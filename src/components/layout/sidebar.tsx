@@ -88,8 +88,8 @@ export function Sidebar() {
     )}>
       {/* Logo Area */}
       <div className={cn(
-        "p-6 border-b border-white/10 flex items-center transition-all",
-        isCollapsed ? "justify-center px-4" : "justify-between p-6"
+        "p-6 border-b border-white/10 flex transition-all duration-300",
+        isCollapsed ? "flex-col items-center gap-4 px-2" : "flex-row items-center justify-between"
       )}>
         <div className="flex items-center gap-3 overflow-hidden">
           <div className="w-9 h-9 brand-icon-gold rounded-lg flex items-center justify-center flex-shrink-0">
@@ -102,6 +102,16 @@ export function Sidebar() {
             </div>
           )}
         </div>
+        
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={toggleCollapse}
+          title={isCollapsed ? "Expandir menu" : "Recolher menu"}
+          className="text-white/40 hover:text-white hover:bg-white/10 hidden sm:flex"
+        >
+          <Menu className="w-5 h-5" />
+        </Button>
       </div>
 
       {/* Main navigation */}
@@ -173,25 +183,8 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* User info & Collapse Toggle at bottom */}
+      {/* User info */}
       <div className="p-3 border-t border-white/10 space-y-2">
-        <Button 
-          variant="ghost" 
-          size={isCollapsed ? "icon" : "sm"}
-          onClick={toggleCollapse}
-          className={cn(
-            "w-full text-white/40 hover:text-white hover:bg-white/10 hidden sm:flex",
-            isCollapsed ? "justify-center" : "justify-start px-3"
-          )}
-        >
-          {isCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : (
-            <>
-              <PanelLeftClose className="w-5 h-5 mr-2" />
-              <span className="text-sm font-medium">Recolher menu</span>
-            </>
-          )}
-        </Button>
-
         {session?.user && (
           <div className={cn(
             "flex items-center gap-3 py-2",
