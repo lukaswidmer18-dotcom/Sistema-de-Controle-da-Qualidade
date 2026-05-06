@@ -464,14 +464,6 @@ export default function NovoFormularioPage() {
                 <SectionTitle icon={<ClipboardList className="w-5 h-5" />} title="Identificação do Recebimento" />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <FormField label="Número do Formulário" required>
-                    <Input
-                      value={formData.formNumber}
-                      onChange={e => updateFormData('formNumber', e.target.value)}
-                      placeholder="REC-YYYYMMDD-XXXX"
-                    />
-                  </FormField>
-
                   <FormField label="Data / Hora de Recebimento" required>
                     <Input
                       type="datetime-local"
