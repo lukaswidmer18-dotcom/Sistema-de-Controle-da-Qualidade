@@ -20,10 +20,12 @@ const statusOptions: { value: ChecklistStatus; label: string; icon: React.Compon
 ]
 
 export function ChecklistItemComponent({ item, onChange, showValidation = false }: ChecklistItemProps) {
+  const alwaysRequirePhoto = item.key === 'temperatura_veiculo' || item.key === 'lacre'
   const isNonConforming = item.status === 'NAO_CONFORME'
   const isNotApplicable = item.status === 'NAO_APLICAVEL'
   const needsObservation = (isNonConforming || isNotApplicable) && !item.observation
-  const needsPhoto = !item.photos?.length
+  const isPhotoRequired = alwaysRequirePhoto || isNonConforming
+  const needsPhoto = isPhotoRequired && !item.photos?.length
 
   const handleStatusChange = (status: ChecklistStatus) => {
     onChange({
@@ -100,15 +102,17 @@ export function ChecklistItemComponent({ item, onChange, showValidation = false 
       </div>
 
       {/* Photo upload */}
-      <PhotoUpload
-        photos={item.photos || []}
-        onPhotosChange={handlePhotosChange}
-        label="Adicionar foto"
-        required={true}
-        maxPhotos={5}
-      />
+      {isPhotoRequired && (
+        <PhotoUpload
+          photos={item.photos || []}
+          onPhotosChange={handlePhotosChange}
+          label="Adicionar foto"
+          required={true}
+          maxPhotos={5}
+        />
+      )}
 
-      {showValidation && needsPhoto && !item.status && (
+      {showValidation && !item.status && (
         <p className="text-xs text-orange-500 mt-1">⚠ Defina o status deste item</p>
       )}
     </div>

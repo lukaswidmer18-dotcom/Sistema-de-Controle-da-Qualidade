@@ -213,7 +213,8 @@ export default function NovoFormularioPage() {
         if (!item.status) {
           errors.push(`Defina o status para: ${item.label}`)
         }
-        if (!item.photos?.length) {
+        const isPhotoRequired = item.key === 'temperatura_veiculo' || item.key === 'lacre' || item.status === 'NAO_CONFORME'
+        if (isPhotoRequired && !item.photos?.length) {
           errors.push(`Foto obrigatória para: ${item.label}`)
         }
         if ((item.status === 'NAO_CONFORME' || item.status === 'NAO_APLICAVEL') && !item.observation) {
@@ -227,7 +228,7 @@ export default function NovoFormularioPage() {
         if (!item.status) {
           errors.push(`Defina o status para: ${item.label}`)
         }
-        if (!item.photos?.length) {
+        if (item.status === 'NAO_CONFORME' && !item.photos?.length) {
           errors.push(`Foto obrigatória para: ${item.label}`)
         }
         if ((item.status === 'NAO_CONFORME' || item.status === 'NAO_APLICAVEL') && !item.observation) {
@@ -238,7 +239,7 @@ export default function NovoFormularioPage() {
 
     if (step === 4) {
       formData.temperatures.forEach((temp, index) => {
-        if (!temp.photoUrl && !temp.photoPreview) {
+        if (temp.status === 'NAO_CONFORME' && !temp.photoUrl && !temp.photoPreview) {
           errors.push(`Foto obrigatória para medição ${index + 1}`)
         }
         if (temp.status === 'NAO_CONFORME' && !temp.observation) {
@@ -807,32 +808,34 @@ export default function NovoFormularioPage() {
                       />
                     </div>
 
-                    <div>
-                      <Label className="text-xs text-gray-500 mb-1 block">Foto da medição *</Label>
-                      <PhotoUpload
-                        photos={
-                          temp.photoUrl || temp.photoPreview
-                            ? [{
-                                fileUrl: temp.photoUrl || '',
-                                fileName: `temp-${index}.jpg`,
-                                fileType: 'image/jpeg',
-                                previewUrl: temp.photoPreview || temp.photoUrl,
-                              }]
-                            : []
-                        }
-                        onPhotosChange={photos => {
-                          const photo = photos[0]
-                          updateTemperature(index, 'photoUrl', photo?.fileUrl || '')
-                          updateTemperature(index, 'photoPreview', photo?.previewUrl || '')
-                        }}
-                        maxPhotos={1}
-                        label="Foto da temperatura"
-                        required
-                      />
-                      {showValidation && !temp.photoUrl && !temp.photoPreview && (
-                        <p className="text-xs text-red-500 mt-1">⚠ Foto obrigatória</p>
-                      )}
-                    </div>
+                    {temp.status === 'NAO_CONFORME' && (
+                      <div>
+                        <Label className="text-xs text-gray-500 mb-1 block">Foto da medição *</Label>
+                        <PhotoUpload
+                          photos={
+                            temp.photoUrl || temp.photoPreview
+                              ? [{
+                                  fileUrl: temp.photoUrl || '',
+                                  fileName: `temp-${index}.jpg`,
+                                  fileType: 'image/jpeg',
+                                  previewUrl: temp.photoPreview || temp.photoUrl,
+                                }]
+                              : []
+                          }
+                          onPhotosChange={photos => {
+                            const photo = photos[0]
+                            updateTemperature(index, 'photoUrl', photo?.fileUrl || '')
+                            updateTemperature(index, 'photoPreview', photo?.previewUrl || '')
+                          }}
+                          maxPhotos={1}
+                          label="Foto da temperatura"
+                          required
+                        />
+                        {showValidation && !temp.photoUrl && !temp.photoPreview && (
+                          <p className="text-xs text-red-500 mt-1">⚠ Foto obrigatória</p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
