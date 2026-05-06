@@ -82,58 +82,71 @@ export default function LoginPage() {
 
       {/* Loading Overlay Premium */}
       {isEntering && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-brand-green/90 backdrop-blur-2xl animate-in fade-in duration-500 overflow-hidden">
-          <div className="relative mb-8">
-            {/* Círculos de brilho no fundo do escudo */}
-            <div className="absolute inset-0 bg-brand-gold/20 blur-3xl rounded-full animate-pulse" />
-            
-            {/* Escudo Central */}
-            <div className="relative w-32 h-32 rounded-full brand-icon-gold flex items-center justify-center border-2 border-white/20 shadow-[0_0_80px_-10px_rgba(188,147,63,0.6)] animate-shield-pulse overflow-hidden">
-              <ShieldCheck className="w-16 h-16 text-white drop-shadow-lg" />
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0d2b26]/95 backdrop-blur-3xl animate-in fade-in duration-700 overflow-hidden">
+          {/* Luzes de fundo dinâmicas */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-gold/10 blur-[120px] rounded-full animate-pulse" />
+          
+          <div className="relative z-10 flex flex-col items-center gap-12 w-full max-w-lg px-6">
+            <div className="relative">
+              {/* Escudo Central Maior */}
+              <div className="relative w-48 h-48 rounded-full brand-icon-gold flex items-center justify-center border-4 border-white/20 shadow-[0_0_100px_-10px_rgba(188,147,63,0.5)] animate-shield-pulse overflow-hidden">
+                <ShieldCheck className="w-24 h-24 text-white drop-shadow-2xl" />
+                
+                {/* Scanner Line mais visível */}
+                <div className="absolute left-0 right-0 h-1.5 bg-white/80 shadow-[0_0_25px_4px_rgba(255,255,255,0.9)] z-10 animate-quality-scan" />
+              </div>
               
-              {/* Scanner Line */}
-              <div className="absolute left-0 right-0 h-1 bg-white/60 shadow-[0_0_15px_2px_rgba(255,255,255,0.8)] z-10 animate-quality-scan" />
+              {/* Anéis orbitais */}
+              <div className="absolute -inset-6 border-2 border-brand-gold/20 rounded-full border-dashed animate-[spin_10s_linear_infinite]" />
+              <div className="absolute -inset-12 border border-white/5 rounded-full border-dashed animate-[spin_15s_linear_infinite_reverse]" />
             </div>
-            
-            {/* Partículas de inspeção girando */}
-            <div className="absolute -inset-4 border border-brand-gold/30 rounded-full border-dashed animate-[spin_8s_linear_infinite]" />
-            <div className="absolute -inset-8 border border-white/10 rounded-full border-dashed animate-[spin_12s_linear_infinite_reverse]" />
+
+            <div className="text-center space-y-8 w-full">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-black text-white tracking-tight uppercase">
+                  Inspecionando Acesso
+                </h2>
+                <div className="h-1 w-24 bg-brand-gold mx-auto rounded-full opacity-50" />
+              </div>
+              
+              <div className="flex flex-col items-center gap-6">
+                <div className="flex items-center gap-4 bg-white/5 py-3 px-6 rounded-2xl border border-white/10 backdrop-blur-md w-full max-w-sm">
+                  <div className="relative flex items-center justify-center">
+                    <Loader2 className="w-5 h-5 text-brand-gold animate-spin" />
+                    <div className="absolute inset-0 bg-brand-gold/20 blur-md rounded-full animate-pulse" />
+                  </div>
+                  <p className="text-base font-bold text-white/90 animate-status-fade tracking-wide">
+                    {LOADING_STEPS[loadingStep]}
+                  </p>
+                </div>
+
+                <div className="flex justify-center gap-2">
+                  {LOADING_STEPS.map((_, idx) => (
+                    <div 
+                      key={idx} 
+                      className={cn(
+                        "h-1.5 rounded-full transition-all duration-700",
+                        idx <= loadingStep ? "w-10 bg-brand-gold shadow-[0_0_10px_rgba(188,147,63,0.5)]" : "w-3 bg-white/10"
+                      )} 
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="text-center space-y-4 max-w-xs">
-            <h2 className="text-2xl font-black text-white tracking-tight animate-in slide-in-from-bottom-2 duration-700">
-              Inspecionando Acesso
-            </h2>
-            
-            <div className="flex items-center justify-center gap-3 bg-white/5 py-2 px-4 rounded-full border border-white/10">
-              <Loader2 className="w-4 h-4 text-brand-gold animate-spin" />
-              <p className="text-sm font-medium text-white/80 animate-status-fade min-w-[200px]">
-                {LOADING_STEPS[loadingStep]}
-              </p>
+          {/* Rodapé fixado no fundo real */}
+          <div className="absolute bottom-12 flex flex-col items-center gap-3">
+            <div className="flex items-center gap-2 text-white/40 text-xs font-black uppercase tracking-[0.3em]">
+              <CheckCircle2 className="w-4 h-4 text-brand-gold" />
+              Padrão de Qualidade Grupo Pluma
             </div>
-
-            <div className="flex justify-center gap-1.5 pt-4">
-              {LOADING_STEPS.map((_, idx) => (
-                <div 
-                  key={idx} 
-                  className={cn(
-                    "h-1 rounded-full transition-all duration-500",
-                    idx <= loadingStep ? "w-6 bg-brand-gold" : "w-2 bg-white/20"
-                  )} 
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Rodapé do loading */}
-          <div className="absolute bottom-10 flex items-center gap-2 text-white/30 text-xs font-bold uppercase tracking-widest">
-            <CheckCircle2 className="w-3 h-3 text-brand-gold" />
-            Padrão de Qualidade Grupo Pluma
+            <div className="text-[10px] text-white/20 font-medium">Bello Alimentos LTDA • Ambiente Seguro</div>
           </div>
         </div>
       )}
 
-      <div className={cn('w-full max-w-md transition-all duration-500 relative z-10', isEntering && 'scale-[0.9] opacity-0 blur-xl')}>
+      <div className={cn('w-full max-w-md transition-all duration-700 relative z-10', isEntering && 'scale-[0.8] opacity-0 blur-3xl')}>
         <div className="motion-enter text-center mb-8">
           <div
             className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-5"
