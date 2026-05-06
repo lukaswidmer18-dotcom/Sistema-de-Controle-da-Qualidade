@@ -10,8 +10,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, ShieldCheck } from 'lucide-react'
+import { Loader2, ShieldCheck, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 
 const loginSchema = z.object({
@@ -21,15 +22,32 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
+const LOADING_STEPS = [
+  "Verificando credenciais...",
+  "Validando parâmetros de Qualidade...",
+  "Inspecionando certificações...",
+  "Acessando ambiente seguro..."
+];
+
 export default function LoginPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [isEntering, setIsEntering] = useState(false)
+  const [loadingStep, setLoadingStep] = useState(0)
   const [error, setError] = useState('')
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   })
+
+  useEffect(() => {
+    if (isEntering) {
+      const interval = setInterval(() => {
+        setLoadingStep((prev) => (prev < LOADING_STEPS.length - 1 ? prev + 1 : prev));
+      }, 800);
+      return () => clearInterval(interval);
+    }
+  }, [isEntering]);
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true)
@@ -46,11 +64,11 @@ export default function LoginPage() {
       setIsLoading(false)
     } else {
       setIsEntering(true)
-      toast.success('Login realizado com sucesso!')
+      // Tempo maior para mostrar a animação de qualidade
       setTimeout(() => {
         router.push('/pdfs-salvos')
         router.refresh()
-      }, 360)
+      }, 3200)
     }
   }
 
@@ -62,7 +80,60 @@ export default function LoginPage() {
       <div className="brand-blob-3" aria-hidden="true" />
       <div className="brand-mesh" aria-hidden="true" />
 
-      <div className={cn('w-full max-w-md transition-all duration-300 relative z-10', isEntering && 'translate-y-1 scale-[0.985] opacity-0')}>
+      {/* Loading Overlay Premium */}
+      {isEntering && (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-brand-green/90 backdrop-blur-2xl animate-in fade-in duration-500 overflow-hidden">
+          <div className="relative mb-8">
+            {/* Círculos de brilho no fundo do escudo */}
+            <div className="absolute inset-0 bg-brand-gold/20 blur-3xl rounded-full animate-pulse" />
+            
+            {/* Escudo Central */}
+            <div className="relative w-32 h-32 rounded-full brand-icon-gold flex items-center justify-center border-2 border-white/20 shadow-[0_0_80px_-10px_rgba(188,147,63,0.6)] animate-shield-pulse overflow-hidden">
+              <ShieldCheck className="w-16 h-16 text-white drop-shadow-lg" />
+              
+              {/* Scanner Line */}
+              <div className="absolute left-0 right-0 h-1 bg-white/60 shadow-[0_0_15px_2px_rgba(255,255,255,0.8)] z-10 animate-quality-scan" />
+            </div>
+            
+            {/* Partículas de inspeção girando */}
+            <div className="absolute -inset-4 border border-brand-gold/30 rounded-full border-dashed animate-[spin_8s_linear_infinite]" />
+            <div className="absolute -inset-8 border border-white/10 rounded-full border-dashed animate-[spin_12s_linear_infinite_reverse]" />
+          </div>
+
+          <div className="text-center space-y-4 max-w-xs">
+            <h2 className="text-2xl font-black text-white tracking-tight animate-in slide-in-from-bottom-2 duration-700">
+              Inspecionando Acesso
+            </h2>
+            
+            <div className="flex items-center justify-center gap-3 bg-white/5 py-2 px-4 rounded-full border border-white/10">
+              <Loader2 className="w-4 h-4 text-brand-gold animate-spin" />
+              <p className="text-sm font-medium text-white/80 animate-status-fade min-w-[200px]">
+                {LOADING_STEPS[loadingStep]}
+              </p>
+            </div>
+
+            <div className="flex justify-center gap-1.5 pt-4">
+              {LOADING_STEPS.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  className={cn(
+                    "h-1 rounded-full transition-all duration-500",
+                    idx <= loadingStep ? "w-6 bg-brand-gold" : "w-2 bg-white/20"
+                  )} 
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Rodapé do loading */}
+          <div className="absolute bottom-10 flex items-center gap-2 text-white/30 text-xs font-bold uppercase tracking-widest">
+            <CheckCircle2 className="w-3 h-3 text-brand-gold" />
+            Padrão de Qualidade Grupo Pluma
+          </div>
+        </div>
+      )}
+
+      <div className={cn('w-full max-w-md transition-all duration-500 relative z-10', isEntering && 'scale-[0.9] opacity-0 blur-xl')}>
         <div className="motion-enter text-center mb-8">
           <div
             className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-5"
@@ -147,7 +218,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full font-semibold mt-2"
+              className="w-full font-semibold mt-2 transition-all active:scale-95"
               disabled={isLoading}
               style={{
                 background: isLoading

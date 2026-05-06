@@ -238,6 +238,33 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  @keyframes quality-scan {
+    0%, 100% { top: 0%; opacity: 0; }
+    5%, 95% { opacity: 1; }
+    50% { top: 100%; opacity: 1; }
+  }
+
+  @keyframes shield-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+  }
+
+  @keyframes status-fade {
+    0%, 100% { opacity: 0.4; transform: translateY(2px); }
+    50% { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-quality-scan {
+    animation: quality-scan 3s ease-in-out infinite;
+  }
+
+  .animate-shield-pulse {
+    animation: shield-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-status-fade {
+    animation: status-fade 2s ease-in-out infinite;
+  }
 }
 
 @keyframes blob-float-1 {
