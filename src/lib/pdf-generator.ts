@@ -76,19 +76,19 @@ export function generateReceiptHTML(data: ReceiptData): string {
 
   const checklistRow = (item: typeof vehicleItems[0], index: number, prefix: string) => `
     <tr style="${item.isNonConformity ? 'background-color:#fff5f5' : ''}">
-      <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#374151;width:40%"><strong>${prefix}.${index + 1}</strong> - ${item.itemLabel}</td>
-      <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;width:15%">
+      <td style="padding:12px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#374151;width:30%"><strong>${prefix}.${index + 1}</strong> - ${item.itemLabel}</td>
+      <td style="padding:12px;border-bottom:1px solid #e5e7eb;text-align:center;width:15%">
         <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(item.status || 'NAO_APLICAVEL')}">
           ${getStatusLabel(item.status || 'NAO_APLICAVEL')}
         </span>
       </td>
-      <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280;width:30%">${item.observation || '—'}</td>
-      <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:right;width:15%">
+      <td style="padding:12px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280;width:30%">${item.observation || '—'}</td>
+      <td style="padding:12px;border-bottom:1px solid #e5e7eb;width:25%">
         ${item.photos.length > 0 ? 
-          `<div style="display:flex;gap:4px;justify-content:flex-end">
-            ${item.photos.map(p => `<img src="${getAbsoluteUrl(p.fileUrl)}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid #d1d5db" alt="foto" />`).join('')}
+          `<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            ${item.photos.map(p => `<img src="${getAbsoluteUrl(p.fileUrl)}" style="width:120px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #d1d5db" alt="foto" />`).join('')}
           </div>` 
-        : '<span style="color:#9ca3af;font-size:11px;font-style:italic">Sem fotos</span>'}
+        : '<span style="color:#9ca3af;font-size:11px;font-style:italic;float:right">Sem fotos</span>'}
       </td>
     </tr>
   `
@@ -287,7 +287,7 @@ export function generateReceiptHTML(data: ReceiptData): string {
             </span>
           </td>
           <td style="text-align:right">
-            ${t.photoUrl ? `<img src="${getAbsoluteUrl(t.photoUrl)}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid #d1d5db" alt="foto" />` : '<span style="color:#9ca3af;font-size:11px;font-style:italic">Sem foto</span>'}
+            ${t.photoUrl ? `<img src="${getAbsoluteUrl(t.photoUrl)}" style="width:120px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #d1d5db" alt="foto" />` : '<span style="color:#9ca3af;font-size:11px;font-style:italic">Sem foto</span>'}
           </td>
         </tr>
       `).join('')}
@@ -307,14 +307,14 @@ export function generateReceiptHTML(data: ReceiptData): string {
         <tr style="background-color:#fff5f5">
           <td style="width:10%;vertical-align:top;font-weight:800;color:#dc2626">NC 6.${index + 1}</td>
           <td style="width:20%;vertical-align:top;font-size:11px;color:#7f1d1d;font-weight:600;text-transform:uppercase">${nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}</td>
-          <td style="width:40%;vertical-align:top;color:#450a0a">${nc.description || 'Sem descrição detalhada'}</td>
+          <td style="width:30%;vertical-align:top;color:#450a0a">${nc.description || 'Sem descrição detalhada'}</td>
           <td style="width:15%;vertical-align:top;text-align:center">
             <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(nc.status)}">
               ${getStatusLabel(nc.status)}
             </span>
           </td>
-          <td style="width:15%;vertical-align:top;text-align:right">
-             ${nc.photoUrl ? `<img src="${getAbsoluteUrl(nc.photoUrl)}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #fca5a5" alt="evidência" />` : ''}
+          <td style="width:25%;vertical-align:top;text-align:right">
+             ${nc.photoUrl ? `<img src="${getAbsoluteUrl(nc.photoUrl)}" style="width:160px;height:120px;object-fit:cover;border-radius:6px;border:1px solid #fca5a5" alt="evidência" />` : ''}
           </td>
         </tr>
       `).join('')}
