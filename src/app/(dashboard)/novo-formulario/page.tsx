@@ -68,7 +68,7 @@ function buildInitialFormData(): ReceiptFormData {
     `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`
 
   return {
-    formNumber: generateFormNumber(),
+    formNumber: '',
     receivedAt: localDatetime,
     evaluatorName: '',
     unit: '',
