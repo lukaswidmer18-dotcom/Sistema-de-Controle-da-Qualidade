@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
 import {
@@ -114,6 +114,11 @@ export default function NovoFormularioPage() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [savedReceiptId, setSavedReceiptId] = useState<string | null>(null)
   const [savedPdfUrl, setSavedPdfUrl] = useState<string | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const updateFormData = useCallback(<K extends keyof ReceiptFormData>(
     key: K,
@@ -397,6 +402,8 @@ export default function NovoFormularioPage() {
         nonConformities: autoNCs.map(nc => ({ description: nc.description })),
       }
     : null
+
+  if (!isMounted) return null
 
   return (
     <div className="min-h-screen brand-shell">
