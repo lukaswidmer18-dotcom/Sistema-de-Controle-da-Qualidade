@@ -51,11 +51,11 @@ interface ReceiptData {
 
 function getStatusBadgeStyle(status: string): string {
   const styles: Record<string, string> = {
-    CONFORME: 'background:#e8ecec;color:#16413a;border:1px solid #8ba09d',
+    CONFORME: 'background:#dcfce7;color:#166534;border:1px solid #bbf7d0',
     NAO_CONFORME: 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5',
-    APROVADO_RESSALVA: 'background:#f1e9d9;color:#16413a;border:1px solid #bc933f',
+    APROVADO_RESSALVA: 'background:#fef9c3;color:#854d0e;border:1px solid #fde047',
     REPROVADO: 'background:#fee2e2;color:#7f1d1d;border:1px solid #ef4444',
-    AGUARDANDO: 'background:#e8ecec;color:#16413a;border:1px solid #a3b4b1',
+    AGUARDANDO: 'background:#f3f4f6;color:#4b5563;border:1px solid #e5e7eb',
     NAO_APLICAVEL: 'background:#f3f4f6;color:#4b5563;border:1px solid #d1d5db',
   }
   return styles[status] || styles.NAO_APLICAVEL
@@ -71,18 +71,24 @@ export function generateReceiptHTML(data: ReceiptData): string {
   const vehicleItems = data.checklistItems.filter(i => i.section === 'VEICULO')
   const cargoItems = data.checklistItems.filter(i => i.section === 'CARGA')
   const products = data.products
+  
+  const primaryBlue = '#006eb7';
 
-  const checklistRow = (item: typeof vehicleItems[0]) => `
-    <tr style="${item.isNonConformity ? 'background:#fff5f5' : ''}">
-      <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;font-size:13px">${item.itemLabel}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:center">
-        <span style="padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;${getStatusBadgeStyle(item.status || 'NAO_APLICAVEL')}">
+  const checklistRow = (item: typeof vehicleItems[0], index: number, prefix: string) => `
+    <tr style="${item.isNonConformity ? 'background-color:#fff5f5' : ''}">
+      <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#374151;width:40%"><strong>${prefix}.${index + 1}</strong> - ${item.itemLabel}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:center;width:15%">
+        <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(item.status || 'NAO_APLICAVEL')}">
           ${getStatusLabel(item.status || 'NAO_APLICAVEL')}
         </span>
       </td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#6b7280">${item.observation || '—'}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:center">
-        ${item.photos.map(p => `<img src="${getAbsoluteUrl(p.fileUrl)}" style="width:50px;height:50px;object-fit:cover;border-radius:4px;margin:2px" alt="foto" />`).join('')}
+      <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280;width:30%">${item.observation || '—'}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:right;width:15%">
+        ${item.photos.length > 0 ? 
+          `<div style="display:flex;gap:4px;justify-content:flex-end">
+            ${item.photos.map(p => `<img src="${getAbsoluteUrl(p.fileUrl)}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid #d1d5db" alt="foto" />`).join('')}
+          </div>` 
+        : '<span style="color:#9ca3af;font-size:11px;font-style:italic">Sem fotos</span>'}
       </td>
     </tr>
   `
@@ -96,209 +102,249 @@ export function generateReceiptHTML(data: ReceiptData): string {
   <title>Relatório de Recebimento ${data.formNumber}</title>
   <style>
     * { margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact }
-    body { font-family:'Source Sans Pro','Segoe UI',Arial,sans-serif;color:#16413a;background:#f8f5eb;font-size:13px }
-    .header { background:linear-gradient(135deg,#16413a,#2d534d);color:white;padding:24px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:5px solid #bc933f }
-    .header-title { font-size:18px;font-weight:700 }
-    .header-subtitle { font-size:12px;opacity:0.85;margin-top:4px }
-    .header-meta { text-align:right;font-size:11px;opacity:0.85 }
-    .section { margin:0 32px 20px;border:1px solid rgba(22,65,58,0.14);border-radius:8px;overflow:hidden;background:#fff;box-shadow:0 18px 34px -30px rgba(22,65,58,0.55) }
-    .section-header { background:#f8f5eb;padding:12px 16px;font-weight:700;font-size:13px;color:#16413a;border-bottom:1px solid rgba(188,147,63,0.22);display:flex;align-items:center;gap:8px }
-    .section-header .dot { width:8px;height:8px;border-radius:50%;background:#bc933f;flex-shrink:0 }
-    .info-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:0 }
-    .info-item { padding:10px 16px;border-bottom:1px solid #f3f4f6}
-    .info-item:nth-child(3n+1) { border-right:1px solid #f3f4f6 }
-    .info-item:nth-child(3n+2) { border-right:1px solid #f3f4f6 }
-    .info-label { font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:#728c88;font-weight:600;margin-bottom:2px }
-    .info-value { font-size:13px;color:#16413a;font-weight:600 }
-    table { width:100%;border-collapse:collapse }
-    th { background:#f8f5eb;padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#446660;font-weight:700;border-bottom:2px solid rgba(188,147,63,0.22) }
-    .status-badge { padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700 }
-    .nc-item { background:#fff5f5;border-left:3px solid #ef4444;padding:10px 14px;margin-bottom:8px;border-radius:0 4px 4px 0 }
-    .nc-label { font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#ef4444;font-weight:700;margin-bottom:3px }
-    .footer { background:#16413a;border-top:4px solid #bc933f;padding:16px 32px;text-align:center;font-size:11px;color:#fff;margin-top:20px }
-    .status-geral { margin:0 32px 20px;padding:16px;border-radius:8px;display:flex;align-items:center;justify-content:space-between }
-    .plate-img { width:100px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #e5e7eb }
-    .photo-grid { display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px 12px }
-    .photo-grid img { width:80px;height:80px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb }
+    body { font-family:'Inter','Segoe UI',Arial,sans-serif;color:#1f2937;background:#ffffff;font-size:12px;line-height:1.5 }
+    
+    .container { padding: 32px 40px; min-height: 90vh; }
+    
+    /* Header */
+    .header { display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px; }
+    .header-title { font-size:22px;font-weight:800;color:${primaryBlue};text-transform:uppercase;max-width:60%;line-height:1.2;letter-spacing:-0.5px }
+    .header-logo { height:56px;object-fit:contain; }
+    .header-divider { border:none;border-bottom:2px solid #e5e7eb;margin-bottom:24px; }
+    
+    /* Meta Block */
+    .meta-block { width:100%;max-width:400px;border-collapse:collapse;margin-bottom:24px; }
+    .meta-block td { border:2px solid #ffffff;padding:6px 12px;font-size:12px; }
+    .meta-label { background-color:${primaryBlue};color:#ffffff;font-weight:700;text-transform:uppercase;width:120px;letter-spacing:0.5px }
+    .meta-value { background-color:#f3f4f6;color:#374151;font-weight:500; }
+    
+    /* Status Geral Highlight */
+    .status-highlight { display:inline-flex;align-items:center;padding:6px 14px;border-radius:6px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:0.5px; }
+    
+    /* Section Divider */
+    .section-divider { display:flex;align-items:center;text-align:center;color:#4b5563;font-weight:800;font-size:16px;letter-spacing:1px;margin:32px 0 24px; }
+    .section-divider::before, .section-divider::after { content:'';flex:1;border-bottom:1px solid #d1d5db; }
+    .section-divider::before { margin-right:16px; }
+    .section-divider::after { margin-left:16px; }
+    
+    /* Section Title */
+    .section-title { display:flex;align-items:center;background-color:#f3f4f6;margin-bottom:16px; }
+    .section-number { background-color:${primaryBlue};color:#ffffff;font-weight:800;font-size:14px;width:32px;height:32px;display:flex;align-items:center;justify-content:center; }
+    .section-text { color:${primaryBlue};font-weight:700;font-size:14px;padding-left:12px;text-transform:none; }
+    
+    /* Tables */
+    table { width:100%;border-collapse:collapse;margin-bottom:32px; }
+    .kv-table td { padding:8px 12px;vertical-align:top;border-bottom:1px solid #f3f4f6; }
+    .kv-key { font-weight:700;color:#4b5563;width:40%;font-size:12px; }
+    .kv-value { color:#1f2937;font-weight:500;font-size:12px; }
+    
+    .data-table th { background-color:#f8fafc;color:#64748b;font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;padding:10px 12px;text-align:left;border-bottom:2px solid #e2e8f0; }
+    .data-table td { padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px; }
+    .data-table tr:nth-child(even) { background-color:#f8fafc; }
+    
+    /* Helpers */
+    .photo-large { width:100%;max-width:300px;height:auto;border-radius:8px;border:1px solid #e5e7eb;margin-top:12px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1); }
+    
+    /* Footer */
+    .footer { background-color:${primaryBlue};color:#ffffff;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:auto;border-top:4px solid #005a96; }
+    .footer-right { text-align:right;opacity:0.9;line-height:1.6; }
+    
     @media print { .page-break { page-break-before: always } }
   </style>
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div style="display:flex;align-items:center;gap:16px">
-    <img src="data:image/png;base64,${logoBelloBase64}" alt="Bello Alimentos" style="height:48px;background:#fff;padding:6px 12px;border-radius:6px;object-fit:contain" />
-    <div>
-      <div class="header-title">Monitoramento de Recebimento de Produtos</div>
-      <div class="header-subtitle">Controle da Qualidade — Recebimento de Veículos</div>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">Monitoramento de Recebimento de Produtos</div>
+    <img src="data:image/png;base64,${logoBelloBase64}" class="header-logo" alt="Bello Alimentos" />
+  </div>
+  <hr class="header-divider" />
+
+  <!-- Top Information -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <table class="meta-block">
+      <tr>
+        <td class="meta-label">DATA</td>
+        <td class="meta-value">${formatDateTime(new Date())}</td>
+      </tr>
+      <tr>
+        <td class="meta-label">AVALIADOR</td>
+        <td class="meta-value">${data.evaluatorName}</td>
+      </tr>
+      <tr>
+        <td class="meta-label">UNIDADE</td>
+        <td class="meta-value">${data.unit}</td>
+      </tr>
+    </table>
+    
+    <div class="status-highlight" style="${getStatusBadgeStyle(data.generalStatus)}">
+      STATUS GERAL: ${getStatusLabel(data.generalStatus)}
     </div>
   </div>
-  <div class="header-meta">
-    <div style="font-weight:700;font-size:16px">${data.formNumber}</div>
-    <div>Gerado em: ${formatDateTime(new Date())}</div>
-  </div>
-</div>
 
-<!-- Status Geral -->
-<div style="margin:20px 32px 0">
-  <div class="status-geral" style="${getStatusBadgeStyle(data.generalStatus)};border:2px solid transparent">
-    <div>
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;opacity:0.7">Status Geral do Recebimento</div>
-      <div style="font-size:20px;font-weight:800;margin-top:2px">${getStatusLabel(data.generalStatus)}</div>
-    </div>
-  </div>
-</div>
+  <div class="section-divider">RESULTADOS</div>
 
-<!-- Identificação -->
-<div style="margin:16px 32px 0">
-  <div class="section">
-    <div class="section-header"><span class="dot"></span>Identificação</div>
-    <div class="info-grid">
-      <div class="info-item"><div class="info-label">Nº do Formulário</div><div class="info-value">${data.formNumber}</div></div>
-      <div class="info-item"><div class="info-label">Data e Hora</div><div class="info-value">${formatDateTime(data.receivedAt)}</div></div>
-      <div class="info-item"><div class="info-label">Avaliador</div><div class="info-value">${data.evaluatorName}</div></div>
-      <div class="info-item"><div class="info-label">Unidade / CD</div><div class="info-value">${data.unit}</div></div>
-      <div class="info-item"><div class="info-label">Resp. Operação</div><div class="info-value">${data.operationResponsible}</div></div>
-      <div class="info-item"><div class="info-label">Resp. Qualidade</div><div class="info-value">${data.qualityResponsible}</div></div>
-      <div class="info-item"><div class="info-label">Ordem de Recebimento</div><div class="info-value">${data.receivingOrder}</div></div>
-      <div class="info-item"><div class="info-label">Nota Fiscal</div><div class="info-value">${data.invoiceNumber}</div></div>
-      <div class="info-item"><div class="info-label">Tipo de Veículo</div><div class="info-value">${data.vehicleType}</div></div>
-      <div class="info-item" style="grid-column:span 3"><div class="info-label">Placa da Carreta</div><div class="info-value">${data.trailerPlate}</div></div>
-    </div>
+  <!-- 1. Identificação -->
+  <div class="section-title">
+    <div class="section-number">1</div>
+    <div class="section-text">Identificação</div>
   </div>
-</div>
+  
+  <table class="kv-table">
+    <tr><td class="kv-key">1.1 - Número do Formulário</td><td class="kv-value">${data.formNumber}</td></tr>
+    <tr><td class="kv-key">1.2 - Data e hora de recebimento</td><td class="kv-value">${formatDateTime(data.receivedAt)}</td></tr>
+    <tr><td class="kv-key">1.3 - Responsável da operação</td><td class="kv-value">${data.operationResponsible}</td></tr>
+    <tr><td class="kv-key">1.4 - Responsável da qualidade</td><td class="kv-value">${data.qualityResponsible}</td></tr>
+    <tr><td class="kv-key">1.5 - Ordem de recebimento</td><td class="kv-value">${data.receivingOrder}</td></tr>
+    <tr><td class="kv-key">1.6 - Nota Fiscal</td><td class="kv-value">${data.invoiceNumber}</td></tr>
+    <tr><td class="kv-key">1.7 - Tipo de Veículo</td><td class="kv-value">${data.vehicleType}</td></tr>
+    <tr>
+      <td class="kv-key">1.8 - Placa da Carreta</td>
+      <td class="kv-value">
+        <div style="font-weight:800;font-size:14px;color:${primaryBlue};text-transform:uppercase;letter-spacing:1px">${data.trailerPlate}</div>
+        ${data.platePicture ? `<img src="${getAbsoluteUrl(data.platePicture)}" class="photo-large" alt="Placa da Carreta" />` : ''}
+      </td>
+    </tr>
+  </table>
 
-<!-- Produtos -->
-<div class="section">
-  <div class="section-header"><span class="dot"></span>Produtos / Lotes</div>
-  <table>
+  <!-- 2. Produtos / Lotes -->
+  <div class="section-title">
+    <div class="section-number">2</div>
+    <div class="section-text">Produtos e Lotes Recebidos</div>
+  </div>
+  <table class="data-table">
     <thead>
       <tr>
-        <th>Código</th>
-        <th>Descrição</th>
-        <th>Lote</th>
-        <th>Quantidade</th>
+        <th style="width:20%">Código</th>
+        <th style="width:40%">Descrição</th>
+        <th style="width:20%">Lote</th>
+        <th style="width:20%;text-align:right">Quantidade</th>
       </tr>
     </thead>
     <tbody>
       ${products.map(p => `
         <tr>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-weight:600">${p.productCode}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6">${p.productDescription || '—'}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6">${p.lot}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6">${p.quantity || '—'}</td>
+          <td style="font-weight:600">${p.productCode}</td>
+          <td>${p.productDescription || '—'}</td>
+          <td>${p.lot}</td>
+          <td style="text-align:right;font-weight:600">${p.quantity || '—'}</td>
         </tr>
       `).join('')}
     </tbody>
   </table>
-</div>
 
-<!-- Condições do Veículo -->
-<div class="section">
-  <div class="section-header"><span class="dot"></span>Condições do Veículo</div>
-  <table>
-    <thead>
-      <tr>
-        <th style="width:30%">Item</th>
-        <th style="width:20%;text-align:center">Status</th>
-        <th style="width:30%">Observação</th>
-        <th style="width:20%;text-align:center">Fotos</th>
-      </tr>
-    </thead>
+  <!-- 3. Condições do Veículo -->
+  <div class="section-title">
+    <div class="section-number">3</div>
+    <div class="section-text">Condições do Veículo</div>
+  </div>
+  <table class="data-table">
     <tbody>
-      ${vehicleItems.map(item => checklistRow(item)).join('')}
+      ${vehicleItems.map((item, index) => checklistRow(item, index, '3')).join('')}
     </tbody>
   </table>
-</div>
 
-<!-- Condições da Carga -->
-<div class="section">
-  <div class="section-header"><span class="dot"></span>Condições da Carga</div>
-  <table>
-    <thead>
-      <tr>
-        <th style="width:30%">Item</th>
-        <th style="width:20%;text-align:center">Status</th>
-        <th style="width:30%">Observação</th>
-        <th style="width:20%;text-align:center">Fotos</th>
-      </tr>
-    </thead>
+  <!-- 4. Condições da Carga -->
+  <div class="section-title">
+    <div class="section-number">4</div>
+    <div class="section-text">Condições da Carga</div>
+  </div>
+  <table class="data-table">
     <tbody>
-      ${cargoItems.map(item => checklistRow(item)).join('')}
+      ${cargoItems.map((item, index) => checklistRow(item, index, '4')).join('')}
     </tbody>
   </table>
-</div>
 
-<!-- Temperaturas -->
-${data.temperatures.length > 0 ? `
-<div class="section">
-  <div class="section-header"><span class="dot"></span>Temperatura dos Produtos</div>
-  <table>
+  <!-- 5. Temperaturas -->
+  ${data.temperatures.length > 0 ? `
+  <div class="section-title">
+    <div class="section-number">5</div>
+    <div class="section-text">Controle de Temperatura</div>
+  </div>
+  <table class="data-table">
     <thead>
       <tr>
         <th>Produto</th>
         <th>Lote</th>
         <th>Tipo</th>
-        <th style="text-align:center">Temp.</th>
+        <th style="text-align:center">Temperatura</th>
         <th style="text-align:center">Status</th>
-        <th>Observação</th>
-        <th style="text-align:center">Foto</th>
+        <th style="text-align:right">Foto</th>
       </tr>
     </thead>
     <tbody>
       ${data.temperatures.map(t => `
-        <tr style="${t.status === 'NAO_CONFORME' ? 'background:#fff5f5' : ''}">
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6">${t.productName || t.productCode || '—'}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6">${t.lot || '—'}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6">${t.temperatureType === 'RESFRIADO' ? 'Resfriado' : 'Congelado'}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;text-align:center;font-weight:700">${t.temperature !== null && t.temperature !== undefined ? `${t.temperature}${t.unit}` : '—'}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;text-align:center">
-            <span style="padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;${getStatusBadgeStyle(t.status || 'NAO_APLICAVEL')}">
+        <tr style="${t.status === 'NAO_CONFORME' ? 'background-color:#fff5f5' : ''}">
+          <td style="font-weight:500">${t.productName || t.productCode || '—'}</td>
+          <td>${t.lot || '—'}</td>
+          <td><span style="font-size:10px;background:#e2e8f0;padding:2px 6px;border-radius:4px;font-weight:600">${t.temperatureType === 'RESFRIADO' ? 'Resfriado' : 'Congelado'}</span></td>
+          <td style="text-align:center;font-weight:800;font-size:14px;color:${primaryBlue}">${t.temperature !== null && t.temperature !== undefined ? `${t.temperature}${t.unit}` : '—'}</td>
+          <td style="text-align:center">
+            <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(t.status || 'NAO_APLICAVEL')}">
               ${getStatusLabel(t.status || 'NAO_APLICAVEL')}
             </span>
           </td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-size:12px;color:#6b7280">${t.observation || '—'}</td>
-          <td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;text-align:center">
-            ${t.photoUrl ? `<img src="${getAbsoluteUrl(t.photoUrl)}" style="width:50px;height:50px;object-fit:cover;border-radius:4px" alt="foto" />` : '—'}
+          <td style="text-align:right">
+            ${t.photoUrl ? `<img src="${getAbsoluteUrl(t.photoUrl)}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;border:1px solid #d1d5db" alt="foto" />` : '<span style="color:#9ca3af;font-size:11px;font-style:italic">Sem foto</span>'}
           </td>
         </tr>
       `).join('')}
     </tbody>
   </table>
-</div>
-` : ''}
+  ` : ''}
 
-<!-- Não Conformidades -->
-${data.nonConformities.length > 0 ? `
-<div class="section" style="border-color:#fca5a5">
-  <div class="section-header" style="background:#fff5f5;color:#991b1b"><span class="dot" style="background:#ef4444"></span>Não Conformidades Registradas</div>
-  <div style="padding:12px 16px">
-    ${data.nonConformities.map((nc, i) => `
-      <div class="nc-item">
-        <div class="nc-label">NC ${String(i + 1).padStart(2, '0')} — ${nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}</div>
-        <div style="font-size:13px;color:#374151">${nc.description || 'Sem descrição'}</div>
-        <div style="display:flex;align-items:center;gap:12px;margin-top:6px">
-          <span style="padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;${getStatusBadgeStyle(nc.status)}">${getStatusLabel(nc.status)}</span>
-          ${nc.photoUrl ? `<img src="${getAbsoluteUrl(nc.photoUrl)}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #fca5a5" alt="evidência" />` : ''}
-        </div>
-      </div>
-    `).join('')}
+  <!-- 6. Não Conformidades -->
+  ${data.nonConformities.length > 0 ? `
+  <div class="section-title" style="background-color:#fee2e2">
+    <div class="section-number" style="background-color:#dc2626">6</div>
+    <div class="section-text" style="color:#b91c1c">Registro de Não Conformidades</div>
   </div>
-</div>
-` : ''}
+  <table class="data-table" style="border:1px solid #fca5a5">
+    <tbody>
+      ${data.nonConformities.map((nc, index) => `
+        <tr style="background-color:#fff5f5">
+          <td style="width:10%;vertical-align:top;font-weight:800;color:#dc2626">NC 6.${index + 1}</td>
+          <td style="width:20%;vertical-align:top;font-size:11px;color:#7f1d1d;font-weight:600;text-transform:uppercase">${nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}</td>
+          <td style="width:40%;vertical-align:top;color:#450a0a">${nc.description || 'Sem descrição detalhada'}</td>
+          <td style="width:15%;vertical-align:top;text-align:center">
+            <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(nc.status)}">
+              ${getStatusLabel(nc.status)}
+            </span>
+          </td>
+          <td style="width:15%;vertical-align:top;text-align:right">
+             ${nc.photoUrl ? `<img src="${getAbsoluteUrl(nc.photoUrl)}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #fca5a5" alt="evidência" />` : ''}
+          </td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+  ` : ''}
 
-<!-- Observações -->
-${data.observations ? `
-<div class="section">
-  <div class="section-header"><span class="dot"></span>Observações Gerais</div>
-  <div style="padding:12px 16px;font-size:13px;color:#374151;line-height:1.6">${data.observations}</div>
+  <!-- 7. Observações Finais -->
+  ${data.observations ? `
+  <div class="section-title">
+    <div class="section-number">7</div>
+    <div class="section-text">Observações Finais</div>
+  </div>
+  <div style="background-color:#f8fafc;border:1px solid #e2e8f0;padding:16px 20px;border-radius:6px;color:#334155;line-height:1.6;margin-bottom:32px">
+    ${data.observations}
+  </div>
+  ` : ''}
+
 </div>
-` : ''}
 
 <!-- Footer -->
 <div class="footer">
-  <p>Controle da Qualidade — Recebimento de Veículos &nbsp;|&nbsp; Formulário ${data.formNumber} &nbsp;|&nbsp; Gerado em ${formatDateTime(new Date())}</p>
+  <div>
+    <img src="data:image/png;base64,${logoBelloBase64}" style="height:24px;filter:brightness(0) invert(1);opacity:0.9" alt="Bello Alimentos" />
+  </div>
+  <div class="footer-right">
+    <strong>Sistema de Controle da Qualidade</strong><br/>
+    Formulário ID: ${data.formNumber} &nbsp;|&nbsp; Recebimento de Veículos<br/>
+    <span style="opacity:0.7">Documento gerado eletronicamente em ${formatDateTime(new Date())}</span>
+  </div>
 </div>
 
 </body>
