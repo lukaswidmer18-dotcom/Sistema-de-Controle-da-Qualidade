@@ -197,6 +197,7 @@ export default function NovoFormularioPage() {
     if (step === 1) {
       if (!formData.receivedAt) errors.push('Data/hora de recebimento é obrigatória')
       if (!formData.evaluatorName) errors.push('Avaliador é obrigatório')
+      if (!formData.unit) errors.push('Avaliado é obrigatório')
       if (!formData.operationResponsible) errors.push('Responsável da operação é obrigatório')
       if (!formData.qualityResponsible) errors.push('Responsável pela qualidade é obrigatório')
       if (!formData.receivingOrder) errors.push('Ordem de recebimento é obrigatória')
@@ -494,6 +495,14 @@ export default function NovoFormularioPage() {
                       value={formData.evaluatorName}
                       onChange={e => updateFormData('evaluatorName', e.target.value)}
                       placeholder="Nome completo"
+                    />
+                  </FormField>
+
+                  <FormField label="Avaliado" required>
+                    <Input
+                      value={formData.unit}
+                      onChange={e => updateFormData('unit', e.target.value)}
+                      placeholder="Ex: SIF 3409: Bello Alimentos Ltda - Itaquiraí/MS;"
                     />
                   </FormField>
 

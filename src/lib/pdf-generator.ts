@@ -183,7 +183,7 @@ export function generateReceiptHTML(data: ReceiptData): string {
       </tr>
       <tr>
         <td class="meta-label">AVALIADO</td>
-        <td class="meta-value">SIF 3409: Bello Alimentos Ltda - Itaquiraí/MS;</td>
+        <td class="meta-value">${data.unit}</td>
       </tr>
     </table>
     
