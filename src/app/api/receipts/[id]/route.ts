@@ -58,9 +58,18 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   }
 
   try {
-    await prisma.receipt.delete({
-      where: { id: params.id },
-    })
+    const id = params.id
+
+    await prisma.$transaction([
+      prisma.nonConformity.deleteMany({ where: { receiptId: id } }),
+      prisma.checklistPhoto.deleteMany({ where: { receiptId: id } }),
+      prisma.checklistItem.deleteMany({ where: { receiptId: id } }),
+      prisma.temperatureMeasurement.deleteMany({ where: { receiptId: id } }),
+      prisma.receiptProduct.deleteMany({ where: { receiptId: id } }),
+      prisma.emailLog.deleteMany({ where: { receiptId: id } }),
+      prisma.receipt.delete({ where: { id } })
+    ])
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Erro ao excluir recibo:', error)
