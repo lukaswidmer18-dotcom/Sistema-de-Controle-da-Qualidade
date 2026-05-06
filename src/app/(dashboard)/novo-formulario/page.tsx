@@ -190,7 +190,6 @@ export default function NovoFormularioPage() {
     const errors: string[] = []
 
     if (step === 1) {
-      if (!formData.formNumber) errors.push('Número do formulário é obrigatório')
       if (!formData.receivedAt) errors.push('Data/hora de recebimento é obrigatória')
       if (!formData.evaluatorName) errors.push('Nome do avaliador é obrigatório')
       if (!formData.unit) errors.push('Unidade é obrigatória')
@@ -325,8 +324,11 @@ export default function NovoFormularioPage() {
     setIsSubmitting(true)
     try {
       const ncs = getAutoNonConformities()
+      const finalFormNumber = formData.formNumber?.trim() || generateFormNumber()
+      
       const payload = {
         ...formData,
+        formNumber: finalFormNumber,
         nonConformities: ncs.map(nc => ({
           section: nc.section,
           description: nc.description,
@@ -464,6 +466,14 @@ export default function NovoFormularioPage() {
                 <SectionTitle icon={<ClipboardList className="w-5 h-5" />} title="Identificação do Recebimento" />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <FormField label="Número do Formulário (Opcional)">
+                    <Input
+                      value={formData.formNumber}
+                      onChange={e => updateFormData('formNumber', e.target.value)}
+                      placeholder="Deixe vazio para gerar automaticamente"
+                    />
+                  </FormField>
+
                   <FormField label="Data / Hora de Recebimento" required>
                     <Input
                       type="datetime-local"
