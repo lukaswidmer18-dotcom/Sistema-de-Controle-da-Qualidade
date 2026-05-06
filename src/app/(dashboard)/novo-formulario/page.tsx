@@ -397,16 +397,16 @@ export default function NovoFormularioPage() {
     : null
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen brand-shell">
       {/* Header */}
-      <div className="bg-white border-b px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Novo Formulário de Recebimento</h1>
-              <p className="text-sm text-gray-500">Etapa {currentStep} de {STEPS.length}</p>
+              <h1 className="text-xl font-bold text-white">Novo Formulário de Recebimento</h1>
+              <p className="text-sm text-white/68">Etapa {currentStep} de {STEPS.length}</p>
             </div>
-            <Badge variant="outline" className="text-xs font-mono">
+            <Badge variant="outline" className="border-brand-gold/45 bg-white/8 text-xs font-mono text-white">
               {formData.formNumber}
             </Badge>
           </div>
@@ -435,7 +435,7 @@ export default function NovoFormularioPage() {
                   className={cn(
                     'w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-all text-left',
                     isActive
-                      ? 'bg-blue-600 text-white font-semibold shadow-sm'
+                      ? 'bg-brand-green text-white font-semibold shadow-[0_16px_38px_-24px_rgba(22,65,58,0.8)]'
                       : isDone
                         ? 'bg-green-50 text-green-700 hover:bg-green-100 cursor-pointer'
                         : 'text-gray-400 cursor-default'
@@ -443,7 +443,7 @@ export default function NovoFormularioPage() {
                 >
                   <div className={cn(
                     'w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold',
-                    isActive ? 'bg-white text-blue-600' : isDone ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-400'
+                    isActive ? 'bg-brand-gold text-white' : isDone ? 'bg-brand-green text-white' : 'bg-gray-200 text-gray-400'
                   )}>
                     {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : step.id}
                   </div>
@@ -456,7 +456,7 @@ export default function NovoFormularioPage() {
 
         {/* Main content */}
         <div className="flex-1 min-w-0">
-          <div className="bg-white rounded-xl shadow-sm border p-6 mb-4">
+          <div className="brand-card motion-enter rounded-xl p-6 mb-4">
 
             {/* STEP 1 - Identificação */}
             {currentStep === 1 && (
@@ -589,7 +589,7 @@ export default function NovoFormularioPage() {
 
                   <div className="rounded-lg border overflow-hidden">
                     <table className="w-full text-sm">
-                      <thead className="bg-gray-50 border-b">
+                      <thead className="bg-brand-cream border-b border-brand-gold/20">
                         <tr>
                           <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Código *</th>
                           <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Descrição</th>
@@ -775,7 +775,7 @@ export default function NovoFormularioPage() {
                         <Input
                           value={temp.unit}
                           readOnly
-                          className="h-8 text-xs bg-gray-50"
+                          className="h-8 text-xs bg-brand-cream"
                         />
                       </div>
 
@@ -1068,7 +1068,7 @@ export default function NovoFormularioPage() {
 function SectionTitle({ icon, title }: { icon: React.ReactNode; title: string }) {
   return (
     <div className="flex items-center gap-2 mb-1">
-      <span className="text-blue-600">{icon}</span>
+      <span className="text-brand-gold">{icon}</span>
       <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
     </div>
   )
@@ -1096,9 +1096,9 @@ function FormField({
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-gray-50 rounded-lg px-4 py-3">
-      <p className="text-xs text-gray-500 mb-0.5">{label}</p>
-      <p className="text-sm font-medium text-gray-900 truncate">{value}</p>
+    <div className="brand-subtle rounded-lg px-4 py-3">
+      <p className="text-xs text-brand-green/58 mb-0.5">{label}</p>
+      <p className="text-sm font-semibold text-brand-green truncate">{value}</p>
     </div>
   )
 }

@@ -159,7 +159,7 @@ export function EmailSendModal({ open, onOpenChange, receipt, onSent }: EmailSen
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Mail className="w-5 h-5 text-blue-600" />
+            <Mail className="w-5 h-5 text-brand-gold" />
             Enviar Relatório por E-mail
           </DialogTitle>
         </DialogHeader>
@@ -195,8 +195,8 @@ export function EmailSendModal({ open, onOpenChange, receipt, onSent }: EmailSen
                   onClick={() => toggleList(list.id)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                     selectedListIds.includes(list.id)
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'
+                      ? 'bg-brand-green text-white border-brand-green shadow-[0_12px_28px_-22px_rgba(22,65,58,0.75)]'
+                      : 'bg-white text-brand-green border-brand-green/14 hover:border-brand-gold/55 hover:bg-brand-cream'
                   }`}
                 >
                   {list.name} ({list.recipients.length})
@@ -267,7 +267,7 @@ export function EmailSendModal({ open, onOpenChange, receipt, onSent }: EmailSen
           </div>
 
           {receipt.pdfUrl && (
-            <p className="text-xs text-gray-500 bg-gray-50 rounded p-2">
+            <p className="brand-subtle text-xs text-brand-green/70 rounded p-2">
               📎 PDF do relatório será anexado automaticamente
             </p>
           )}

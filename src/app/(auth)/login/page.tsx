@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, ShieldCheck } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
 const loginSchema = z.object({
@@ -24,6 +25,7 @@ type LoginForm = z.infer<typeof loginSchema>
 export default function LoginPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [isEntering, setIsEntering] = useState(false)
   const [error, setError] = useState('')
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
@@ -44,26 +46,30 @@ export default function LoginPage() {
       setError('E-mail ou senha incorretos.')
       setIsLoading(false)
     } else {
+      setIsEntering(true)
       toast.success('Login realizado com sucesso!')
-      router.push('/pdfs-salvos')
-      router.refresh()
+      setTimeout(() => {
+        router.push('/pdfs-salvos')
+        router.refresh()
+      }, 360)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+    <div className="brand-shell min-h-screen flex items-center justify-center p-4">
+      <div className={cn('w-full max-w-md transition-all duration-300', isEntering && 'translate-y-1 scale-[0.985] opacity-0')}>
+        <div className="motion-enter text-center mb-8">
+          <div className="brand-icon inline-flex items-center justify-center w-16 h-16 rounded-full mb-4">
             <ShieldCheck className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Controle da Qualidade</h1>
-          <p className="text-gray-500 mt-1">Recebimento de Veículos</p>
+          <p className="text-xs font-bold uppercase tracking-[0.34em] text-brand-gold">Grupo Pluma</p>
+          <h1 className="text-3xl font-black text-brand-green">Controle da Qualidade</h1>
+          <p className="text-brand-green/62 mt-1">Recebimento de Veículos</p>
         </div>
 
-        <Card>
+        <Card className="motion-enter-delay border-brand-green/12 bg-white/94 shadow-[var(--shadow-brand-deep)]">
           <CardHeader>
-            <CardTitle>Acesso ao Sistema</CardTitle>
+            <CardTitle className="text-brand-green">Acesso ao Sistema</CardTitle>
             <CardDescription>
               Informe suas credenciais para continuar
             </CardDescription>
@@ -116,8 +122,8 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            <div className="mt-6 p-4 bg-gray-50 rounded-md text-xs text-gray-500">
-              <p className="font-medium mb-1">Usuários de demonstração:</p>
+            <div className="brand-subtle mt-6 p-4 rounded-md text-xs text-brand-green/70">
+              <p className="font-bold mb-1 text-brand-green">Usuários de demonstração:</p>
               <p>admin@empresa.com / admin123</p>
               <p>qualidade@empresa.com / qualidade123</p>
               <p>operacao@empresa.com / operacao123</p>

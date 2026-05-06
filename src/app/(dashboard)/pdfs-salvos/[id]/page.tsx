@@ -121,7 +121,7 @@ export default function ReceiptDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen brand-shell flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
       </div>
     )
@@ -129,8 +129,8 @@ export default function ReceiptDetailPage() {
 
   if (notFound || !receipt) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center bg-white rounded-xl border shadow-sm p-12 max-w-sm">
+      <div className="min-h-screen brand-shell flex items-center justify-center">
+        <div className="brand-card motion-enter text-center rounded-xl p-12 max-w-sm">
           <AlertTriangle className="w-14 h-14 text-orange-400 mx-auto mb-4" />
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Formulário não encontrado</h2>
           <p className="text-sm text-gray-500 mb-4">
@@ -148,19 +148,19 @@ export default function ReceiptDetailPage() {
   const ncCount = receipt.nonConformities.length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen brand-shell">
       {/* Header */}
-      <div className="bg-white border-b px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <Button variant="ghost" size="sm" onClick={() => router.back()} className="h-8 w-8 p-0 shrink-0">
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <div className="min-w-0">
-              <h1 className="text-lg font-bold text-gray-900 truncate">
+              <h1 className="text-lg font-bold text-white truncate">
                 Recebimento {receipt.formNumber}
               </h1>
-              <p className="text-xs text-gray-500">{formatDateTime(receipt.receivedAt)}</p>
+              <p className="text-xs text-white/65">{formatDateTime(receipt.receivedAt)}</p>
             </div>
           </div>
 
@@ -225,7 +225,7 @@ export default function ReceiptDetailPage() {
         <Section icon={<Package className="w-4 h-4" />} title={`Produtos (${receipt.products.length})`}>
           <div className="rounded-lg border overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-brand-cream border-b border-brand-gold/20">
                 <tr>
                   <th className="text-left px-3 py-2 text-xs font-medium text-gray-500">Código</th>
                   <th className="text-left px-3 py-2 text-xs font-medium text-gray-500">Descrição</th>
@@ -252,7 +252,7 @@ export default function ReceiptDetailPage() {
           <Section icon={<Thermometer className="w-4 h-4" />} title={`Temperaturas (${receipt.temperatures.length})`}>
             <div className="space-y-2">
               {receipt.temperatures.map((temp, index) => (
-                <div key={temp.id} className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-2.5">
+                <div key={temp.id} className="flex items-center justify-between brand-subtle rounded-lg px-4 py-2.5">
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-gray-400 w-16">{index + 1}. {temp.temperatureType === 'CONGELADO' ? 'Cong.' : 'Resf.'}</span>
                     {temp.productCode && <span className="text-xs font-mono text-gray-700">{temp.productCode}</span>}
@@ -277,7 +277,7 @@ export default function ReceiptDetailPage() {
           <Section icon={<Truck className="w-4 h-4" />} title="Checklist">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[...(receipt.vehicleChecklist || []), ...(receipt.cargoChecklist || [])].map((item, i) => (
-                <div key={i} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2">
+                <div key={i} className="flex items-center justify-between brand-subtle rounded-lg px-3 py-2">
                   <span className="text-xs text-gray-700 truncate flex-1">{item.label}</span>
                   {item.status && (
                     <Badge className={cn('text-xs border ml-2 shrink-0', getStatusColor(item.status))}>
@@ -365,9 +365,9 @@ function Section({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-white rounded-xl border shadow-sm p-5">
+    <div className="brand-card motion-enter rounded-xl p-5">
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-blue-600">{icon}</span>
+        <span className="text-brand-gold">{icon}</span>
         <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
       </div>
       {children}
@@ -377,9 +377,9 @@ function Section({
 
 function InfoField({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="bg-gray-50 rounded-lg px-3 py-2.5">
-      <p className="text-xs text-gray-400 mb-0.5">{label}</p>
-      <p className={cn('text-sm text-gray-800 font-medium truncate', mono && 'font-mono')}>{value || '—'}</p>
+    <div className="brand-subtle rounded-lg px-3 py-2.5">
+      <p className="text-xs text-brand-green/58 mb-0.5">{label}</p>
+      <p className={cn('text-sm text-brand-green font-semibold truncate', mono && 'font-mono')}>{value || '—'}</p>
     </div>
   )
 }

@@ -92,7 +92,7 @@ export function PhotoUpload({
               <img
                 src={photo.previewUrl || photo.fileUrl}
                 alt={photo.fileName}
-                className="w-20 h-20 object-cover rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition"
+                className="w-20 h-20 object-cover rounded-lg border border-brand-green/12 shadow-[0_12px_30px_-24px_rgba(22,65,58,0.7)] cursor-pointer hover:opacity-90 transition"
                 onClick={() => setPreviewPhoto(photo.previewUrl || photo.fileUrl)}
               />
               <button

@@ -19,6 +19,13 @@ const config: Config = {
     },
     extend: {
       colors: {
+        brand: {
+          green: "#16413A",
+          gold: "#BC933F",
+          cream: "#F8F5EB",
+          mist: "#E8ECEC",
+          sage: "#8BA09D",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -43,15 +43,15 @@ export function getStatusLabel(status: string): string {
 
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    CONFORME: 'bg-green-100 text-green-800 border-green-200',
+    CONFORME: 'bg-brand-green/10 text-brand-green border-brand-green/20',
     NAO_CONFORME: 'bg-red-100 text-red-800 border-red-200',
-    APROVADO_RESSALVA: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    APROVADO_RESSALVA: 'bg-brand-gold/16 text-brand-green border-brand-gold/35',
     REPROVADO: 'bg-red-200 text-red-900 border-red-300',
-    AGUARDANDO: 'bg-blue-100 text-blue-800 border-blue-200',
+    AGUARDANDO: 'bg-brand-mist text-brand-green border-brand-sage/40',
     NAO_APLICAVEL: 'bg-gray-100 text-gray-600 border-gray-200',
-    ABERTA: 'bg-orange-100 text-orange-800 border-orange-200',
-    EM_ANALISE: 'bg-blue-100 text-blue-800 border-blue-200',
-    CONCLUIDA: 'bg-green-100 text-green-800 border-green-200',
+    ABERTA: 'bg-brand-gold/16 text-brand-green border-brand-gold/35',
+    EM_ANALISE: 'bg-brand-mist text-brand-green border-brand-sage/40',
+    CONCLUIDA: 'bg-brand-green/10 text-brand-green border-brand-green/20',
   }
   return colors[status] || 'bg-gray-100 text-gray-600 border-gray-200'
 }

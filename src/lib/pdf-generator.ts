@@ -50,11 +50,11 @@ interface ReceiptData {
 
 function getStatusBadgeStyle(status: string): string {
   const styles: Record<string, string> = {
-    CONFORME: 'background:#dcfce7;color:#166534;border:1px solid #86efac',
+    CONFORME: 'background:#e8ecec;color:#16413a;border:1px solid #8ba09d',
     NAO_CONFORME: 'background:#fee2e2;color:#991b1b;border:1px solid #fca5a5',
-    APROVADO_RESSALVA: 'background:#fef9c3;color:#854d0e;border:1px solid #fde047',
+    APROVADO_RESSALVA: 'background:#f1e9d9;color:#16413a;border:1px solid #bc933f',
     REPROVADO: 'background:#fee2e2;color:#7f1d1d;border:1px solid #ef4444',
-    AGUARDANDO: 'background:#dbeafe;color:#1e40af;border:1px solid #93c5fd',
+    AGUARDANDO: 'background:#e8ecec;color:#16413a;border:1px solid #a3b4b1',
     NAO_APLICAVEL: 'background:#f3f4f6;color:#4b5563;border:1px solid #d1d5db',
   }
   return styles[status] || styles.NAO_APLICAVEL
@@ -95,26 +95,26 @@ export function generateReceiptHTML(data: ReceiptData): string {
   <title>Relatório de Recebimento ${data.formNumber}</title>
   <style>
     * { margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact }
-    body { font-family:'Segoe UI',Arial,sans-serif;color:#1f2937;background:#fff;font-size:13px }
-    .header { background:linear-gradient(135deg,#1d4ed8,#2563eb);color:white;padding:24px 32px;display:flex;justify-content:space-between;align-items:center }
+    body { font-family:'Source Sans Pro','Segoe UI',Arial,sans-serif;color:#16413a;background:#f8f5eb;font-size:13px }
+    .header { background:linear-gradient(135deg,#16413a,#2d534d);color:white;padding:24px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:5px solid #bc933f }
     .header-title { font-size:18px;font-weight:700 }
     .header-subtitle { font-size:12px;opacity:0.85;margin-top:4px }
     .header-meta { text-align:right;font-size:11px;opacity:0.85 }
-    .section { margin:0 32px 20px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden }
-    .section-header { background:#f8fafc;padding:12px 16px;font-weight:700;font-size:13px;color:#374151;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;gap:8px }
-    .section-header .dot { width:8px;height:8px;border-radius:50%;background:#2563eb;flex-shrink:0 }
+    .section { margin:0 32px 20px;border:1px solid rgba(22,65,58,0.14);border-radius:8px;overflow:hidden;background:#fff;box-shadow:0 18px 34px -30px rgba(22,65,58,0.55) }
+    .section-header { background:#f8f5eb;padding:12px 16px;font-weight:700;font-size:13px;color:#16413a;border-bottom:1px solid rgba(188,147,63,0.22);display:flex;align-items:center;gap:8px }
+    .section-header .dot { width:8px;height:8px;border-radius:50%;background:#bc933f;flex-shrink:0 }
     .info-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:0 }
     .info-item { padding:10px 16px;border-bottom:1px solid #f3f4f6}
     .info-item:nth-child(3n+1) { border-right:1px solid #f3f4f6 }
     .info-item:nth-child(3n+2) { border-right:1px solid #f3f4f6 }
-    .info-label { font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:#9ca3af;font-weight:600;margin-bottom:2px }
-    .info-value { font-size:13px;color:#1f2937;font-weight:500 }
+    .info-label { font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:#728c88;font-weight:600;margin-bottom:2px }
+    .info-value { font-size:13px;color:#16413a;font-weight:600 }
     table { width:100%;border-collapse:collapse }
-    th { background:#f8fafc;padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;font-weight:600;border-bottom:2px solid #e5e7eb }
+    th { background:#f8f5eb;padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#446660;font-weight:700;border-bottom:2px solid rgba(188,147,63,0.22) }
     .status-badge { padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700 }
     .nc-item { background:#fff5f5;border-left:3px solid #ef4444;padding:10px 14px;margin-bottom:8px;border-radius:0 4px 4px 0 }
     .nc-label { font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#ef4444;font-weight:700;margin-bottom:3px }
-    .footer { background:#f8fafc;border-top:2px solid #e5e7eb;padding:16px 32px;text-align:center;font-size:11px;color:#9ca3af;margin-top:20px }
+    .footer { background:#16413a;border-top:4px solid #bc933f;padding:16px 32px;text-align:center;font-size:11px;color:#fff;margin-top:20px }
     .status-geral { margin:0 32px 20px;padding:16px;border-radius:8px;display:flex;align-items:center;justify-content:space-between }
     .plate-img { width:100px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #e5e7eb }
     .photo-grid { display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px 12px }

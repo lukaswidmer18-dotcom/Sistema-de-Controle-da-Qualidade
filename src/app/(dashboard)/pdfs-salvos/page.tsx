@@ -137,13 +137,13 @@ export default function PdfsSalvosPage() {
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen brand-shell">
       {/* Header */}
-      <div className="bg-white border-b px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">PDFs Salvos</h1>
-            <p className="text-sm text-gray-500">{total} formulário(s) encontrado(s)</p>
+            <h1 className="text-xl font-bold text-white">PDFs Salvos</h1>
+            <p className="text-sm text-white/68">{total} formulário(s) encontrado(s)</p>
           </div>
           <Button
             variant="outline"
@@ -162,7 +162,7 @@ export default function PdfsSalvosPage() {
 
         {/* Filter panel */}
         {showFilters && (
-          <div className="bg-white rounded-xl border shadow-sm p-5 space-y-4">
+          <div className="brand-card motion-enter rounded-xl p-5 space-y-4">
             <h2 className="text-sm font-semibold text-gray-700">Filtros de pesquisa</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-1.5">
@@ -270,7 +270,7 @@ export default function PdfsSalvosPage() {
         )}
 
         {/* Table */}
-        <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+        <div className="brand-card motion-enter-delay rounded-xl overflow-hidden">
           {loading ? (
             <SkeletonRows />
           ) : rows.length === 0 ? (
@@ -282,7 +282,7 @@ export default function PdfsSalvosPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 border-b">
+                <thead className="bg-brand-cream border-b border-brand-gold/20">
                   <tr>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Data</th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Formulário</th>
@@ -296,7 +296,7 @@ export default function PdfsSalvosPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {rows.map(row => (
-                    <tr key={row.id} className="hover:bg-gray-50/50 transition-colors">
+                    <tr key={row.id} className="hover:bg-brand-cream/60 transition-colors">
                       <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
                         {formatDateTime(row.receivedAt)}
                       </td>

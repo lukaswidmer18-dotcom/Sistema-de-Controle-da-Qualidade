@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { cn } from '@/lib/utils'
 
 interface Recipient {
   email: string
@@ -158,13 +159,13 @@ export default function ListasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen brand-shell">
       {/* Header */}
-      <div className="bg-white border-b px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Listas de Transmissão</h1>
-            <p className="text-sm text-gray-500">Gerencie os grupos de destinatários de e-mail</p>
+            <h1 className="text-xl font-bold text-white">Listas de Transmissão</h1>
+            <p className="text-sm text-white/68">Gerencie os grupos de destinatários de e-mail</p>
           </div>
           <Button onClick={openCreate} className="gap-2">
             <Plus className="w-4 h-4" />
@@ -179,7 +180,7 @@ export default function ListasPage() {
             <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
           </div>
         ) : lists.length === 0 ? (
-          <div className="text-center py-16 text-gray-400 bg-white rounded-xl border">
+          <div className="brand-card motion-enter text-center py-16 text-gray-400 rounded-xl">
             <Mail className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="text-sm font-medium">Nenhuma lista criada</p>
             <p className="text-xs mt-1">Clique em "Nova Lista" para começar</p>
@@ -189,11 +190,14 @@ export default function ListasPage() {
             {lists.map(list => (
               <div
                 key={list.id}
-                className="bg-white rounded-xl border shadow-sm p-5 flex items-center justify-between gap-4"
+                className={cn(
+                  'brand-card motion-enter rounded-xl p-5 flex items-center justify-between gap-4',
+                  deleting === list.id && 'opacity-75'
+                )}
               >
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${list.isActive ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                    <Users className={`w-5 h-5 ${list.isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${list.isActive ? 'bg-brand-green/10' : 'bg-gray-100'}`}>
+                    <Users className={`w-5 h-5 ${list.isActive ? 'text-brand-green' : 'text-gray-400'}`} />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
@@ -231,7 +235,10 @@ export default function ListasPage() {
                     size="sm"
                     onClick={() => void handleDelete(list.id)}
                     disabled={deleting === list.id}
-                    className="h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50"
+                    className={cn(
+                      'h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50',
+                      deleting === list.id && 'motion-delete'
+                    )}
                   >
                     {deleting === list.id
                       ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -292,7 +299,7 @@ export default function ListasPage() {
               <p className="text-xs text-gray-400">
                 Um e-mail por linha, ou separados por vírgula/ponto-e-vírgula.
                 {formData.emailsRaw && (
-                  <span className="ml-1 text-blue-500">
+                  <span className="ml-1 text-brand-gold">
                     {parseEmails(formData.emailsRaw).length} e-mail(s) válido(s)
                   </span>
                 )}

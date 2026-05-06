@@ -11,7 +11,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <AuthProvider>
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="brand-shell flex min-h-screen">
         <Sidebar />
         <main className="flex-1 overflow-auto">
           {children}

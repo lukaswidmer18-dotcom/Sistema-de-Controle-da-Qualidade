@@ -52,8 +52,8 @@ const EMPTY_FORM: UserFormData = {
 }
 
 const ROLE_COLORS: Record<UserRole, string> = {
-  ADMIN: 'bg-purple-100 text-purple-800 border-purple-200',
-  QUALIDADE: 'bg-blue-100 text-blue-800 border-blue-200',
+  ADMIN: 'bg-brand-gold/16 text-brand-green border-brand-gold/35',
+  QUALIDADE: 'bg-brand-green/10 text-brand-green border-brand-green/20',
   OPERACAO: 'bg-gray-100 text-gray-700 border-gray-200',
 }
 
@@ -162,8 +162,8 @@ export default function UsuariosPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center bg-white rounded-xl border shadow-sm p-12 max-w-sm">
+      <div className="min-h-screen brand-shell flex items-center justify-center">
+        <div className="brand-card motion-enter text-center rounded-xl p-12 max-w-sm">
           <ShieldAlert className="w-14 h-14 text-red-400 mx-auto mb-4" />
           <h2 className="text-lg font-semibold text-gray-900 mb-2">Acesso Restrito</h2>
           <p className="text-sm text-gray-500">
@@ -175,13 +175,13 @@ export default function UsuariosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen brand-shell">
       {/* Header */}
-      <div className="bg-white border-b px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Gerenciamento de Usuários</h1>
-            <p className="text-sm text-gray-500">{users.length} usuário(s) cadastrado(s)</p>
+            <h1 className="text-xl font-bold text-white">Gerenciamento de Usuários</h1>
+            <p className="text-sm text-white/68">{users.length} usuário(s) cadastrado(s)</p>
           </div>
           <Button onClick={openCreate} className="gap-2">
             <Plus className="w-4 h-4" />
@@ -196,14 +196,14 @@ export default function UsuariosPage() {
             <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
           </div>
         ) : users.length === 0 ? (
-          <div className="text-center py-16 text-gray-400 bg-white rounded-xl border">
+          <div className="brand-card motion-enter text-center py-16 text-gray-400 rounded-xl">
             <User className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="text-sm font-medium">Nenhum usuário cadastrado</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+          <div className="brand-card motion-enter rounded-xl overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-brand-cream border-b border-brand-gold/20">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Usuário</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">E-mail</th>
@@ -214,7 +214,7 @@ export default function UsuariosPage() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {users.map(user => (
-                  <tr key={user.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={user.id} className="hover:bg-brand-cream/60 transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center shrink-0">

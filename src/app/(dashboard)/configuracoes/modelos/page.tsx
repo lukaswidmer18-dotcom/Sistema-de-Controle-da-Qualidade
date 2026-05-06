@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { cn } from '@/lib/utils'
 
 interface EmailTemplate {
   id: string
@@ -176,13 +177,13 @@ export default function ModelosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen brand-shell">
       {/* Header */}
-      <div className="bg-white border-b px-6 py-4 sticky top-0 z-10 shadow-sm">
+      <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-gray-900">Modelos de E-mail</h1>
-            <p className="text-sm text-gray-500">Crie modelos reutilizáveis para envio de relatórios</p>
+            <h1 className="text-xl font-bold text-white">Modelos de E-mail</h1>
+            <p className="text-sm text-white/68">Crie modelos reutilizáveis para envio de relatórios</p>
           </div>
           <Button onClick={openCreate} className="gap-2">
             <Plus className="w-4 h-4" />
@@ -197,7 +198,7 @@ export default function ModelosPage() {
             <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
           </div>
         ) : templates.length === 0 ? (
-          <div className="text-center py-16 text-gray-400 bg-white rounded-xl border">
+          <div className="brand-card motion-enter text-center py-16 text-gray-400 rounded-xl">
             <Mail className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p className="text-sm font-medium">Nenhum modelo criado</p>
             <p className="text-xs mt-1">Clique em "Novo Modelo" para começar</p>
@@ -207,11 +208,14 @@ export default function ModelosPage() {
             {templates.map(template => (
               <div
                 key={template.id}
-                className="bg-white rounded-xl border shadow-sm p-5 flex items-center justify-between gap-4"
+                className={cn(
+                  'brand-card motion-enter rounded-xl p-5 flex items-center justify-between gap-4',
+                  deleting === template.id && 'opacity-75'
+                )}
               >
                 <div className="flex items-start gap-3 min-w-0">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${template.isActive ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                    <Mail className={`w-5 h-5 ${template.isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${template.isActive ? 'bg-brand-green/10' : 'bg-gray-100'}`}>
+                    <Mail className={`w-5 h-5 ${template.isActive ? 'text-brand-green' : 'text-gray-400'}`} />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
@@ -240,7 +244,10 @@ export default function ModelosPage() {
                     size="sm"
                     onClick={() => void handleDelete(template.id)}
                     disabled={deleting === template.id}
-                    className="h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50"
+                    className={cn(
+                      'h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50',
+                      deleting === template.id && 'motion-delete'
+                    )}
                   >
                     {deleting === template.id
                       ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -305,7 +312,7 @@ export default function ModelosPage() {
                     key={v.key}
                     type="button"
                     onClick={() => insertVariable(v.key)}
-                    className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-mono border border-blue-200 hover:bg-blue-100 transition-colors"
+                    className="px-2.5 py-1 rounded-full bg-brand-cream text-brand-green text-xs font-mono border border-brand-gold/25 hover:border-brand-gold/55 hover:bg-brand-gold/10 transition-colors"
                   >
                     {v.label}
                   </button>
