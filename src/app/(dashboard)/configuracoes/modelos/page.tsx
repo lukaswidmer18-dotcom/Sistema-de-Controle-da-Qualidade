@@ -183,7 +183,7 @@ export default function ModelosPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-white">Modelos de E-mail</h1>
-            <p className="text-sm text-white/68">Crie modelos reutilizáveis para envio de relatórios</p>
+            <p className="text-sm text-white/65">Crie modelos reutilizáveis para envio de relatórios</p>
           </div>
           <Button onClick={openCreate} className="gap-2">
             <Plus className="w-4 h-4" />

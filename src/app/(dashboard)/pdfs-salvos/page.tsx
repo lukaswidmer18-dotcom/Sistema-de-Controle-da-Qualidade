@@ -143,7 +143,7 @@ export default function PdfsSalvosPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-white">PDFs Salvos</h1>
-            <p className="text-sm text-white/68">{total} formulário(s) encontrado(s)</p>
+            <p className="text-sm text-white/65">{total} formulário(s) encontrado(s)</p>
           </div>
           <Button
             variant="outline"

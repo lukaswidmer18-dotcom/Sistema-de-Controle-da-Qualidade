@@ -165,7 +165,7 @@ export default function ListasPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-white">Listas de Transmissão</h1>
-            <p className="text-sm text-white/68">Gerencie os grupos de destinatários de e-mail</p>
+            <p className="text-sm text-white/65">Gerencie os grupos de destinatários de e-mail</p>
           </div>
           <Button onClick={openCreate} className="gap-2">
             <Plus className="w-4 h-4" />

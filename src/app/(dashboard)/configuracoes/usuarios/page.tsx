@@ -181,7 +181,7 @@ export default function UsuariosPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-white">Gerenciamento de Usuários</h1>
-            <p className="text-sm text-white/68">{users.length} usuário(s) cadastrado(s)</p>
+            <p className="text-sm text-white/65">{users.length} usuário(s) cadastrado(s)</p>
           </div>
           <Button onClick={openCreate} className="gap-2">
             <Plus className="w-4 h-4" />

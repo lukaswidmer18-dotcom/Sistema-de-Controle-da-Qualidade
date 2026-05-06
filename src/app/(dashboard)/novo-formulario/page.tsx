@@ -404,7 +404,7 @@ export default function NovoFormularioPage() {
           <div className="flex items-center justify-between mb-3">
             <div>
               <h1 className="text-xl font-bold text-white">Novo Formulário de Recebimento</h1>
-              <p className="text-sm text-white/68">Etapa {currentStep} de {STEPS.length}</p>
+              <p className="text-sm text-white/65">Etapa {currentStep} de {STEPS.length}</p>
             </div>
             <Badge variant="outline" className="border-brand-gold/45 bg-white/8 text-xs font-mono text-white">
               {formData.formNumber}

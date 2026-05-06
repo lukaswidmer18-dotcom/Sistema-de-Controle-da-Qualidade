@@ -1,4 +1,5 @@
 import { formatDateTime, getStatusLabel } from './utils'
+import { logoBelloBase64 } from './logo-bello-base64'
 
 interface ReceiptData {
   formNumber: string
@@ -126,9 +127,12 @@ export function generateReceiptHTML(data: ReceiptData): string {
 
 <!-- Header -->
 <div class="header">
-  <div>
-    <div class="header-title">Monitoramento de Recebimento de Produtos</div>
-    <div class="header-subtitle">Controle da Qualidade — Recebimento de Veículos</div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <img src="data:image/png;base64,${logoBelloBase64}" alt="Bello Alimentos" style="height:48px;background:#fff;padding:6px 12px;border-radius:6px;object-fit:contain" />
+    <div>
+      <div class="header-title">Monitoramento de Recebimento de Produtos</div>
+      <div class="header-subtitle">Controle da Qualidade — Recebimento de Veículos</div>
+    </div>
   </div>
   <div class="header-meta">
     <div style="font-weight:700;font-size:16px">${data.formNumber}</div>
@@ -143,7 +147,6 @@ export function generateReceiptHTML(data: ReceiptData): string {
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;opacity:0.7">Status Geral do Recebimento</div>
       <div style="font-size:20px;font-weight:800;margin-top:2px">${getStatusLabel(data.generalStatus)}</div>
     </div>
-    ${data.platePicture ? `<img src="${getAbsoluteUrl(data.platePicture)}" class="plate-img" alt="Placa" />` : ''}
   </div>
 </div>
 
