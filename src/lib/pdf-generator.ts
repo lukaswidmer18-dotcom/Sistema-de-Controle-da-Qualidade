@@ -74,24 +74,30 @@ export function generateReceiptHTML(data: ReceiptData): string {
   
   const primaryBlue = '#006eb7';
 
-  const checklistRow = (item: typeof vehicleItems[0], index: number, prefix: string) => `
+  const checklistRow = (item: typeof vehicleItems[0], index: number, prefix: string) => {
+    const hasPhotos = item.photos && item.photos.length > 0;
+    
+    return `
     <tr style="${item.isNonConformity ? 'background-color:#fff5f5' : ''}">
-      <td style="padding:12px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#374151;width:30%"><strong>${prefix}.${index + 1}</strong> - ${item.itemLabel}</td>
-      <td style="padding:12px;border-bottom:1px solid #e5e7eb;text-align:center;width:15%">
+      <td style="padding:12px;${!hasPhotos ? 'border-bottom:1px solid #e5e7eb;' : ''}font-size:12px;color:#374151;width:40%"><strong>${prefix}.${index + 1}</strong> - ${item.itemLabel}</td>
+      <td style="padding:12px;${!hasPhotos ? 'border-bottom:1px solid #e5e7eb;' : ''}text-align:center;width:20%">
         <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(item.status || 'NAO_APLICAVEL')}">
           ${getStatusLabel(item.status || 'NAO_APLICAVEL')}
         </span>
       </td>
-      <td style="padding:12px;border-bottom:1px solid #e5e7eb;font-size:11px;color:#6b7280;width:30%">${item.observation || '—'}</td>
-      <td style="padding:12px;border-bottom:1px solid #e5e7eb;width:25%">
-        ${item.photos.length > 0 ? 
-          `<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
-            ${item.photos.map(p => `<img src="${getAbsoluteUrl(p.fileUrl)}" style="width:120px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #d1d5db" alt="foto" />`).join('')}
-          </div>` 
-        : '<span style="color:#9ca3af;font-size:11px;font-style:italic;float:right">Sem fotos</span>'}
+      <td style="padding:12px;${!hasPhotos ? 'border-bottom:1px solid #e5e7eb;' : ''}font-size:11px;color:#6b7280;width:40%">${item.observation || '—'}</td>
+    </tr>
+    ${hasPhotos ? `
+    <tr style="${item.isNonConformity ? 'background-color:#fff5f5' : ''}">
+      <td colspan="3" style="padding:0 12px 16px 12px;border-bottom:1px solid #e5e7eb;">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;">
+          ${item.photos.map(p => `<img src="${getAbsoluteUrl(p.fileUrl)}" class="photo-large" alt="foto" />`).join('')}
+        </div>
       </td>
     </tr>
+    ` : ''}
   `
+  }
 
   return `
 <!DOCTYPE html>
@@ -241,6 +247,13 @@ export function generateReceiptHTML(data: ReceiptData): string {
     <div class="section-text">Condições do Veículo</div>
   </div>
   <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:40%">Item</th>
+        <th style="width:20%;text-align:center">Status</th>
+        <th style="width:40%">Observação</th>
+      </tr>
+    </thead>
     <tbody>
       ${vehicleItems.map((item, index) => checklistRow(item, index, '3')).join('')}
     </tbody>
@@ -252,6 +265,13 @@ export function generateReceiptHTML(data: ReceiptData): string {
     <div class="section-text">Condições da Carga</div>
   </div>
   <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:40%">Item</th>
+        <th style="width:20%;text-align:center">Status</th>
+        <th style="width:40%">Observação</th>
+      </tr>
+    </thead>
     <tbody>
       ${cargoItems.map((item, index) => checklistRow(item, index, '4')).join('')}
     </tbody>
@@ -271,25 +291,28 @@ export function generateReceiptHTML(data: ReceiptData): string {
         <th>Tipo</th>
         <th style="text-align:center">Temperatura</th>
         <th style="text-align:center">Status</th>
-        <th style="text-align:right">Foto</th>
       </tr>
     </thead>
     <tbody>
       ${data.temperatures.map(t => `
         <tr style="${t.status === 'NAO_CONFORME' ? 'background-color:#fff5f5' : ''}">
-          <td style="font-weight:500">${t.productName || t.productCode || '—'}</td>
-          <td>${t.lot || '—'}</td>
-          <td><span style="font-size:10px;background:#e2e8f0;padding:2px 6px;border-radius:4px;font-weight:600">${t.temperatureType === 'RESFRIADO' ? 'Resfriado' : 'Congelado'}</span></td>
-          <td style="text-align:center;font-weight:800;font-size:14px;color:${primaryBlue}">${t.temperature !== null && t.temperature !== undefined ? `${t.temperature}${t.unit}` : '—'}</td>
-          <td style="text-align:center">
+          <td style="font-weight:500;${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">${t.productName || t.productCode || '—'}</td>
+          <td style="${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">${t.lot || '—'}</td>
+          <td style="${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}"><span style="font-size:10px;background:#e2e8f0;padding:2px 6px;border-radius:4px;font-weight:600">${t.temperatureType === 'RESFRIADO' ? 'Resfriado' : 'Congelado'}</span></td>
+          <td style="text-align:center;font-weight:800;font-size:14px;color:${primaryBlue};${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">${t.temperature !== null && t.temperature !== undefined ? `${t.temperature}${t.unit}` : '—'}</td>
+          <td style="text-align:center;${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">
             <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(t.status || 'NAO_APLICAVEL')}">
               ${getStatusLabel(t.status || 'NAO_APLICAVEL')}
             </span>
           </td>
-          <td style="text-align:right">
-            ${t.photoUrl ? `<img src="${getAbsoluteUrl(t.photoUrl)}" style="width:120px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #d1d5db" alt="foto" />` : '<span style="color:#9ca3af;font-size:11px;font-style:italic">Sem foto</span>'}
+        </tr>
+        ${t.photoUrl ? `
+        <tr style="${t.status === 'NAO_CONFORME' ? 'background-color:#fff5f5' : ''}">
+          <td colspan="5" style="padding:0 12px 16px 12px;border-bottom:1px solid #f1f5f9;">
+            <img src="${getAbsoluteUrl(t.photoUrl)}" class="photo-large" alt="foto" />
           </td>
         </tr>
+        ` : ''}
       `).join('')}
     </tbody>
   </table>
@@ -302,21 +325,34 @@ export function generateReceiptHTML(data: ReceiptData): string {
     <div class="section-text" style="color:#b91c1c">Registro de Não Conformidades</div>
   </div>
   <table class="data-table" style="border:1px solid #fca5a5">
+    <thead>
+      <tr>
+        <th style="width:15%">ID</th>
+        <th style="width:25%">Seção</th>
+        <th style="width:40%">Descrição</th>
+        <th style="width:20%;text-align:center">Status</th>
+      </tr>
+    </thead>
     <tbody>
       ${data.nonConformities.map((nc, index) => `
         <tr style="background-color:#fff5f5">
-          <td style="width:10%;vertical-align:top;font-weight:800;color:#dc2626">NC 6.${index + 1}</td>
-          <td style="width:20%;vertical-align:top;font-size:11px;color:#7f1d1d;font-weight:600;text-transform:uppercase">${nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}</td>
-          <td style="width:30%;vertical-align:top;color:#450a0a">${nc.description || 'Sem descrição detalhada'}</td>
-          <td style="width:15%;vertical-align:top;text-align:center">
+          <td style="vertical-align:top;font-weight:800;color:#dc2626;${!nc.photoUrl ? 'border-bottom:1px solid #fca5a5;' : 'border-bottom:none;'}">NC 6.${index + 1}</td>
+          <td style="vertical-align:top;font-size:11px;color:#7f1d1d;font-weight:600;text-transform:uppercase;${!nc.photoUrl ? 'border-bottom:1px solid #fca5a5;' : 'border-bottom:none;'}">${nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}</td>
+          <td style="vertical-align:top;color:#450a0a;${!nc.photoUrl ? 'border-bottom:1px solid #fca5a5;' : 'border-bottom:none;'}">${nc.description || 'Sem descrição detalhada'}</td>
+          <td style="vertical-align:top;text-align:center;${!nc.photoUrl ? 'border-bottom:1px solid #fca5a5;' : 'border-bottom:none;'}">
             <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(nc.status)}">
               ${getStatusLabel(nc.status)}
             </span>
           </td>
-          <td style="width:25%;vertical-align:top;text-align:right">
-             ${nc.photoUrl ? `<img src="${getAbsoluteUrl(nc.photoUrl)}" style="width:160px;height:120px;object-fit:cover;border-radius:6px;border:1px solid #fca5a5" alt="evidência" />` : ''}
-          </td>
         </tr>
+        ${nc.photoUrl ? `
+        <tr style="background-color:#fff5f5">
+           <td colspan="4" style="padding:0 12px 16px 12px;border-bottom:1px solid #fca5a5;">
+              <div style="font-weight:600;font-size:11px;color:#991b1b;margin-bottom:6px">Evidência Fotográfica:</div>
+              <img src="${getAbsoluteUrl(nc.photoUrl)}" class="photo-large" alt="evidência" />
+           </td>
+        </tr>
+        ` : ''}
       `).join('')}
     </tbody>
   </table>
