@@ -152,8 +152,10 @@ export function generateReceiptHTML(data: ReceiptData): string {
     .photo-large { width:100%;max-width:300px;height:auto;border-radius:8px;border:1px solid #e5e7eb;margin-top:12px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1); }
     
     /* Footer */
-    .footer { background-color:${primaryBlue};color:#ffffff;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:auto;border-top:4px solid #005a96; }
-    .footer-right { text-align:right;opacity:0.9;line-height:1.6; }
+    .footer { padding:24px 40px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:auto;border-top:1px solid #e5e7eb;background-color:#ffffff;color:#6b7280; }
+    .footer-left { display:flex;flex-direction:column;gap:6px; }
+    .footer-right { text-align:right;line-height:1.6; }
+    .footer strong { color:${primaryBlue};font-weight:700;font-size:11px; }
     
     @media print { .page-break { page-break-before: always } }
   </style>
@@ -373,13 +375,13 @@ export function generateReceiptHTML(data: ReceiptData): string {
 
 <!-- Footer -->
 <div class="footer">
-  <div>
-    <img src="data:image/png;base64,${logoBelloBase64}" style="height:24px;filter:brightness(0) invert(1);opacity:0.9" alt="Bello Alimentos" />
+  <div class="footer-left">
+    <img src="data:image/png;base64,${logoBelloBase64}" style="height:24px;margin-bottom:2px" alt="Bello Alimentos" />
+    <span>Documento gerado eletronicamente em ${formatDateTime(new Date())}</span>
   </div>
   <div class="footer-right">
     <strong>Sistema de Controle da Qualidade</strong><br/>
-    Formulário ID: ${data.formNumber} &nbsp;|&nbsp; Recebimento de Veículos<br/>
-    <span style="opacity:0.7">Documento gerado eletronicamente em ${formatDateTime(new Date())}</span>
+    Formulário ID: ${data.formNumber} &nbsp;|&nbsp; Recebimento de Veículos
   </div>
 </div>
 
