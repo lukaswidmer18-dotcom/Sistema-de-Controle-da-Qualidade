@@ -14,8 +14,7 @@ import {
   LogOut,
   ShieldCheck,
   ChevronRight,
-  PanelLeftClose,
-  PanelLeftOpen,
+  Menu,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
