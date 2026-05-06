@@ -39,6 +39,7 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   })
+  const loadingProgress = Math.min(100, Math.round(((loadingStep + 1) / LOADING_STEPS.length) * 100))
 
   useEffect(() => {
     if (isEntering) {
@@ -80,73 +81,76 @@ export default function LoginPage() {
       <div className="brand-blob-3" aria-hidden="true" />
       <div className="brand-mesh" aria-hidden="true" />
 
-      {/* Loading Overlay Premium */}
       {isEntering && (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0d2b26]/95 backdrop-blur-3xl animate-in fade-in duration-700 overflow-hidden">
-          {/* Luzes de fundo dinâmicas */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-gold/10 blur-[120px] rounded-full animate-pulse" />
-          
-          <div className="relative z-10 flex flex-col items-center gap-12 w-full max-w-lg px-6">
-            <div className="relative">
-              {/* Escudo Central Maior */}
-              <div className="relative w-48 h-48 rounded-full brand-icon-gold flex items-center justify-center border-4 border-white/20 shadow-[0_0_100px_-10px_rgba(188,147,63,0.5)] animate-shield-pulse overflow-hidden">
-                <ShieldCheck className="w-24 h-24 text-white drop-shadow-2xl" />
-                
-                {/* Scanner Line mais visível */}
-                <div className="absolute left-0 right-0 h-1.5 bg-white/80 shadow-[0_0_25px_4px_rgba(255,255,255,0.9)] z-10 animate-quality-scan" />
-              </div>
-              
-              {/* Anéis orbitais */}
-              <div className="absolute -inset-6 border-2 border-brand-gold/20 rounded-full border-dashed animate-[spin_10s_linear_infinite]" />
-              <div className="absolute -inset-12 border border-white/5 rounded-full border-dashed animate-[spin_15s_linear_infinite_reverse]" />
-            </div>
+        <div className="login-entry-overlay fixed inset-0 z-[100] flex items-center justify-center overflow-hidden px-4">
+          <div className="login-entry-glow" aria-hidden="true" />
 
-            <div className="text-center space-y-8 w-full">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-black text-white tracking-tight uppercase">
-                  Inspecionando Acesso
+          <div className="login-verification-panel relative z-10 w-full max-w-md rounded-lg p-6 sm:p-7">
+            <div className="flex items-start gap-4">
+              <div className="login-verification-emblem flex h-16 w-16 shrink-0 items-center justify-center rounded-full">
+                <ShieldCheck className="login-verification-icon h-8 w-8 text-white" />
+              </div>
+              <div className="min-w-0 pt-1">
+                <p className="text-xs font-black uppercase tracking-[0.32em] text-brand-gold">
+                  Grupo Pluma
+                </p>
+                <h2 className="mt-1 text-2xl font-black tracking-tight text-white">
+                  Validando acesso
                 </h2>
-                <div className="h-1 w-24 bg-brand-gold mx-auto rounded-full opacity-50" />
+                <p className="mt-1 text-sm font-medium text-white/[0.58]" aria-live="polite">
+                  {LOADING_STEPS[loadingStep]}
+                </p>
               </div>
-              
-              <div className="flex flex-col items-center gap-6">
-                <div className="flex items-center gap-4 bg-white/5 py-3 px-6 rounded-2xl border border-white/10 backdrop-blur-md w-full max-w-sm">
-                  <div className="relative flex items-center justify-center">
-                    <Loader2 className="w-5 h-5 text-brand-gold animate-spin" />
-                    <div className="absolute inset-0 bg-brand-gold/20 blur-md rounded-full animate-pulse" />
+            </div>
+
+            <div className="mt-7 space-y-2">
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.16em] text-white/[0.42]">
+                <span>Progresso</span>
+                <span>{loadingProgress}%</span>
+              </div>
+              <div className="login-progress-track h-2 overflow-hidden rounded-full">
+                <div
+                  className="login-progress-bar h-full rounded-full"
+                  style={{ transform: `scaleX(${loadingProgress / 100})` }}
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-2.5">
+              {LOADING_STEPS.map((step, idx) => {
+                const complete = idx < loadingStep
+                const active = idx === loadingStep
+
+                return (
+                  <div
+                    key={step}
+                    className="login-step-row flex items-center gap-3 rounded-md px-3 py-2"
+                    data-active={active}
+                    data-complete={complete}
+                    style={{ animationDelay: `${idx * 90}ms` }}
+                  >
+                    <span className="login-step-marker flex h-7 w-7 shrink-0 items-center justify-center rounded-full">
+                      {complete ? (
+                        <CheckCircle2 className="h-4 w-4" />
+                      ) : (
+                        <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                      )}
+                    </span>
+                    <span className="min-w-0 text-sm font-semibold">{step}</span>
                   </div>
-                  <p className="text-base font-bold text-white/90 animate-status-fade tracking-wide">
-                    {LOADING_STEPS[loadingStep]}
-                  </p>
-                </div>
-
-                <div className="flex justify-center gap-2">
-                  {LOADING_STEPS.map((_, idx) => (
-                    <div 
-                      key={idx} 
-                      className={cn(
-                        "h-1.5 rounded-full transition-all duration-700",
-                        idx <= loadingStep ? "w-10 bg-brand-gold shadow-[0_0_10px_rgba(188,147,63,0.5)]" : "w-3 bg-white/10"
-                      )} 
-                    />
-                  ))}
-                </div>
-              </div>
+                )
+              })}
             </div>
-          </div>
 
-          {/* Rodapé fixado no fundo real */}
-          <div className="absolute bottom-12 flex flex-col items-center gap-3">
-            <div className="flex items-center gap-2 text-white/40 text-xs font-black uppercase tracking-[0.3em]">
-              <CheckCircle2 className="w-4 h-4 text-brand-gold" />
-              Padrão de Qualidade Grupo Pluma
+            <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-[11px] font-bold uppercase tracking-[0.16em] text-white/[0.36]">
+              <span>Ambiente seguro</span>
+              <span>Bello Alimentos LTDA</span>
             </div>
-            <div className="text-[10px] text-white/20 font-medium">Bello Alimentos LTDA • Ambiente Seguro</div>
           </div>
         </div>
       )}
 
-      <div className={cn('w-full max-w-md transition-all duration-700 relative z-10', isEntering && 'scale-[0.8] opacity-0 blur-3xl')}>
+      <div className={cn('w-full max-w-md transition-all duration-700 relative z-10', isEntering && 'scale-[0.96] opacity-0 blur-sm')}>
         <div className="motion-enter text-center mb-8">
           <div
             className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-5"
