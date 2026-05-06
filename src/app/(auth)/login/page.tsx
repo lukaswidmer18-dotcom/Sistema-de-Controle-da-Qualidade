@@ -82,33 +82,33 @@ export default function LoginPage() {
       <div className="brand-mesh" aria-hidden="true" />
 
       {isEntering && (
-        <div className="login-entry-overlay fixed inset-0 z-[100] flex items-center justify-center overflow-hidden px-4">
+        <div className="login-entry-overlay overflow-hidden">
           <div className="login-entry-glow" aria-hidden="true" />
 
-          <div className="login-verification-panel relative z-10 w-full max-w-md rounded-lg p-6 sm:p-7">
-            <div className="flex items-start gap-4">
-              <div className="login-verification-emblem flex h-16 w-16 shrink-0 items-center justify-center rounded-full">
-                <ShieldCheck className="login-verification-icon h-8 w-8 text-white" />
+          <div className="login-verification-panel relative z-10 w-full max-w-[620px] rounded-xl p-6 sm:p-8 lg:p-10">
+            <div className="flex items-start gap-5 sm:gap-6">
+              <div className="login-verification-emblem flex h-20 w-20 shrink-0 items-center justify-center rounded-full sm:h-24 sm:w-24">
+                <ShieldCheck className="login-verification-icon h-10 w-10 text-white sm:h-12 sm:w-12" />
               </div>
-              <div className="min-w-0 pt-1">
-                <p className="text-xs font-black uppercase tracking-[0.32em] text-brand-gold">
+              <div className="min-w-0 pt-1.5 sm:pt-2">
+                <p className="text-xs font-black uppercase tracking-[0.34em] text-brand-gold sm:text-sm">
                   Grupo Pluma
                 </p>
-                <h2 className="mt-1 text-2xl font-black tracking-tight text-white">
+                <h2 className="mt-1 text-3xl font-black tracking-tight text-white sm:text-4xl">
                   Validando acesso
                 </h2>
-                <p className="mt-1 text-sm font-medium text-white/[0.58]" aria-live="polite">
+                <p className="mt-2 text-base font-semibold text-white/[0.62]" aria-live="polite">
                   {LOADING_STEPS[loadingStep]}
                 </p>
               </div>
             </div>
 
-            <div className="mt-7 space-y-2">
-              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.16em] text-white/[0.42]">
+            <div className="mt-8 space-y-2.5 sm:mt-10">
+              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-[0.18em] text-white/[0.46]">
                 <span>Progresso</span>
                 <span>{loadingProgress}%</span>
               </div>
-              <div className="login-progress-track h-2 overflow-hidden rounded-full">
+              <div className="login-progress-track h-2.5 overflow-hidden rounded-full">
                 <div
                   className="login-progress-bar h-full rounded-full"
                   style={{ transform: `scaleX(${loadingProgress / 100})` }}
@@ -116,7 +116,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="mt-6 space-y-2.5">
+            <div className="mt-7 space-y-3">
               {LOADING_STEPS.map((step, idx) => {
                 const complete = idx < loadingStep
                 const active = idx === loadingStep
@@ -124,25 +124,25 @@ export default function LoginPage() {
                 return (
                   <div
                     key={step}
-                    className="login-step-row flex items-center gap-3 rounded-md px-3 py-2"
+                    className="login-step-row flex items-center gap-4 rounded-lg px-4 py-3"
                     data-active={active}
                     data-complete={complete}
                     style={{ animationDelay: `${idx * 90}ms` }}
                   >
-                    <span className="login-step-marker flex h-7 w-7 shrink-0 items-center justify-center rounded-full">
+                    <span className="login-step-marker flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
                       {complete ? (
-                        <CheckCircle2 className="h-4 w-4" />
+                        <CheckCircle2 className="h-5 w-5" />
                       ) : (
-                        <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                        <span className="h-2 w-2 rounded-full bg-current" />
                       )}
                     </span>
-                    <span className="min-w-0 text-sm font-semibold">{step}</span>
+                    <span className="min-w-0 text-base font-semibold">{step}</span>
                   </div>
                 )
               })}
             </div>
 
-            <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-[11px] font-bold uppercase tracking-[0.16em] text-white/[0.36]">
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-xs font-bold uppercase tracking-[0.18em] text-white/[0.38]">
               <span>Ambiente seguro</span>
               <span>Bello Alimentos LTDA</span>
             </div>

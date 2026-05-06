@@ -239,6 +239,15 @@
     display: none;
   }
   .login-entry-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100vw;
+    padding: clamp(24px, 4vw, 64px);
     background:
       radial-gradient(circle 520px at 50% 38%, rgba(188, 147, 63, 0.16) 0%, transparent 64%),
       radial-gradient(circle 720px at 14% 18%, rgba(35, 96, 84, 0.42) 0%, transparent 68%),
@@ -249,11 +258,11 @@
 
   .login-entry-glow {
     position: absolute;
-    inset: 12%;
+    inset: 8%;
     background:
-      radial-gradient(circle at 48% 42%, rgba(219, 176, 82, 0.24) 0%, transparent 42%),
-      radial-gradient(circle at 62% 68%, rgba(70, 142, 126, 0.22) 0%, transparent 52%);
-    filter: blur(54px);
+      radial-gradient(circle at 48% 42%, rgba(219, 176, 82, 0.28) 0%, transparent 42%),
+      radial-gradient(circle at 62% 68%, rgba(70, 142, 126, 0.26) 0%, transparent 52%);
+    filter: blur(64px);
     pointer-events: none;
     animation: login-glow-drift 3.2s ease-in-out infinite;
   }
@@ -264,7 +273,7 @@
       linear-gradient(165deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.085) 52%, rgba(188, 147, 63, 0.10) 100%);
     border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow:
-      0 34px 98px -34px rgba(0, 0, 0, 0.74),
+      0 42px 118px -38px rgba(0, 0, 0, 0.78),
       0 0 0 1px rgba(188, 147, 63, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.20);
     backdrop-filter: blur(26px) saturate(170%);
