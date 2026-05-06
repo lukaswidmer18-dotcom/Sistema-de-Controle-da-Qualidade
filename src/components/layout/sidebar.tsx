@@ -88,8 +88,8 @@ export function Sidebar() {
     )}>
       {/* Logo Area */}
       <div className={cn(
-        "p-6 border-b border-white/10 flex items-center justify-between transition-all",
-        isCollapsed ? "px-4" : "p-6"
+        "p-6 border-b border-white/10 flex items-center transition-all",
+        isCollapsed ? "justify-center px-4" : "justify-between p-6"
       )}>
         <div className="flex items-center gap-3 overflow-hidden">
           <div className="w-9 h-9 brand-icon-gold rounded-lg flex items-center justify-center flex-shrink-0">
@@ -102,14 +102,6 @@ export function Sidebar() {
             </div>
           )}
         </div>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={toggleCollapse}
-          className="text-white/40 hover:text-white hover:bg-white/10 hidden sm:flex"
-        >
-          {isCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
-        </Button>
       </div>
 
       {/* Main navigation */}
@@ -181,11 +173,28 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* User info */}
-      <div className="p-3 border-t border-white/10">
+      {/* User info & Collapse Toggle at bottom */}
+      <div className="p-3 border-t border-white/10 space-y-2">
+        <Button 
+          variant="ghost" 
+          size={isCollapsed ? "icon" : "sm"}
+          onClick={toggleCollapse}
+          className={cn(
+            "w-full text-white/40 hover:text-white hover:bg-white/10 hidden sm:flex",
+            isCollapsed ? "justify-center" : "justify-start px-3"
+          )}
+        >
+          {isCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : (
+            <>
+              <PanelLeftClose className="w-5 h-5 mr-2" />
+              <span className="text-sm font-medium">Recolher menu</span>
+            </>
+          )}
+        </Button>
+
         {session?.user && (
           <div className={cn(
-            "flex items-center gap-3 mb-3",
+            "flex items-center gap-3 py-2",
             isCollapsed && "justify-center"
           )}>
             <div className="w-8 h-8 bg-white/12 rounded-full flex items-center justify-center flex-shrink-0 ring-1 ring-white/12">
@@ -203,6 +212,7 @@ export function Sidebar() {
             )}
           </div>
         )}
+        
         <Button
           variant="ghost"
           size={isCollapsed ? "icon" : "sm"}
