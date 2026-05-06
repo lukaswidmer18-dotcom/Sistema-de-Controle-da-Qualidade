@@ -46,7 +46,7 @@ const receiptSchema = z.object({
   formNumber: z.string().optional(),
   receivedAt: z.string(),
   evaluatorName: z.string().min(1),
-  unit: z.string().min(1),
+  unit: z.string().optional().default('N/A'),
   operationResponsible: z.string().min(1),
   qualityResponsible: z.string().min(1),
   receivingOrder: z.string().min(1),

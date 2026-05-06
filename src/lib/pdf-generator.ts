@@ -181,10 +181,6 @@ export function generateReceiptHTML(data: ReceiptData): string {
         <td class="meta-label">AVALIADOR</td>
         <td class="meta-value">${data.evaluatorName}</td>
       </tr>
-      <tr>
-        <td class="meta-label">UNIDADE</td>
-        <td class="meta-value">${data.unit}</td>
-      </tr>
     </table>
     
     <div class="status-highlight" style="${getStatusBadgeStyle(data.generalStatus)}">
@@ -203,16 +199,17 @@ export function generateReceiptHTML(data: ReceiptData): string {
   <table class="kv-table">
     <tr><td class="kv-key">1.1 - Número do Formulário</td><td class="kv-value">${data.formNumber}</td></tr>
     <tr><td class="kv-key">1.2 - Data e hora de recebimento</td><td class="kv-value">${formatDateTime(data.receivedAt)}</td></tr>
-    <tr><td class="kv-key">1.3 - Responsável da operação</td><td class="kv-value">${data.operationResponsible}</td></tr>
-    <tr><td class="kv-key">1.4 - Responsável da qualidade</td><td class="kv-value">${data.qualityResponsible}</td></tr>
-    <tr><td class="kv-key">1.5 - Ordem de recebimento</td><td class="kv-value">${data.receivingOrder}</td></tr>
-    <tr><td class="kv-key">1.6 - Nota Fiscal</td><td class="kv-value">${data.invoiceNumber}</td></tr>
-    <tr><td class="kv-key">1.7 - Tipo de Veículo</td><td class="kv-value">${data.vehicleType}</td></tr>
+    <tr><td class="kv-key">1.3 - Avaliador</td><td class="kv-value">${data.evaluatorName}</td></tr>
+    <tr><td class="kv-key">1.4 - Responsável da operação</td><td class="kv-value">${data.operationResponsible}</td></tr>
+    <tr><td class="kv-key">1.5 - Responsável da qualidade</td><td class="kv-value">${data.qualityResponsible}</td></tr>
+    <tr><td class="kv-key">1.6 - Ordem de recebimento</td><td class="kv-value">${data.receivingOrder}</td></tr>
+    <tr><td class="kv-key">1.7 - Nota Fiscal</td><td class="kv-value">${data.invoiceNumber}</td></tr>
+    <tr><td class="kv-key">1.8 - Placas</td><td class="kv-value">${data.vehicleType}</td></tr>
     <tr>
-      <td class="kv-key">1.8 - Placa da Carreta</td>
+      <td class="kv-key">1.9 - Placa - Carreta</td>
       <td class="kv-value">
         <div style="font-weight:800;font-size:14px;color:${primaryBlue};text-transform:uppercase;letter-spacing:1px">${data.trailerPlate}</div>
-        ${data.platePicture ? `<img src="${getAbsoluteUrl(data.platePicture)}" class="photo-large" alt="Placa da Carreta" />` : ''}
+        ${data.platePicture ? `<img src="${getAbsoluteUrl(data.platePicture)}" class="photo-large" alt="Placa - Carreta" />` : ''}
       </td>
     </tr>
   </table>

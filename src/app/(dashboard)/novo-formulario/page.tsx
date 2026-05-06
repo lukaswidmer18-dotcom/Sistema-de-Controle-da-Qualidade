@@ -196,9 +196,8 @@ export default function NovoFormularioPage() {
 
     if (step === 1) {
       if (!formData.receivedAt) errors.push('Data/hora de recebimento é obrigatória')
-      if (!formData.evaluatorName) errors.push('Nome do avaliador é obrigatório')
-      if (!formData.unit) errors.push('Unidade é obrigatória')
-      if (!formData.operationResponsible) errors.push('Responsável pela operação é obrigatório')
+      if (!formData.evaluatorName) errors.push('Avaliador é obrigatório')
+      if (!formData.operationResponsible) errors.push('Responsável da operação é obrigatório')
       if (!formData.qualityResponsible) errors.push('Responsável pela qualidade é obrigatório')
       if (!formData.receivingOrder) errors.push('Ordem de recebimento é obrigatória')
       if (!formData.invoiceNumber) errors.push('Número da nota fiscal é obrigatório')
@@ -481,7 +480,7 @@ export default function NovoFormularioPage() {
                     />
                   </FormField>
 
-                  <FormField label="Data / Hora de Recebimento" required>
+                  <FormField label="Data e hora de recebimento" required>
                     <Input
                       type="datetime-local"
                       value={formData.receivedAt}
@@ -489,7 +488,7 @@ export default function NovoFormularioPage() {
                     />
                   </FormField>
 
-                  <FormField label="Nome do Avaliador" required>
+                  <FormField label="Avaliador" required>
                     <Input
                       value={formData.evaluatorName}
                       onChange={e => updateFormData('evaluatorName', e.target.value)}
@@ -497,15 +496,7 @@ export default function NovoFormularioPage() {
                     />
                   </FormField>
 
-                  <FormField label="Unidade" required>
-                    <Input
-                      value={formData.unit}
-                      onChange={e => updateFormData('unit', e.target.value)}
-                      placeholder="Ex: Filial SP"
-                    />
-                  </FormField>
-
-                  <FormField label="Responsável pela Operação" required>
+                  <FormField label="Responsável da operação" required>
                     <Input
                       value={formData.operationResponsible}
                       onChange={e => updateFormData('operationResponsible', e.target.value)}
@@ -513,7 +504,7 @@ export default function NovoFormularioPage() {
                     />
                   </FormField>
 
-                  <FormField label="Responsável pela Qualidade" required>
+                  <FormField label="Responsável da qualidade" required>
                     <Input
                       value={formData.qualityResponsible}
                       onChange={e => updateFormData('qualityResponsible', e.target.value)}
@@ -521,7 +512,7 @@ export default function NovoFormularioPage() {
                     />
                   </FormField>
 
-                  <FormField label="Ordem de Recebimento" required>
+                  <FormField label="Ordem de recebimento" required>
                     <Input
                       value={formData.receivingOrder}
                       onChange={e => updateFormData('receivingOrder', e.target.value)}
@@ -529,7 +520,7 @@ export default function NovoFormularioPage() {
                     />
                   </FormField>
 
-                  <FormField label="Número da Nota Fiscal" required>
+                  <FormField label="Nota Fiscal" required>
                     <Input
                       value={formData.invoiceNumber}
                       onChange={e => updateFormData('invoiceNumber', e.target.value)}
@@ -537,27 +528,19 @@ export default function NovoFormularioPage() {
                     />
                   </FormField>
 
-                  <FormField label="Tipo de Veículo" required>
-                    <Select
+                  <FormField label="Placas" required>
+                    <Input
                       value={formData.vehicleType}
-                      onValueChange={val => updateFormData('vehicleType', val)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {VEHICLE_TYPES.map(type => (
-                          <SelectItem key={type} value={type}>{type}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      onChange={e => updateFormData('vehicleType', e.target.value.toUpperCase())}
+                      placeholder="Ex: ABC-1234"
+                    />
                   </FormField>
 
-                  <FormField label="Placa do Reboque / Veículo" required>
+                  <FormField label="Placa - Carreta" required>
                     <Input
                       value={formData.trailerPlate}
                       onChange={e => updateFormData('trailerPlate', e.target.value.toUpperCase())}
-                      placeholder="ABC-1234"
+                      placeholder="Ex: XYZ-9876"
                     />
                   </FormField>
                 </div>
