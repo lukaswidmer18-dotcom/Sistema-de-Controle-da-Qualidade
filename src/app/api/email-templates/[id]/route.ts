@@ -1,0 +1,26 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
+
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const session = await auth()
+  if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+
+  const body = await request.json()
+  const { name, subject, body: templateBody, isActive } = body
+
+  const template = await prisma.emailTemplate.update({
+    where: { id: params.id },
+    data: { name, subject, body: templateBody, isActive },
+  })
+
+  return NextResponse.json({ template })
+}
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const session = await auth()
+  if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+
+  await prisma.emailTemplate.delete({ where: { id: params.id } })
+  return NextResponse.json({ success: true })
+}

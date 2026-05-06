@@ -1,0 +1,171 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("OPERACAO") // ADMIN, QUALIDADE, OPERACAO
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  receipts  Receipt[]
+  emailLogs EmailLog[]
+}
+
+model Receipt {
+  id                   String   @id @default(cuid())
+  formNumber           String   @unique
+  receivedAt           DateTime
+  evaluatorName        String
+  unit                 String
+  operationResponsible String
+  qualityResponsible   String
+  receivingOrder       String
+  invoiceNumber        String
+  vehicleType          String
+  trailerPlate         String
+  platePicture         String?
+  generalStatus        String   @default("AGUARDANDO") // CONFORME, NAO_CONFORME, APROVADO_RESSALVA, REPROVADO, AGUARDANDO
+  observations         String?
+  pdfUrl               String?
+  emailSent            Boolean  @default(false)
+  lastEmailSentAt      DateTime?
+  createdBy            String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  creator              User     @relation(fields: [createdBy], references: [id])
+  products             ReceiptProduct[]
+  checklistItems       ChecklistItem[]
+  temperatures         TemperatureMeasurement[]
+  nonConformities      NonConformity[]
+  emailLogs            EmailLog[]
+}
+
+model ReceiptProduct {
+  id                 String  @id @default(cuid())
+  receiptId          String
+  productCode        String
+  productDescription String?
+  lot                String
+  quantity           String?
+  createdAt          DateTime @default(now())
+
+  receipt            Receipt @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+}
+
+model ChecklistItem {
+  id             String   @id @default(cuid())
+  receiptId      String
+  section        String   // VEICULO, CARGA
+  itemKey        String
+  itemLabel      String
+  status         String?  // CONFORME, NAO_CONFORME, NAO_APLICAVEL
+  observation    String?
+  isNonConformity Boolean @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  receipt        Receipt  @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+  photos         ChecklistPhoto[]
+  nonConformity  NonConformity?
+}
+
+model ChecklistPhoto {
+  id              String   @id @default(cuid())
+  receiptId       String
+  checklistItemId String
+  fileUrl         String
+  fileName        String
+  fileType        String
+  createdAt       DateTime @default(now())
+
+  checklistItem   ChecklistItem @relation(fields: [checklistItemId], references: [id], onDelete: Cascade)
+}
+
+model TemperatureMeasurement {
+  id              String   @id @default(cuid())
+  receiptId       String
+  productCode     String?
+  productName     String?
+  lot             String?
+  temperatureType String   // RESFRIADO, CONGELADO
+  temperature     Float?
+  unit            String   @default("°C")
+  status          String?  // CONFORME, NAO_CONFORME, NAO_APLICAVEL
+  observation     String?
+  photoUrl        String?
+  createdAt       DateTime @default(now())
+
+  receipt         Receipt  @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+}
+
+model NonConformity {
+  id              String   @id @default(cuid())
+  receiptId       String
+  checklistItemId String?  @unique
+  section         String
+  description     String?
+  photoUrl        String?
+  status          String   @default("ABERTA") // ABERTA, EM_ANALISE, CONCLUIDA
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  receipt         Receipt      @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+  checklistItem   ChecklistItem? @relation(fields: [checklistItemId], references: [id])
+}
+
+model EmailList {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  recipients  EmailListRecipient[]
+}
+
+model EmailListRecipient {
+  id          String    @id @default(cuid())
+  emailListId String
+  email       String
+  name        String?
+  createdAt   DateTime  @default(now())
+
+  emailList   EmailList @relation(fields: [emailListId], references: [id], onDelete: Cascade)
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  subject   String
+  body      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EmailLog {
+  id           String   @id @default(cuid())
+  receiptId    String
+  sentBy       String
+  recipients   String   // JSON array of emails
+  subject      String
+  body         String
+  status       String   // SENT, FAILED
+  errorMessage String?
+  sentAt       DateTime @default(now())
+
+  receipt      Receipt  @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+  sender       User     @relation(fields: [sentBy], references: [id])
+}
