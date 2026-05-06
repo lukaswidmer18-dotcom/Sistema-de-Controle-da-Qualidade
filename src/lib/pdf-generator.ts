@@ -153,7 +153,7 @@ export function generateReceiptHTML(data: ReceiptData): string {
     
     /* Footer */
     .footer { padding:24px 40px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:auto;border-top:1px solid #e5e7eb;background-color:#ffffff;color:#6b7280; }
-    .footer-left { display:flex;flex-direction:column;gap:6px; }
+    .footer-left { display:flex;flex-direction:column;gap:6px;align-items:flex-start; }
     .footer-right { text-align:right;line-height:1.6; }
     .footer strong { color:${primaryBlue};font-weight:700;font-size:11px; }
     
@@ -373,7 +373,7 @@ export function generateReceiptHTML(data: ReceiptData): string {
 <!-- Footer -->
 <div class="footer">
   <div class="footer-left">
-    <img src="data:image/png;base64,${logoBelloBase64}" style="height:24px;margin-bottom:2px" alt="Bello Alimentos" />
+    <img src="data:image/png;base64,${logoBelloBase64}" style="height:24px;width:auto;object-fit:contain;margin-bottom:2px" alt="Bello Alimentos" />
     <span>Documento gerado eletronicamente em ${formatDateTime(new Date())}</span>
   </div>
   <div class="footer-right">
