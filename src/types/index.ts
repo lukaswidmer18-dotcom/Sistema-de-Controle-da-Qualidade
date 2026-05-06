@@ -86,21 +86,18 @@ export interface ReceiptFormData {
 }
 
 export const VEHICLE_CHECKLIST_ITEMS: ChecklistItemData[] = [
-  { key: 'temperatura_veiculo', label: 'Temperatura do Veículo', section: 'VEICULO' },
-  { key: 'painel_temperatura', label: 'Painel de Temperatura', section: 'VEICULO' },
+  { key: 'temperatura_veiculo', label: 'Temperatura do veículo (adicionar foto do painel)', section: 'VEICULO' },
   { key: 'lacre', label: 'Lacre', section: 'VEICULO' },
-  { key: 'divisoria', label: 'Divisória (quando aplicável)', section: 'VEICULO' },
-  { key: 'higiene_bau', label: 'Higiene e Estrutura do Baú', section: 'VEICULO' },
+  { key: 'divisoria', label: 'Divisória (caso não seja carga mista, colocar N/A)', section: 'VEICULO' },
+  { key: 'higiene_bau', label: 'Higiene e estrutura do baú', section: 'VEICULO' },
   { key: 'termografo', label: 'Termógrafo', section: 'VEICULO' },
 ]
 
 export const CARGO_CHECKLIST_ITEMS: ChecklistItemData[] = [
-  { key: 'estrechamento_pallets', label: 'Estrechamento dos Pallets', section: 'CARGA' },
-  { key: 'condicoes_embalagens', label: 'Condições das Embalagens', section: 'CARGA' },
-  { key: 'liberacao_liquido', label: 'Liberação de Líquido', section: 'CARGA' },
-  { key: 'condicoes_etiquetas', label: 'Condições de Etiquetas', section: 'CARGA' },
-  { key: 'datas_producao', label: 'Datas de Produção', section: 'CARGA' },
-  { key: 'datas_validade', label: 'Datas de Validade', section: 'CARGA' },
+  { key: 'estrechamento_pallets', label: "Estrechamento dos pallets (adicionar fotos se 'não conforme')", section: 'CARGA' },
+  { key: 'condicoes_embalagens', label: "Condições das embalagens (adicionar fotos se 'não conforme')", section: 'CARGA' },
+  { key: 'liberacao_liquido', label: "Liberação de líquido (adicionar fotos se 'não conforme')", section: 'CARGA' },
+  { key: 'condicoes_etiquetas_datas', label: "Condições de etiquetas e datas de produção/validade (adicionar fotos se 'não conforme')", section: 'CARGA' },
 ]
 
 export const VEHICLE_TYPES = [
