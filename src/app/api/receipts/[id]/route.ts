@@ -50,3 +50,20 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
   return NextResponse.json({ receipt })
 }
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const session = await auth()
+  if (!session) {
+    return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+  }
+
+  try {
+    await prisma.receipt.delete({
+      where: { id: params.id },
+    })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Erro ao excluir recibo:', error)
+    return NextResponse.json({ error: 'Erro ao excluir o formulário' }, { status: 500 })
+  }
+}

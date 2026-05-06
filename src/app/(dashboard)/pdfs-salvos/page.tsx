@@ -14,6 +14,7 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
+  Trash2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -26,6 +27,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { EmailSendModal } from '@/components/form/email-send-modal'
 import { getStatusLabel, getStatusColor, formatDateTime } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -90,6 +99,8 @@ export default function PdfsSalvosPage() {
   const [appliedFilters, setAppliedFilters] = useState<Filters>(EMPTY_FILTERS)
   const [showFilters, setShowFilters] = useState(false)
   const [emailModal, setEmailModal] = useState<ReceiptRow | null>(null)
+  const [deleteModal, setDeleteModal] = useState<ReceiptRow | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const fetchData = useCallback(async (currentFilters: Filters, currentPage: number) => {
     setLoading(true)
@@ -132,6 +143,22 @@ export default function PdfsSalvosPage() {
 
   const updateFilter = (key: keyof Filters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }))
+  }
+
+  const handleDelete = async () => {
+    if (!deleteModal) return
+    setIsDeleting(true)
+    try {
+      const res = await fetch(`/api/receipts/${deleteModal.id}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Falha ao excluir formulário')
+      toast.success('Formulário excluído com sucesso')
+      setDeleteModal(null)
+      void fetchData(appliedFilters, page)
+    } catch (error) {
+      toast.error('Erro ao excluir formulário')
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   const totalPages = Math.ceil(total / PAGE_SIZE)
@@ -370,6 +397,15 @@ export default function PdfsSalvosPage() {
                           >
                             <Mail className="w-3.5 h-3.5" />
                           </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                            title="Excluir relatório"
+                            onClick={() => setDeleteModal(row)}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -434,6 +470,35 @@ export default function PdfsSalvosPage() {
           }}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!deleteModal} onOpenChange={open => !open && setDeleteModal(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="text-red-600">Excluir Formulário</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja excluir o formulário <strong>{deleteModal?.formNumber}</strong>? Esta ação não poderá ser desfeita e os dados serão perdidos permanentemente.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4 gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setDeleteModal(null)}
+              disabled={isDeleting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? 'Excluindo...' : 'Sim, excluir'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
