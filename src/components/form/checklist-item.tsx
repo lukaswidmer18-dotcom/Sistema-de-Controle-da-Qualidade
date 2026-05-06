@@ -20,7 +20,7 @@ const statusOptions: { value: ChecklistStatus; label: string; icon: React.Compon
 ]
 
 export function ChecklistItemComponent({ item, onChange, showValidation = false }: ChecklistItemProps) {
-  const alwaysRequirePhoto = item.key === 'temperatura_veiculo' || item.key === 'lacre'
+  const alwaysRequirePhoto = item.key === 'temperatura_veiculo' || item.key === 'lacre' || item.key === 'termografo'
   const isNonConforming = item.status === 'NAO_CONFORME'
   const isNotApplicable = item.status === 'NAO_APLICAVEL'
   const needsObservation = (isNonConforming || isNotApplicable) && !item.observation

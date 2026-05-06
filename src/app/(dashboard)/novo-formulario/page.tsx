@@ -213,7 +213,7 @@ export default function NovoFormularioPage() {
         if (!item.status) {
           errors.push(`Defina o status para: ${item.label}`)
         }
-        const isPhotoRequired = item.key === 'temperatura_veiculo' || item.key === 'lacre' || item.status === 'NAO_CONFORME'
+        const isPhotoRequired = item.key === 'temperatura_veiculo' || item.key === 'lacre' || item.key === 'termografo' || item.status === 'NAO_CONFORME'
         if (isPhotoRequired && !item.photos?.length) {
           errors.push(`Foto obrigatória para: ${item.label}`)
         }
