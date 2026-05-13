@@ -35,6 +35,7 @@ import {
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { Combobox } from '@/components/ui/combobox'
 import { PhotoUpload } from '@/components/form/photo-upload'
 import { ChecklistItemComponent } from '@/components/form/checklist-item'
 import { EmailSendModal } from '@/components/form/email-send-modal'
@@ -115,10 +116,33 @@ export default function NovoFormularioPage() {
   const [savedReceiptId, setSavedReceiptId] = useState<string | null>(null)
   const [savedPdfUrl, setSavedPdfUrl] = useState<string | null>(null)
   const [isMounted, setIsMounted] = useState(false)
+  const [evaluators, setEvaluators] = useState<Array<{ label: string, value: string }>>([])
+  const [units, setUnits] = useState<Array<{ label: string, value: string }>>([])
+
+  const fetchConfigLists = useCallback(async () => {
+    try {
+      // Busca Avaliadores
+      const resEval = await fetch('/api/config-lists?name=AVALIADORES')
+      if (resEval.ok) {
+        const data = await resEval.json() as { list?: { options: Array<{ label: string, value: string }> } }
+        if (data.list?.options) setEvaluators(data.list.options)
+      }
+
+      // Busca Unidades
+      const resUnits = await fetch('/api/config-lists?name=UNIDADES')
+      if (resUnits.ok) {
+        const data = await resUnits.json() as { list?: { options: Array<{ label: string, value: string }> } }
+        if (data.list?.options) setUnits(data.list.options)
+      }
+    } catch (error) {
+      console.error('Erro ao buscar listas de configuração:', error)
+    }
+  }, [])
 
   useEffect(() => {
     setIsMounted(true)
-  }, [])
+    void fetchConfigLists()
+  }, [fetchConfigLists])
 
   const updateFormData = useCallback(<K extends keyof ReceiptFormData>(
     key: K,
@@ -483,26 +507,66 @@ export default function NovoFormularioPage() {
                   </FormField>
 
                   <FormField label="Data e hora de recebimento" required>
-                    <Input
-                      type="datetime-local"
-                      value={formData.receivedAt}
-                      onChange={e => updateFormData('receivedAt', e.target.value)}
-                    />
+                    <div className="relative">
+                      <Input
+                        type="datetime-local"
+                        value={formData.receivedAt}
+                        readOnly
+                        className="bg-gray-50 border-gray-100 text-gray-500 cursor-not-allowed select-none"
+                      />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                        <Badge variant="outline" className="bg-white text-[10px] uppercase font-bold text-gray-400 border-gray-100">
+                          Auto
+                        </Badge>
+                      </div>
+                    </div>
                   </FormField>
 
-                  <FormField label="Avaliador" required>
-                    <Input
+                  <FormField 
+                    label="Avaliador" 
+                    required 
+                    action={
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 w-6 p-0 hover:bg-brand-gold/10 hover:text-brand-gold"
+                        onClick={() => window.open('/configuracoes/opcoes', '_blank')}
+                        title="Gerenciar avaliadores"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </Button>
+                    }
+                  >
+                    <Combobox
+                      options={evaluators}
                       value={formData.evaluatorName}
-                      onChange={e => updateFormData('evaluatorName', e.target.value)}
-                      placeholder="Nome completo"
+                      onValueChange={val => updateFormData('evaluatorName', val)}
+                      placeholder="Selecione o avaliador"
+                      searchPlaceholder="Buscar avaliador..."
                     />
                   </FormField>
 
-                  <FormField label="Avaliado" required>
-                    <Input
+                  <FormField 
+                    label="Avaliado" 
+                    required
+                    action={
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 w-6 p-0 hover:bg-brand-gold/10 hover:text-brand-gold"
+                        onClick={() => window.open('/configuracoes/opcoes', '_blank')}
+                        title="Gerenciar unidades"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </Button>
+                    }
+                  >
+                    <Combobox
+                      options={units}
                       value={formData.unit}
-                      onChange={e => updateFormData('unit', e.target.value)}
-                      placeholder="Ex: SIF 3409: Bello Alimentos Ltda - Itaquiraí/MS;"
+                      onValueChange={val => updateFormData('unit', val)}
+                      placeholder="Selecione a unidade"
+                      searchPlaceholder="Buscar unidade ou SIF..."
                     />
                   </FormField>
 
@@ -1081,18 +1145,23 @@ function SectionTitle({ icon, title }: { icon: React.ReactNode; title: string })
 function FormField({
   label,
   required,
+  action,
   children,
 }: {
   label: string
   required?: boolean
+  action?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
     <div className="space-y-1.5">
-      <Label className="text-sm font-medium text-gray-700">
-        {label}
-        {required && <span className="text-red-500 ml-0.5">*</span>}
-      </Label>
+      <div className="flex items-center justify-between">
+        <Label className="text-sm font-medium text-gray-700">
+          {label}
+          {required && <span className="text-red-500 ml-0.5">*</span>}
+        </Label>
+        {action}
+      </div>
       {children}
     </div>
   )

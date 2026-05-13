@@ -43,6 +43,11 @@ const settingsItems = [
     icon: Mail,
   },
   {
+    href: '/configuracoes/opcoes',
+    label: 'Opções das Listas',
+    icon: Settings,
+  },
+  {
     href: '/configuracoes/modelos',
     label: 'Modelos de E-mail',
     icon: FileText,

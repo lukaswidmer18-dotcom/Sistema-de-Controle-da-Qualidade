@@ -54,22 +54,26 @@ export default function LoginPage() {
     setIsLoading(true)
     setError('')
 
-    const result = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    })
+    try {
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      })
 
-    if (result?.error) {
-      setError('E-mail ou senha incorretos.')
+      if (result?.error) {
+        setError('E-mail ou senha incorretos.')
+        setIsLoading(false)
+      } else {
+        setIsEntering(true)
+        setTimeout(() => {
+          router.push('/pdfs-salvos')
+          router.refresh()
+        }, 3200)
+      }
+    } catch {
+      setError('Erro ao conectar com o servidor. Tente novamente.')
       setIsLoading(false)
-    } else {
-      setIsEntering(true)
-      // Tempo maior para mostrar a animação de qualidade
-      setTimeout(() => {
-        router.push('/pdfs-salvos')
-        router.refresh()
-      }, 3200)
     }
   }
 

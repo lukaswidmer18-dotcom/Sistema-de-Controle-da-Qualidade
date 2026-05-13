@@ -169,3 +169,28 @@ model EmailLog {
   receipt      Receipt  @relation(fields: [receiptId], references: [id], onDelete: Cascade)
   sender       User     @relation(fields: [sentBy], references: [id])
 }
+
+model ConfigList {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g., "AVALIADORES", "UNIDADES", "TIPOS_VEICULO"
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  options     ConfigListOption[]
+}
+
+model ConfigListOption {
+  id           String     @id @default(cuid())
+  configListId String
+  value        String
+  label        String
+  isActive     Boolean    @default(true)
+  order        Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  configList   ConfigList @relation(fields: [configListId], references: [id], onDelete: Cascade)
+
+  @@unique([configListId, value])
+}
