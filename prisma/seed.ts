@@ -167,25 +167,149 @@ Equipe da Qualidade`,
     },
   })
 
+  // Create unit-specific email lists
+  const listDourados = await prisma.emailList.upsert({
+    where: { id: 'list-dourados' },
+    update: {},
+    create: {
+      id: 'list-dourados',
+      name: 'Qualidade - Dourados',
+      description: 'Equipe de qualidade Dourados',
+      isActive: true,
+      recipients: {
+        create: [
+          { email: 'emerson.braga@belloalimentos.com.br', name: 'Emerson Braga' },
+          { email: 'francisca.nunes@belloalimentos.com.br', name: 'Francisca Nunes' },
+          { email: 'daiane.souza@mareterra.com.br', name: 'Daiane Souza' },
+          { email: 'fabio.shaen@belloalimentos.com.br', name: 'Fabio Shaen' },
+          { email: 'belloentrepostos.qualidade@belloalimentos.com.br', name: 'Qualidade Entrepostos' },
+          { email: 'leonardo.peiga@belloalimentos.com.br', name: 'Leonardo Peiga' },
+          { email: 'emilly.santos@belloalimentos.com.br', name: 'Emilly Santos' },
+          { email: 'vitoria.silva@belloalimentos.com.br', name: 'Vitoria Silva' },
+          { email: 'nathan.peres@belloalimentos.com.br', name: 'Nathan Peres' },
+          { email: 'alessandra.santos@belloalimentos.com.br', name: 'Alessandra Santos' },
+        ],
+      },
+    },
+  })
+
+  const listCampoGrande = await prisma.emailList.upsert({
+    where: { id: 'list-campogrande' },
+    update: {},
+    create: {
+      id: 'list-campogrande',
+      name: 'Qualidade - Campo Grande',
+      description: 'Equipe de qualidade Campo Grande',
+      isActive: true,
+      recipients: {
+        create: [
+          { email: 'emerson.braga@belloalimentos.com.br', name: 'Emerson Braga' },
+          { email: 'francisca.nunes@belloalimentos.com.br', name: 'Francisca Nunes' },
+          { email: 'daiane.souza@mareterra.com.br', name: 'Daiane Souza' },
+          { email: 'fabio.shaen@belloalimentos.com.br', name: 'Fabio Shaen' },
+          { email: 'belloentrepostos.qualidade@belloalimentos.com.br', name: 'Qualidade Entrepostos' },
+          { email: 'adriano.silva@belloalimentos.com.br', name: 'Adriano Silva' },
+          { email: 'emerson.ramos@belloalimentos.com.br', name: 'Emerson Ramos' },
+          { email: 'maria.rodrigues@belloalimentos.com.br', name: 'Maria Rodrigues' },
+          { email: 'eliziane.ramos@belloalimentos.com.br', name: 'Eliziane Ramos' },
+        ],
+      },
+    },
+  })
+
+  const listCuiaba = await prisma.emailList.upsert({
+    where: { id: 'list-cuiaba' },
+    update: {},
+    create: {
+      id: 'list-cuiaba',
+      name: 'Qualidade - Cuiabá',
+      description: 'Equipe de qualidade Cuiabá',
+      isActive: true,
+      recipients: {
+        create: [
+          { email: 'emerson.braga@belloalimentos.com.br', name: 'Emerson Braga' },
+          { email: 'francisca.nunes@belloalimentos.com.br', name: 'Francisca Nunes' },
+          { email: 'daiane.souza@mareterra.com.br', name: 'Daiane Souza' },
+          { email: 'fabio.shaen@belloalimentos.com.br', name: 'Fabio Shaen' },
+          { email: 'belloentrepostos.qualidade@belloalimentos.com.br', name: 'Qualidade Entrepostos' },
+          { email: 'josineltton.luis@belloalimentos.com.br', name: 'Josineltton Luis' },
+          { email: 'joacir.silva@belloalimentos.com.br', name: 'Joacir Silva' },
+          { email: 'henrique.silva@belloalimentos.com.br', name: 'Henrique Silva' },
+          { email: 'laran.souza@belloalimentos.com.br', name: 'Laran Souza' },
+        ],
+      },
+    },
+  })
+
+  const listRondonopolis = await prisma.emailList.upsert({
+    where: { id: 'list-rondonopolis' },
+    update: {},
+    create: {
+      id: 'list-rondonopolis',
+      name: 'Qualidade - Rondonópolis',
+      description: 'Equipe de qualidade Rondonópolis',
+      isActive: true,
+      recipients: {
+        create: [
+          { email: 'emerson.braga@belloalimentos.com.br', name: 'Emerson Braga' },
+          { email: 'francisca.nunes@belloalimentos.com.br', name: 'Francisca Nunes' },
+          { email: 'daiane.souza@mareterra.com.br', name: 'Daiane Souza' },
+          { email: 'fabio.shaen@belloalimentos.com.br', name: 'Fabio Shaen' },
+          { email: 'belloentrepostos.qualidade@belloalimentos.com.br', name: 'Qualidade Entrepostos' },
+          { email: 'bianca.rezende@belloalimentos.com.br', name: 'Bianca Rezende' },
+          { email: 'kleiton.freitas@belloalimentos.com.br', name: 'Kleiton Freitas' },
+          { email: 'paulo.procopio@belloalimentos.com.br', name: 'Paulo Procopio' },
+        ],
+      },
+    },
+  })
+
+  const listRioVerde = await prisma.emailList.upsert({
+    where: { id: 'list-rioverde' },
+    update: {},
+    create: {
+      id: 'list-rioverde',
+      name: 'Qualidade - Rio Verde',
+      description: 'Equipe de qualidade Rio Verde',
+      isActive: true,
+      recipients: {
+        create: [
+          { email: 'emerson.braga@belloalimentos.com.br', name: 'Emerson Braga' },
+          { email: 'francisca.nunes@belloalimentos.com.br', name: 'Francisca Nunes' },
+          { email: 'daiane.souza@mareterra.com.br', name: 'Daiane Souza' },
+          { email: 'fabio.shaen@belloalimentos.com.br', name: 'Fabio Shaen' },
+          { email: 'belloentrepostos.qualidade@belloalimentos.com.br', name: 'Qualidade Entrepostos' },
+          { email: 'larissa.ferreira@belloalimentos.com.br', name: 'Larissa Ferreira' },
+          { email: 'maciel.batista@belloalimentos.com.br', name: 'Maciel Batista' },
+        ],
+      },
+    },
+  })
+
   // Create default Config Lists
-  const avaliadoresList = await prisma.configList.upsert({
+  await prisma.configList.upsert({
     where: { name: 'AVALIADORES' },
     update: {},
     create: {
       name: 'AVALIADORES',
       description: 'Lista de avaliadores disponíveis no sistema',
-      options: {
-        create: [
-          { label: 'CD CAMPO GRANDE', value: 'CD CAMPO GRANDE', order: 1 },
-          { label: 'CD DOURADOS', value: 'CD DOURADOS', order: 2 },
-          { label: 'CD CUIABÁ', value: 'CD CUIABÁ', order: 3 },
-          { label: 'CD RONDONÓPOLIS', value: 'CD RONDONÓPOLIS', order: 4 },
-          { label: 'CD RIO VERDE', value: 'CD RIO VERDE', order: 5 },
-          { label: 'CD CORUMBÁ', value: 'CD CORUMBÁ', order: 6 },
-        ]
-      }
     }
   })
+
+  const avaliadoresList = await prisma.configList.findUnique({ where: { name: 'AVALIADORES' } })
+  if (avaliadoresList) {
+    await prisma.configListOption.deleteMany({ where: { configListId: avaliadoresList.id } })
+    await prisma.configListOption.createMany({
+      data: [
+        { configListId: avaliadoresList.id, label: 'CD CAMPO GRANDE', value: 'CD CAMPO GRANDE', order: 1, emailListId: 'list-campogrande' },
+        { configListId: avaliadoresList.id, label: 'CD DOURADOS', value: 'CD DOURADOS', order: 2, emailListId: 'list-dourados' },
+        { configListId: avaliadoresList.id, label: 'CD CUIABÁ', value: 'CD CUIABÁ', order: 3, emailListId: 'list-cuiaba' },
+        { configListId: avaliadoresList.id, label: 'CD RONDONÓPOLIS', value: 'CD RONDONÓPOLIS', order: 4, emailListId: 'list-rondonopolis' },
+        { configListId: avaliadoresList.id, label: 'CD RIO VERDE', value: 'CD RIO VERDE', order: 5, emailListId: 'list-rioverde' },
+        { configListId: avaliadoresList.id, label: 'CD CORUMBÁ', value: 'CD CORUMBÁ', order: 6 },
+      ]
+    })
+  }
 
   // Create UNIDADES list
   const listNameUnidades = 'UNIDADES'

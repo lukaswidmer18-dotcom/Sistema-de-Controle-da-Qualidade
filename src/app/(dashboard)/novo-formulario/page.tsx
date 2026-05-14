@@ -116,7 +116,7 @@ export default function NovoFormularioPage() {
   const [savedReceiptId, setSavedReceiptId] = useState<string | null>(null)
   const [savedPdfUrl, setSavedPdfUrl] = useState<string | null>(null)
   const [isMounted, setIsMounted] = useState(false)
-  const [evaluators, setEvaluators] = useState<Array<{ label: string, value: string }>>([])
+  const [evaluators, setEvaluators] = useState<Array<{ label: string, value: string, emailListId?: string }>>([])
   const [units, setUnits] = useState<Array<{ label: string, value: string }>>([])
 
   const fetchConfigLists = useCallback(async () => {
@@ -124,7 +124,7 @@ export default function NovoFormularioPage() {
       // Busca Avaliadores
       const resEval = await fetch('/api/config-lists?name=AVALIADORES')
       if (resEval.ok) {
-        const data = await resEval.json() as { list?: { options: Array<{ label: string, value: string }> } }
+        const data = await resEval.json() as { list?: { options: Array<{ label: string, value: string, emailListId?: string }> } }
         if (data.list?.options) setEvaluators(data.list.options)
       }
 
@@ -423,6 +423,7 @@ export default function NovoFormularioPage() {
         generalStatus: formData.generalStatus,
         qualityResponsible: formData.qualityResponsible,
         pdfUrl: savedPdfUrl ?? undefined,
+        evaluatorEmailListId: formData.evaluatorEmailListId,
         products: formData.products.map(p => ({ productCode: p.productCode, lot: p.lot })),
         nonConformities: autoNCs.map(nc => ({ description: nc.description })),
       }
@@ -540,7 +541,14 @@ export default function NovoFormularioPage() {
                     <Combobox
                       options={evaluators}
                       value={formData.evaluatorName}
-                      onValueChange={val => updateFormData('evaluatorName', val)}
+                      onValueChange={val => {
+                        const selected = evaluators.find(e => e.value === val)
+                        setFormData(prev => ({ 
+                          ...prev, 
+                          evaluatorName: val,
+                          evaluatorEmailListId: selected?.emailListId
+                        }))
+                      }}
                       placeholder="Selecione o avaliador"
                       searchPlaceholder="Buscar avaliador..."
                     />

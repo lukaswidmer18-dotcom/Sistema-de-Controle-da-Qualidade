@@ -35,6 +35,7 @@ interface ReceiptData {
   generalStatus: string
   qualityResponsible: string
   pdfUrl?: string | null
+  evaluatorEmailListId?: string
   products: Array<{ productCode: string; lot: string }>
   nonConformities: Array<{ description?: string | null }>
 }
@@ -64,9 +65,14 @@ export function EmailSendModal({ open, onOpenChange, receipt, onSent }: EmailSen
       ]).then(([listsData, templatesData]) => {
         setLists(listsData.lists || [])
         setTemplates(templatesData.templates || [])
+        
+        // Auto-select list based on evaluator
+        if (receipt.evaluatorEmailListId) {
+          setSelectedListIds([receipt.evaluatorEmailListId])
+        }
       })
     }
-  }, [open])
+  }, [open, receipt.evaluatorEmailListId])
 
   const getVariables = () => ({
     numero_formulario: receipt.formNumber,

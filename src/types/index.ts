@@ -68,6 +68,7 @@ export interface ReceiptFormData {
   formNumber: string
   receivedAt: string
   evaluatorName: string
+  evaluatorEmailListId?: string
   unit: string
   operationResponsible: string
   qualityResponsible: string

@@ -132,7 +132,8 @@ model EmailList {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  recipients  EmailListRecipient[]
+  recipients         EmailListRecipient[]
+  configListOptions  ConfigListOption[]
 }
 
 model EmailListRecipient {
@@ -187,10 +188,12 @@ model ConfigListOption {
   label        String
   isActive     Boolean    @default(true)
   order        Int        @default(0)
+  emailListId  String?    // Link to EmailList for auto-populating recipients
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
   configList   ConfigList @relation(fields: [configListId], references: [id], onDelete: Cascade)
+  emailList    EmailList? @relation(fields: [emailListId], references: [id])
 
   @@unique([configListId, value])
 }
