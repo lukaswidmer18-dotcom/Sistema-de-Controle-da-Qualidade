@@ -64,6 +64,17 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xs: "4px",
+      },
+      letterSpacing: {
+        display: "-0.03em",
+        heading: "-0.02em",
+        subheading: "-0.015em",
+        ui: "-0.01em",
+      },
+      lineHeight: {
+        display: "0.96",
+        heading: "1.14",
       },
       keyframes: {
         "accordion-down": {

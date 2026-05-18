@@ -1,12 +1,11 @@
 import type { Metadata } from 'next'
-import { Source_Sans_3 } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
-const sourceSans = Source_Sans_3({
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-source-sans',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body className={sourceSans.className}>
+      <body className={inter.className}>
         {children}
         <Toaster
           position="top-right"
