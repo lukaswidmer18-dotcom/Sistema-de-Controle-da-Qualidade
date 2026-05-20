@@ -1,4 +1,4 @@
-export type UserRole = 'ADMIN' | 'QUALIDADE' | 'OPERACAO'
+export type UserRole = 'ADMIN' | 'QUALIDADE'
 
 export type GeneralStatus =
   | 'CONFORME'

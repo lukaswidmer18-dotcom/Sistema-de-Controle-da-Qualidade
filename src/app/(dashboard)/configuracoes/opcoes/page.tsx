@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import toast from 'react-hot-toast'
-import { Plus, Trash2, Loader2, ListTree, ChevronRight } from 'lucide-react'
+import { Plus, Trash2, Loader2, ListTree, ChevronRight, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -126,7 +126,7 @@ export default function OpcoesPage() {
           
           {/* Sidebar de Listas */}
           <div className="md:col-span-4 space-y-4">
-            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider px-2">Categorias</h2>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2">Categorias</h2>
             <div className="space-y-1">
               {loading && lists.length === 0 ? (
                 <div className="flex justify-center py-8">
@@ -190,10 +190,10 @@ export default function OpcoesPage() {
                     <table className="w-full text-left border-collapse">
                       <thead className="sticky top-0 bg-white z-10">
                         <tr className="bg-gray-50/50 border-b border-gray-100">
-                          <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Ordem</th>
-                          <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Nome (Label)</th>
-                          <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Valor (Interno)</th>
-                          <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right">Ações</th>
+                          <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Ordem</th>
+                          <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Nome (Label)</th>
+                          <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Valor (Interno)</th>
+                          <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Ações</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-50">

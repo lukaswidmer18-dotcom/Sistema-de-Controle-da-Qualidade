@@ -47,7 +47,7 @@ export function ChecklistItemComponent({ item, onChange, showValidation = false 
     )}>
       {/* Item label + non-conformity badge */}
       <div className="flex items-center justify-between mb-3">
-        <Label className="font-medium text-gray-800 text-sm">{item.label}</Label>
+        <Label className="font-medium text-gray-700 text-sm">{item.label}</Label>
         {isNonConforming && (
           <span className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-0.5 rounded-full flex items-center gap-1">
             <AlertTriangle className="w-3 h-3" />

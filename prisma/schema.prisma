@@ -12,7 +12,7 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      String   @default("OPERACAO") // ADMIN, QUALIDADE, OPERACAO
+  role      String   @default("QUALIDADE") // ADMIN, QUALIDADE
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

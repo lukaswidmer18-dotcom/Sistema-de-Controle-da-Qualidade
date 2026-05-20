@@ -296,7 +296,7 @@ export default function ReceiptDetailPage() {
           title={`Não Conformidades (${ncCount})`}
         >
           {ncCount === 0 ? (
-            <div className="flex items-center gap-2 py-3 text-green-600">
+            <div className="flex items-center gap-2 py-3 text-brand-green">
               <CheckCircle2 className="w-5 h-5" />
               <span className="text-sm">Nenhuma não conformidade registrada</span>
             </div>
@@ -326,7 +326,7 @@ export default function ReceiptDetailPage() {
         <div className="flex items-center justify-between text-xs text-gray-400 pb-4">
           <span>ID: {receipt.id}</span>
           {receipt.emailSentAt && (
-            <span className="flex items-center gap-1 text-green-600">
+            <span className="flex items-center gap-1 text-brand-green">
               <CheckCircle2 className="w-3.5 h-3.5" />
               E-mail enviado em {formatDateTime(receipt.emailSentAt)}
             </span>

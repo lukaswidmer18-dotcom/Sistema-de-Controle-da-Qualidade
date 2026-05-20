@@ -112,7 +112,7 @@ export function Sidebar() {
           size="icon" 
           onClick={toggleCollapse}
           title={isCollapsed ? "Expandir menu" : "Recolher menu"}
-          className="text-white/40 hover:text-white hover:bg-white/10 hidden sm:flex"
+          className="text-white/50 hover:text-white hover:bg-white/10 hidden sm:flex"
         >
           <Menu className="w-5 h-5" />
         </Button>
@@ -133,14 +133,14 @@ export function Sidebar() {
                 isCollapsed ? 'justify-center gap-0' : 'gap-3',
                 isActive
                   ? 'bg-white text-brand-green shadow-[0_16px_36px_-24px_rgba(0,0,0,0.5)]'
-                  : 'text-white/74 hover:bg-white/9 hover:text-white'
+                  : 'text-white/75 hover:bg-white/10 hover:text-white'
               )}
             >
-              <Icon className={cn('w-5 h-5 flex-shrink-0', isActive ? 'text-brand-gold' : 'text-white/46 group-hover:text-brand-gold')} />
+              <Icon className={cn('w-5 h-5 flex-shrink-0', isActive ? 'text-brand-gold' : 'text-white/50 group-hover:text-brand-gold')} />
               {!isCollapsed && (
                 <div className="flex-1 min-w-0 animate-in fade-in slide-in-from-left-2 duration-300">
                   <p className="text-sm font-medium truncate">{item.label}</p>
-                  <p className={cn('text-xs truncate', isActive ? 'text-brand-green/70' : 'text-white/42')}>{item.description}</p>
+                  <p className={cn('text-xs truncate', isActive ? 'text-brand-green/70' : 'text-white/40')}>{item.description}</p>
                 </div>
               )}
               {isActive && !isCollapsed && <ChevronRight className="w-4 h-4 text-brand-gold flex-shrink-0" />}
@@ -173,10 +173,10 @@ export function Sidebar() {
                 isCollapsed ? 'justify-center gap-0' : 'gap-3',
                 isActive
                   ? 'bg-white text-brand-green shadow-[0_16px_36px_-24px_rgba(0,0,0,0.5)]'
-                  : 'text-white/74 hover:bg-white/9 hover:text-white'
+                  : 'text-white/75 hover:bg-white/10 hover:text-white'
               )}
             >
-              <Icon className={cn('w-4 h-4 flex-shrink-0', isActive ? 'text-brand-gold' : 'text-white/46 group-hover:text-brand-gold')} />
+              <Icon className={cn('w-4 h-4 flex-shrink-0', isActive ? 'text-brand-gold' : 'text-white/50 group-hover:text-brand-gold')} />
               {!isCollapsed && (
                 <span className="text-sm font-medium truncate animate-in fade-in slide-in-from-left-2 duration-300">
                   {item.label}
@@ -194,7 +194,7 @@ export function Sidebar() {
             "flex items-center gap-3 py-2",
             isCollapsed && "justify-center"
           )}>
-            <div className="w-8 h-8 bg-white/12 rounded-full flex items-center justify-center flex-shrink-0 ring-1 ring-white/12">
+            <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center flex-shrink-0 ring-1 ring-white/10">
               <span className="text-xs font-bold text-brand-gold">
                 {session.user.name?.charAt(0).toUpperCase()}
               </span>
@@ -202,8 +202,8 @@ export function Sidebar() {
             {!isCollapsed && (
               <div className="flex-1 min-w-0 animate-in fade-in slide-in-from-left-2 duration-300">
                 <p className="text-sm font-medium text-white truncate">{session.user.name}</p>
-                <Badge variant="secondary" className="text-xs mt-0.5 border-brand-gold/30 bg-white/8 text-white">
-                  {getRoleLabel(session.user.role || 'OPERACAO')}
+                <Badge variant="secondary" className="text-xs mt-0.5 border-brand-gold/30 bg-white/10 text-white">
+                  {getRoleLabel(session.user.role || 'QUALIDADE')}
                 </Badge>
               </div>
             )}

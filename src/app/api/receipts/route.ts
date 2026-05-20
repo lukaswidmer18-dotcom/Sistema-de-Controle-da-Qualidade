@@ -133,7 +133,8 @@ export async function GET(request: NextRequest) {
     prisma.receipt.findMany({
       where,
       include: {
-        products: true,
+        products: { select: { productCode: true, lot: true } },
+        nonConformities: { select: { description: true } },
         creator: { select: { name: true, email: true } },
         _count: { select: { nonConformities: true, emailLogs: true } },
       },

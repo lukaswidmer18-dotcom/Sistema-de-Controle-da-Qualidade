@@ -80,11 +80,11 @@ export function EmailSendModal({ open, onOpenChange, receipt, onSent }: EmailSen
     ordem_recebimento: receipt.receivingOrder,
     nota_fiscal: receipt.invoiceNumber,
     placa: receipt.trailerPlate,
-    codigo_produto: receipt.products.map(p => p.productCode).join(', '),
-    lote: receipt.products.map(p => p.lot).join(', '),
+    codigo_produto: (receipt.products ?? []).map(p => p.productCode).join(', '),
+    lote: (receipt.products ?? []).map(p => p.lot).join(', '),
     status_geral: getStatusLabel(receipt.generalStatus),
     responsavel_qualidade: receipt.qualityResponsible,
-    resumo_nao_conformidade: receipt.nonConformities
+    resumo_nao_conformidade: (receipt.nonConformities ?? [])
       .map(nc => nc.description)
       .filter(Boolean)
       .join('; ') || 'Sem não conformidades',
@@ -146,13 +146,15 @@ export function EmailSendModal({ open, onOpenChange, receipt, onSent }: EmailSen
         }),
       })
 
-      if (!response.ok) throw new Error('Erro ao enviar')
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Erro ao enviar')
 
       toast.success('E-mail enviado com sucesso!')
       onSent?.()
       onOpenChange(false)
-    } catch {
-      toast.error('Erro ao enviar e-mail. Verifique as configurações SMTP.')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Erro ao enviar e-mail'
+      toast.error(message, { duration: 8000 })
     } finally {
       setSending(false)
     }

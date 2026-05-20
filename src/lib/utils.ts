@@ -44,7 +44,7 @@ export function getStatusLabel(status: string): string {
 export function getStatusColor(status: string): string {
   const colors: Record<string, string> = {
     CONFORME: 'bg-brand-green/10 text-brand-green border-brand-green/20',
-    NAO_CONFORME: 'bg-red-100 text-red-800 border-red-200',
+    NAO_CONFORME: 'bg-red-50 text-red-700 border-red-200',
     APROVADO_RESSALVA: 'bg-brand-gold/16 text-brand-green border-brand-gold/35',
     REPROVADO: 'bg-red-200 text-red-900 border-red-300',
     AGUARDANDO: 'bg-brand-mist text-brand-green border-brand-sage/40',
@@ -60,7 +60,6 @@ export function getRoleLabel(role: string): string {
   const labels: Record<string, string> = {
     ADMIN: 'Administrador',
     QUALIDADE: 'Qualidade',
-    OPERACAO: 'Operação',
   }
   return labels[role] || role
 }

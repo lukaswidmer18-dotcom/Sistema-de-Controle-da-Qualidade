@@ -272,7 +272,6 @@ export default function LoginPage() {
             <p className="font-bold mb-1" style={{ color: 'rgba(188,147,63,0.85)' }}>Usuários de demonstração:</p>
             <p>admin@empresa.com / admin123</p>
             <p>qualidade@empresa.com / qualidade123</p>
-            <p>operacao@empresa.com / operacao123</p>
           </div>
         </div>
 

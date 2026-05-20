@@ -23,8 +23,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
   }
 
+  let body: { receiptId?: string; recipients?: string[]; subject?: string; body?: string; pdfUrl?: string } = {}
+
   try {
-    const body = await request.json()
+    body = await request.json()
     const { receiptId, recipients, subject, body: emailBody, pdfUrl } = body
 
     if (!receiptId || !recipients?.length || !subject || !emailBody) {
@@ -81,11 +83,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Email error:', error)
-
-    try {
-      const body = await request.json().catch(() => ({}))
-      if (body.receiptId) {
+    if (body.receiptId) {
+      try {
         await prisma.emailLog.create({
           data: {
             receiptId: body.receiptId,
@@ -97,9 +96,10 @@ export async function POST(request: NextRequest) {
             errorMessage: error instanceof Error ? error.message : 'Unknown error',
           },
         })
-      }
-    } catch {}
+      } catch {}
+    }
 
-    return NextResponse.json({ error: 'Erro ao enviar e-mail' }, { status: 500 })
+    const message = error instanceof Error ? error.message : 'Erro desconhecido'
+    return NextResponse.json({ error: `Erro ao enviar e-mail: ${message}` }, { status: 500 })
   }
 }

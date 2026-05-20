@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
-import { Plus, Pencil, ShieldAlert, Loader2, User, CheckCircle2, XCircle } from 'lucide-react'
+import { Plus, Pencil, Trash2, ShieldAlert, Loader2, User, CheckCircle2, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -47,14 +47,13 @@ const EMPTY_FORM: UserFormData = {
   name: '',
   email: '',
   password: '',
-  role: 'OPERACAO',
+  role: 'QUALIDADE',
   isActive: true,
 }
 
 const ROLE_COLORS: Record<UserRole, string> = {
   ADMIN: 'bg-brand-gold/16 text-brand-green border-brand-gold/35',
   QUALIDADE: 'bg-brand-green/10 text-brand-green border-brand-green/20',
-  OPERACAO: 'bg-gray-100 text-gray-700 border-gray-200',
 }
 
 export default function UsuariosPage() {
@@ -65,6 +64,8 @@ export default function UsuariosPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState<UserFormData>(EMPTY_FORM)
+  const [deleteTarget, setDeleteTarget] = useState<UserRow | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
 
@@ -160,6 +161,26 @@ export default function UsuariosPage() {
     setFormData(prev => ({ ...prev, [key]: value }))
   }
 
+  const handleDelete = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/users/${deleteTarget.id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error((err as { error?: string }).error || 'Erro ao deletar usuário')
+      }
+      toast.success('Usuário deletado!')
+      setDeleteTarget(null)
+      void fetchUsers()
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro inesperado'
+      toast.error(message)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen brand-shell flex items-center justify-center">
@@ -234,23 +255,34 @@ export default function UsuariosPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5">
                         {user.isActive
-                          ? <CheckCircle2 className="w-4 h-4 text-green-500" />
+                          ? <CheckCircle2 className="w-4 h-4 text-brand-green" />
                           : <XCircle className="w-4 h-4 text-gray-400" />}
-                        <span className={`text-xs ${user.isActive ? 'text-green-600' : 'text-gray-400'}`}>
+                        <span className={`text-xs ${user.isActive ? 'text-brand-green' : 'text-gray-400'}`}>
                           {user.isActive ? 'Ativo' : 'Inativo'}
                         </span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openEdit(user)}
-                        className="h-8 w-8 p-0"
-                        disabled={user.id === (session?.user as { id?: string } | undefined)?.id && editingId !== null}
-                      >
-                        <Pencil className="w-3.5 h-3.5" />
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEdit(user)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteTarget(user)}
+                          className="h-8 w-8 p-0 text-red-400 hover:text-red-600 hover:bg-red-50"
+                          disabled={user.id === (session?.user as { id?: string } | undefined)?.id}
+                          title={user.id === (session?.user as { id?: string } | undefined)?.id ? 'Não é possível deletar sua própria conta' : 'Deletar usuário'}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -260,7 +292,34 @@ export default function UsuariosPage() {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Modal Confirmação Delete */}
+      <Dialog open={!!deleteTarget} onOpenChange={open => { if (!open) setDeleteTarget(null) }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Deletar Usuário</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600 py-2">
+            Tem certeza que deseja deletar <strong>{deleteTarget?.name}</strong>?
+            Essa ação não pode ser desfeita.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => void handleDelete()}
+              disabled={deleting}
+              className="gap-2"
+            >
+              {deleting && <Loader2 className="w-4 h-4 animate-spin" />}
+              Deletar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Criar/Editar */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -321,7 +380,6 @@ export default function UsuariosPage() {
                 <SelectContent>
                   <SelectItem value="ADMIN">Administrador</SelectItem>
                   <SelectItem value="QUALIDADE">Qualidade</SelectItem>
-                  <SelectItem value="OPERACAO">Operação</SelectItem>
                 </SelectContent>
               </Select>
             </div>

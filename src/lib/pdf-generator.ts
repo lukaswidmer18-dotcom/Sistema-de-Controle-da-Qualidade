@@ -72,7 +72,9 @@ export function generateReceiptHTML(data: ReceiptData): string {
   const cargoItems = data.checklistItems.filter(i => i.section === 'CARGA')
   const products = data.products
   
-  const primaryBlue = '#006eb7';
+  const primaryGreen = '#16413A';
+  const primaryGold  = '#BC933F';
+  const primaryCream = '#F8F5EB';
 
   const checklistRow = (item: typeof vehicleItems[0], index: number, prefix: string) => {
     const hasPhotos = item.photos && item.photos.length > 0;
@@ -114,39 +116,39 @@ export function generateReceiptHTML(data: ReceiptData): string {
     
     /* Header */
     .header { display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px; }
-    .header-title { font-size:22px;font-weight:800;color:${primaryBlue};text-transform:uppercase;max-width:60%;line-height:1.2;letter-spacing:-0.5px }
+    .header-title { font-size:22px;font-weight:800;color:${primaryGreen};text-transform:uppercase;max-width:60%;line-height:1.2;letter-spacing:-0.5px }
     .header-logo { height:56px;object-fit:contain; }
-    .header-divider { border:none;border-bottom:2px solid #e5e7eb;margin-bottom:24px; }
-    
+    .header-divider { border:none;border-bottom:2px solid ${primaryGold};opacity:0.35;margin-bottom:24px; }
+
     /* Meta Block */
     .meta-block { width:100%;max-width:400px;border-collapse:collapse;margin-bottom:24px; }
     .meta-block td { border:2px solid #ffffff;padding:6px 12px;font-size:12px; }
-    .meta-label { background-color:${primaryBlue};color:#ffffff;font-weight:700;text-transform:uppercase;width:120px;letter-spacing:0.5px }
-    .meta-value { background-color:#f3f4f6;color:#374151;font-weight:500; }
-    
+    .meta-label { background-color:${primaryGreen};color:#ffffff;font-weight:700;text-transform:uppercase;width:120px;letter-spacing:0.5px }
+    .meta-value { background-color:${primaryCream};color:#374151;font-weight:500; }
+
     /* Status Geral Highlight */
     .status-highlight { display:inline-flex;align-items:center;padding:6px 14px;border-radius:6px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:0.5px; }
-    
+
     /* Section Divider */
-    .section-divider { display:flex;align-items:center;text-align:center;color:#4b5563;font-weight:800;font-size:16px;letter-spacing:1px;margin:32px 0 24px; }
-    .section-divider::before, .section-divider::after { content:'';flex:1;border-bottom:1px solid #d1d5db; }
+    .section-divider { display:flex;align-items:center;text-align:center;color:${primaryGreen};font-weight:800;font-size:16px;letter-spacing:1px;margin:32px 0 24px; }
+    .section-divider::before, .section-divider::after { content:'';flex:1;border-bottom:1px solid rgba(188,147,63,0.3); }
     .section-divider::before { margin-right:16px; }
     .section-divider::after { margin-left:16px; }
-    
+
     /* Section Title */
-    .section-title { display:flex;align-items:center;background-color:#f3f4f6;margin-bottom:16px; }
-    .section-number { background-color:${primaryBlue};color:#ffffff;font-weight:800;font-size:14px;width:32px;height:32px;display:flex;align-items:center;justify-content:center; }
-    .section-text { color:${primaryBlue};font-weight:700;font-size:14px;padding-left:12px;text-transform:none; }
-    
+    .section-title { display:flex;align-items:center;background-color:${primaryCream};margin-bottom:16px;border-left:3px solid ${primaryGold}; }
+    .section-number { background-color:${primaryGreen};color:#ffffff;font-weight:800;font-size:14px;width:32px;height:32px;display:flex;align-items:center;justify-content:center; }
+    .section-text { color:${primaryGreen};font-weight:700;font-size:14px;padding-left:12px;text-transform:none; }
+
     /* Tables */
     table { width:100%;border-collapse:collapse;margin-bottom:32px; }
-    .kv-table td { padding:8px 12px;vertical-align:top;border-bottom:1px solid #f3f4f6; }
+    .kv-table td { padding:8px 12px;vertical-align:top;border-bottom:1px solid rgba(22,65,58,0.07); }
     .kv-key { font-weight:700;color:#4b5563;width:40%;font-size:12px; }
     .kv-value { color:#1f2937;font-weight:500;font-size:12px; }
-    
-    .data-table th { background-color:#f8fafc;color:#64748b;font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;padding:10px 12px;text-align:left;border-bottom:2px solid #e2e8f0; }
-    .data-table td { padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px; }
-    .data-table tr:nth-child(even) { background-color:#f8fafc; }
+
+    .data-table th { background-color:${primaryCream};color:${primaryGreen};font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:0.5px;padding:10px 12px;text-align:left;border-bottom:2px solid rgba(188,147,63,0.4); }
+    .data-table td { padding:10px 12px;border-bottom:1px solid rgba(22,65,58,0.07);font-size:12px; }
+    .data-table tr:nth-child(even) { background-color:rgba(248,245,235,0.5); }
     
     /* Helpers */
     .photo-large { width:100%;max-width:300px;height:auto;border-radius:8px;border:1px solid #e5e7eb;margin-top:12px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1); }
@@ -155,7 +157,7 @@ export function generateReceiptHTML(data: ReceiptData): string {
     .footer { padding:24px 40px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:auto;border-top:1px solid #e5e7eb;background-color:#ffffff;color:#6b7280; }
     .footer-left { display:flex;flex-direction:column;gap:6px;align-items:flex-start; }
     .footer-right { text-align:right;line-height:1.6; }
-    .footer strong { color:${primaryBlue};font-weight:700;font-size:11px; }
+    .footer strong { color:${primaryGreen};font-weight:700;font-size:11px; }
     
     @media print { .page-break { page-break-before: always } }
   </style>
@@ -212,7 +214,7 @@ export function generateReceiptHTML(data: ReceiptData): string {
     <tr>
       <td class="kv-key">1.9 - Placa - Carreta</td>
       <td class="kv-value">
-        <div style="font-weight:800;font-size:14px;color:${primaryBlue};text-transform:uppercase;letter-spacing:1px">${data.trailerPlate}</div>
+        <div style="font-weight:800;font-size:14px;color:${primaryGreen};text-transform:uppercase;letter-spacing:1px">${data.trailerPlate}</div>
         ${data.platePicture ? `<img src="${getAbsoluteUrl(data.platePicture)}" class="photo-large" alt="Placa - Carreta" />` : ''}
       </td>
     </tr>
@@ -302,7 +304,7 @@ export function generateReceiptHTML(data: ReceiptData): string {
           <td style="font-weight:500;${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">${t.productName || t.productCode || '—'}</td>
           <td style="${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">${t.lot || '—'}</td>
           <td style="${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}"><span style="font-size:10px;background:#e2e8f0;padding:2px 6px;border-radius:4px;font-weight:600">${t.temperatureType === 'RESFRIADO' ? 'Resfriado' : 'Congelado'}</span></td>
-          <td style="text-align:center;font-weight:800;font-size:14px;color:${primaryBlue};${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">${t.temperature !== null && t.temperature !== undefined ? `${t.temperature}${t.unit}` : '—'}</td>
+          <td style="text-align:center;font-weight:800;font-size:14px;color:${primaryGreen};${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">${t.temperature !== null && t.temperature !== undefined ? `${t.temperature}${t.unit}` : '—'}</td>
           <td style="text-align:center;${!t.photoUrl ? 'border-bottom:1px solid #f1f5f9;' : 'border-bottom:none;'}">
             <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(t.status || 'NAO_APLICAVEL')}">
               ${getStatusLabel(t.status || 'NAO_APLICAVEL')}

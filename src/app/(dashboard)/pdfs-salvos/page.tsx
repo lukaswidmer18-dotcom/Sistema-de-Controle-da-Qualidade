@@ -354,7 +354,7 @@ export default function PdfsSalvosPage() {
                           </Badge>
                           {row.emailSentAt && (
                             <span title="E-mail enviado" aria-label="E-mail enviado">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-brand-green shrink-0" />
                             </span>
                           )}
                         </div>

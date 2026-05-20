@@ -472,7 +472,7 @@ export default function NovoFormularioPage() {
                     isActive
                       ? 'bg-brand-green text-white font-semibold shadow-[0_16px_38px_-24px_rgba(22,65,58,0.8)]'
                       : isDone
-                        ? 'bg-green-50 text-green-700 hover:bg-green-100 cursor-pointer'
+                        ? 'bg-brand-green/10 text-brand-green hover:bg-brand-green/15 cursor-pointer'
                         : 'text-gray-400 cursor-default'
                   )}
                 >
@@ -928,10 +928,10 @@ export default function NovoFormularioPage() {
                 <SectionTitle icon={<ShieldAlert className="w-5 h-5" />} title="Não Conformidades" />
 
                 {autoNCs.length === 0 ? (
-                  <div className="text-center py-12 bg-green-50 rounded-lg border border-green-200">
-                    <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" />
-                    <p className="text-green-700 font-medium">Nenhuma não conformidade registrada</p>
-                    <p className="text-sm text-green-600 mt-1">Todos os itens avaliados estão conformes</p>
+                  <div className="text-center py-12 bg-brand-green/10 rounded-lg border border-brand-green/20">
+                    <CheckCircle2 className="w-12 h-12 text-brand-green mx-auto mb-3" />
+                    <p className="text-brand-green font-medium">Nenhuma não conformidade registrada</p>
+                    <p className="text-sm text-brand-green/70 mt-1">Todos os itens avaliados estão conformes</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -991,8 +991,8 @@ export default function NovoFormularioPage() {
                 {savedReceiptId ? (
                   /* Sucesso */
                   <div className="text-center py-8 space-y-4">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                      <CheckCircle2 className="w-9 h-9 text-green-600" />
+                    <div className="w-16 h-16 bg-brand-green/10 rounded-full flex items-center justify-center mx-auto">
+                      <CheckCircle2 className="w-9 h-9 text-brand-green" />
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">Formulário salvo com sucesso!</h3>
@@ -1074,9 +1074,9 @@ export default function NovoFormularioPage() {
                           </ul>
                         </div>
                       ) : (
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-2">
-                          <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
-                          <p className="text-sm text-green-700 font-medium">Formulário completo. Pronto para finalizar!</p>
+                        <div className="bg-brand-green/10 border border-brand-green/20 rounded-lg p-4 flex items-center gap-2">
+                          <CheckCircle2 className="w-5 h-5 text-brand-green shrink-0" />
+                          <p className="text-sm text-brand-green font-medium">Formulário completo. Pronto para finalizar!</p>
                         </div>
                       )
                     })()}

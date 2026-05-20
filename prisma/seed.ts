@@ -30,19 +30,6 @@ async function main() {
     },
   })
 
-  // Create operacao user
-  const operacaoPassword = await bcrypt.hash('operacao123', 10)
-  await prisma.user.upsert({
-    where: { email: 'operacao@empresa.com' },
-    update: {},
-    create: {
-      name: 'Equipe Operação',
-      email: 'operacao@empresa.com',
-      password: operacaoPassword,
-      role: 'OPERACAO',
-    },
-  })
-
   // Create email lists
   const qualidadeList = await prisma.emailList.upsert({
     where: { id: 'list-qualidade' },
@@ -373,7 +360,6 @@ Equipe da Qualidade`,
   console.log('Users created:')
   console.log('  Admin: admin@empresa.com / admin123')
   console.log('  Qualidade: qualidade@empresa.com / qualidade123')
-  console.log('  Operação: operacao@empresa.com / operacao123')
 }
 
 main()

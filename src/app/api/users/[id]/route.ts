@@ -25,3 +25,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
   return NextResponse.json({ user: { ...user, isActive: user.active } })
 }
+
+export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
+  const session = await auth()
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Sem permissão' }, { status: 403 })
+  }
+
+  if (session.user.id === params.id) {
+    return NextResponse.json({ error: 'Não é possível deletar sua própria conta' }, { status: 400 })
+  }
+
+  await prisma.user.delete({ where: { id: params.id } })
+
+  return NextResponse.json({ success: true })
+}

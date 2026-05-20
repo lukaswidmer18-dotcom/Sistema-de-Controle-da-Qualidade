@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { generateReceiptHTML } from '@/lib/pdf-generator'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
+import puppeteer from 'puppeteer'
 
 export async function POST(request: NextRequest) {
   const session = await auth()
@@ -60,22 +61,45 @@ export async function POST(request: NextRequest) {
       nonConformities: receipt.nonConformities,
     })
 
-    // Save the HTML as the PDF representation (would use puppeteer in production)
     const uploadsDir = join(process.cwd(), 'public', 'uploads', 'pdfs')
     await mkdir(uploadsDir, { recursive: true })
 
-    const fileName = `receipt-${receipt.formNumber}-${Date.now()}.html`
-    const filePath = join(uploadsDir, fileName)
-    await writeFile(filePath, html, 'utf-8')
+    // Save HTML for in-browser preview
+    const htmlFileName = `receipt-${receipt.formNumber}-${Date.now()}.html`
+    const htmlFilePath = join(uploadsDir, htmlFileName)
+    await writeFile(htmlFilePath, html, 'utf-8')
 
-    const pdfUrl = `/uploads/pdfs/${fileName}`
+    // Generate real PDF with puppeteer
+    const pdfFileName = `receipt-${receipt.formNumber}-${Date.now()}.pdf`
+    const pdfFilePath = join(uploadsDir, pdfFileName)
+
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    })
+
+    try {
+      const page = await browser.newPage()
+      await page.setContent(html, { waitUntil: 'networkidle0' })
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: { top: '0', right: '0', bottom: '0', left: '0' },
+      })
+      await writeFile(pdfFilePath, pdfBuffer)
+    } finally {
+      await browser.close()
+    }
+
+    const htmlUrl = `/uploads/pdfs/${htmlFileName}`
+    const pdfUrl = `/uploads/pdfs/${pdfFileName}`
 
     await prisma.receipt.update({
       where: { id: receiptId },
       data: { pdfUrl },
     })
 
-    return NextResponse.json({ pdfUrl, html })
+    return NextResponse.json({ pdfUrl, htmlUrl, html })
   } catch (error) {
     console.error('PDF generation error:', error)
     return NextResponse.json({ error: 'Erro ao gerar PDF' }, { status: 500 })
