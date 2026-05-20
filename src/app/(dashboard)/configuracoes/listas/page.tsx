@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import toast from 'react-hot-toast'
-import { Plus, Pencil, Trash2, Users, Loader2, Mail } from 'lucide-react'
+import { Plus, Pencil, Trash2, Users, Loader2, Mail, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -38,6 +38,8 @@ interface ListFormData {
   emailsRaw: string
 }
 
+const PAGE_SIZE = 8
+
 const EMPTY_FORM: ListFormData = {
   name: '',
   description: '',
@@ -61,6 +63,10 @@ export default function ListasPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState<ListFormData>(EMPTY_FORM)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
+
+  const totalPages = Math.max(1, Math.ceil(lists.length / PAGE_SIZE))
+  const paginatedLists = lists.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   const fetchLists = useCallback(async () => {
     setLoading(true)
@@ -69,6 +75,7 @@ export default function ListasPage() {
       if (!res.ok) throw new Error('Erro ao carregar listas')
       const data = await res.json() as { lists: EmailList[] }
       setLists(data.lists || [])
+      setPage(1)
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Erro inesperado'
       toast.error(message)
@@ -194,7 +201,7 @@ export default function ListasPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {lists.map(list => (
+            {paginatedLists.map(list => (
               <div
                 key={list.id}
                 className={cn(
@@ -254,6 +261,45 @@ export default function ListasPage() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6 px-1">
+            <p className="text-xs text-gray-400">
+              {lists.length} lista(s) — página {page} de {totalPages}
+            </p>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="h-8 w-8 p-0"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                <Button
+                  key={p}
+                  variant={p === page ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setPage(p)}
+                  className="h-8 w-8 p-0 text-xs"
+                >
+                  {p}
+                </Button>
+              ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="h-8 w-8 p-0"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         )}
       </div>
