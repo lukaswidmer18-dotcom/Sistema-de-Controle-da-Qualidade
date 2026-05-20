@@ -1,6 +1,165 @@
 import { formatDateTime, getStatusLabel } from './utils'
 import { logoBelloBase64 } from './logo-bello-base64'
 
+interface ActionPlanData {
+  receipt: {
+    formNumber: string
+    invoiceNumber: string
+    trailerPlate: string
+    receivedAt: Date | string
+    qualityResponsible: string
+    nonConformities: Array<{
+      section: string
+      description?: string | null
+      photoUrl?: string | null
+    }>
+  }
+  actionPlan: {
+    description: string
+    responsible: string
+    deadline: string | Date
+    rootCause: string
+    createdAt?: Date | string
+  }
+}
+
+export function generateActionPlanHTML(data: ActionPlanData): string {
+  const { receipt, actionPlan } = data
+  const primaryGreen = '#16413A'
+  const primaryGold = '#BC933F'
+  const primaryCream = '#F8F5EB'
+
+  const deadlineFormatted = new Date(actionPlan.deadline).toLocaleDateString('pt-BR')
+  const createdAtFormatted = actionPlan.createdAt ? formatDateTime(actionPlan.createdAt) : formatDateTime(new Date())
+
+  return `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Plano de Ação — ${receipt.formNumber}</title>
+  <style>
+    * { margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact }
+    body { font-family:'Inter','Segoe UI',Arial,sans-serif;color:#1f2937;background:#ffffff;font-size:12px;line-height:1.5 }
+    .container { padding:32px 40px;min-height:90vh }
+    .header { display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:12px }
+    .header-title { font-size:22px;font-weight:800;color:${primaryGreen};text-transform:uppercase;max-width:60%;line-height:1.2;letter-spacing:-0.5px }
+    .header-logo { height:56px;object-fit:contain }
+    .header-divider { border:none;border-bottom:2px solid ${primaryGold};opacity:0.35;margin-bottom:24px }
+    .meta-block { width:100%;max-width:400px;border-collapse:collapse;margin-bottom:24px }
+    .meta-block td { border:2px solid #ffffff;padding:6px 12px;font-size:12px }
+    .meta-label { background-color:${primaryGreen};color:#ffffff;font-weight:700;text-transform:uppercase;width:120px;letter-spacing:0.5px }
+    .meta-value { background-color:${primaryCream};color:#374151;font-weight:500 }
+    .section-title { display:flex;align-items:center;background-color:${primaryCream};margin-bottom:16px;border-left:3px solid ${primaryGold} }
+    .section-number { background-color:${primaryGreen};color:#ffffff;font-weight:800;font-size:14px;width:32px;height:32px;display:flex;align-items:center;justify-content:center }
+    .section-text { color:${primaryGreen};font-weight:700;font-size:14px;padding-left:12px }
+    .nc-item { background:#fff5f5;border:1px solid #fca5a5;border-radius:6px;padding:12px 16px;margin-bottom:8px;page-break-inside:avoid }
+    .nc-label { font-size:10px;font-weight:700;text-transform:uppercase;color:#991b1b;letter-spacing:0.5px;margin-bottom:4px }
+    .nc-desc { font-size:12px;color:#450a0a }
+    .field-box { background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:16px 20px;margin-bottom:20px }
+    .field-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:${primaryGreen};margin-bottom:8px }
+    .field-value { font-size:13px;color:#1f2937;line-height:1.6;white-space:pre-wrap }
+    .info-row { display:flex;gap:24px;margin-bottom:20px }
+    .info-box { flex:1;background:${primaryCream};border-radius:6px;padding:12px 16px }
+    .info-box-label { font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:rgba(22,65,58,0.5);margin-bottom:4px }
+    .info-box-value { font-size:14px;font-weight:700;color:${primaryGreen} }
+    .footer { padding:24px 40px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:auto;border-top:1px solid #e5e7eb;background-color:#ffffff;color:#6b7280 }
+    .footer-left { display:flex;flex-direction:column;gap:6px;align-items:flex-start }
+    .footer-right { text-align:right;line-height:1.6 }
+    .footer strong { color:${primaryGreen};font-weight:700;font-size:11px }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-title">Plano de Ação — Não Conformidade</div>
+    <img src="data:image/png;base64,${logoBelloBase64}" class="header-logo" alt="Bello Alimentos" />
+  </div>
+  <hr class="header-divider" />
+
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px">
+    <table class="meta-block">
+      <tr><td class="meta-label">FORMULÁRIO</td><td class="meta-value">${receipt.formNumber}</td></tr>
+      <tr><td class="meta-label">NOTA FISCAL</td><td class="meta-value">${receipt.invoiceNumber}</td></tr>
+      <tr><td class="meta-label">PLACA</td><td class="meta-value" style="font-weight:800;font-size:13px">${receipt.trailerPlate}</td></tr>
+      <tr><td class="meta-label">RECEBIMENTO</td><td class="meta-value">${formatDateTime(receipt.receivedAt)}</td></tr>
+      <tr><td class="meta-label">RESP. QUALIDADE</td><td class="meta-value">${receipt.qualityResponsible}</td></tr>
+    </table>
+    <div style="padding:8px 16px;background:#fee2e2;border:1px solid #fca5a5;border-radius:6px;font-weight:800;font-size:13px;color:#991b1b;text-transform:uppercase;letter-spacing:0.5px;align-self:flex-start">
+      NÃO CONFORME
+    </div>
+  </div>
+
+  <!-- 1. Não Conformidades -->
+  <div class="section-title" style="background-color:#fee2e2">
+    <div class="section-number" style="background-color:#dc2626">1</div>
+    <div class="section-text" style="color:#b91c1c">Não Conformidades Identificadas</div>
+  </div>
+  <div style="margin-bottom:24px">
+    ${receipt.nonConformities.map((nc, i) => `
+      <div class="nc-item">
+        <div class="nc-label">NC ${i + 1} — ${nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}</div>
+        <div class="nc-desc">${nc.description || 'Sem descrição'}</div>
+      </div>
+    `).join('')}
+  </div>
+
+  <!-- 2. Causa Raiz -->
+  <div class="section-title">
+    <div class="section-number">2</div>
+    <div class="section-text">Causa Raiz</div>
+  </div>
+  <div class="field-box" style="margin-bottom:24px">
+    <div class="field-value">${actionPlan.rootCause}</div>
+  </div>
+
+  <!-- 3. Ação Corretiva -->
+  <div class="section-title">
+    <div class="section-number">3</div>
+    <div class="section-text">Descrição da Ação Corretiva</div>
+  </div>
+  <div class="field-box" style="margin-bottom:24px">
+    <div class="field-value">${actionPlan.description}</div>
+  </div>
+
+  <!-- 4. Responsável e Prazo -->
+  <div class="section-title">
+    <div class="section-number">4</div>
+    <div class="section-text">Responsável e Prazo</div>
+  </div>
+  <div class="info-row">
+    <div class="info-box">
+      <div class="info-box-label">Responsável pela ação</div>
+      <div class="info-box-value">${actionPlan.responsible}</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-label">Prazo para conclusão</div>
+      <div class="info-box-value">${deadlineFormatted}</div>
+    </div>
+    <div class="info-box">
+      <div class="info-box-label">Plano registrado em</div>
+      <div class="info-box-value" style="font-size:12px;font-weight:600">${createdAtFormatted}</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-left">
+    <img src="data:image/png;base64,${logoBelloBase64}" style="height:24px;width:auto;object-fit:contain;margin-bottom:2px" alt="Bello Alimentos" />
+    <span>Documento gerado eletronicamente em ${formatDateTime(new Date())}</span>
+  </div>
+  <div class="footer-right">
+    <strong>Sistema de Controle da Qualidade</strong><br/>
+    Plano de Ação — Referência: ${receipt.formNumber}
+  </div>
+</div>
+
+</body>
+</html>
+`
+}
+
 interface ReceiptData {
   formNumber: string
   receivedAt: Date | string

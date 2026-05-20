@@ -49,6 +49,7 @@ model Receipt {
   temperatures         TemperatureMeasurement[]
   nonConformities      NonConformity[]
   emailLogs            EmailLog[]
+  actionPlan           ActionPlan?
 }
 
 model ReceiptProduct {
@@ -169,6 +170,21 @@ model EmailLog {
 
   receipt      Receipt  @relation(fields: [receiptId], references: [id], onDelete: Cascade)
   sender       User     @relation(fields: [sentBy], references: [id])
+}
+
+model ActionPlan {
+  id          String   @id @default(cuid())
+  receiptId   String   @unique
+  description String
+  responsible String
+  deadline    DateTime
+  rootCause   String
+  status      String   @default("PENDENTE") // PENDENTE, CONCLUIDO
+  pdfUrl      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  receipt     Receipt  @relation(fields: [receiptId], references: [id], onDelete: Cascade)
 }
 
 model ConfigList {

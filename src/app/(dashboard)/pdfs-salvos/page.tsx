@@ -16,6 +16,8 @@ import {
   ChevronUp,
   FileText,
   Trash2,
+  Plus,
+  ClipboardList,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -170,14 +172,17 @@ export default function PdfsSalvosPage() {
       <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-white">PDFs Salvos</h1>
-            <p className="text-sm text-white/65">{total} formulário(s) encontrado(s)</p>
+            <p className="text-[0.625rem] font-bold uppercase tracking-[0.24em] mb-0.5" style={{ color: 'rgba(188,147,63,0.60)' }}>
+              Biblioteca
+            </p>
+            <h1 className="text-xl font-black tracking-tight text-white leading-none">PDFs Salvos</h1>
+            <p className="text-[0.75rem] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{total} formulário(s) encontrado(s)</p>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setShowFilters(prev => !prev)}
-            className="gap-2"
+            className="gap-2 border-white/[0.14] bg-white/[0.07] text-white/80 hover:bg-white/[0.14] hover:text-white hover:border-white/25 backdrop-blur-sm transition-all"
           >
             <Filter className="w-4 h-4" />
             Filtros
@@ -191,7 +196,7 @@ export default function PdfsSalvosPage() {
         {/* Filter panel */}
         {showFilters && (
           <div className="brand-card motion-enter rounded-xl p-5 space-y-4">
-            <h2 className="text-sm font-semibold text-gray-700">Filtros de pesquisa</h2>
+            <p className="text-[0.6875rem] font-bold uppercase tracking-[0.14em]" style={{ color: 'rgba(22,65,58,0.45)' }}>Filtros de pesquisa</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-1.5">
                 <Label className="text-xs text-gray-500">Data de (recebimento)</Label>
@@ -302,29 +307,51 @@ export default function PdfsSalvosPage() {
           {loading ? (
             <SkeletonRows />
           ) : rows.length === 0 ? (
-            <div className="text-center py-16 text-gray-400">
-              <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              <p className="text-sm font-medium">Nenhum formulário encontrado</p>
-              <p className="text-xs mt-1">Tente ajustar os filtros ou crie um novo formulário</p>
+            <div className="flex flex-col items-center py-20">
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
+                style={{
+                  background: 'linear-gradient(145deg, #16413a, #24584f)',
+                  boxShadow: '0 14px 34px -20px rgba(22,65,58,0.85), inset 0 1px 0 rgba(255,255,255,0.18)',
+                }}
+              >
+                <FileText className="w-7 h-7 text-white/60" />
+              </div>
+              <p className="text-sm font-semibold" style={{ color: 'rgba(22,65,58,0.68)' }}>
+                Nenhum formulário encontrado
+              </p>
+              <p className="text-xs mt-1.5 max-w-[200px] text-center text-gray-400 leading-relaxed">
+                Tente ajustar os filtros ou registre um novo recebimento
+              </p>
+              <Link
+                href="/novo-formulario"
+                className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.09em] transition-colors hover:opacity-80"
+                style={{ color: 'rgba(188,147,63,0.80)' }}
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Novo formulário
+              </Link>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-brand-cream border-b border-brand-gold/20">
                   <tr>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Data</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Formulário</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">NF</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Placa</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Produto / Lote</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Resp. Qualidade</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Ações</th>
+                    {['Data','Formulário','NF','Placa','Produto / Lote','Status','Resp. Qualidade','Ações'].map(col => (
+                      <th key={col} className="text-left px-4 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.09em]" style={{ color: 'rgba(22,65,58,0.42)' }}>{col}</th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {rows.map(row => (
-                    <tr key={row.id} className="hover:bg-brand-cream/60 transition-colors">
+                    <tr
+                      key={row.id}
+                      className="transition-colors"
+                      style={row.emailSentAt
+                        ? { boxShadow: 'inset 4px 0 0 rgba(52,211,153,0.75)', background: 'rgba(52,211,153,0.04)' }
+                        : { boxShadow: 'inset 4px 0 0 rgba(251,146,60,0.55)', background: 'rgba(251,146,60,0.03)' }
+                      }
+                    >
                       <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
                         {formatDateTime(row.receivedAt)}
                       </td>
@@ -400,6 +427,18 @@ export default function PdfsSalvosPage() {
                           >
                             <Mail className="w-3.5 h-3.5" />
                           </Button>
+                          {row.generalStatus === 'NAO_CONFORME' && (
+                            <Link href={`/plano-acao/${row.id}`}>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 w-7 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                title="Plano de Ação"
+                              >
+                                <ClipboardList className="w-3.5 h-3.5" />
+                              </Button>
+                            </Link>
+                          )}
                           <Button
                             variant="ghost"
                             size="sm"
@@ -420,17 +459,17 @@ export default function PdfsSalvosPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="border-t px-4 py-3 flex items-center justify-between">
-              <p className="text-xs text-gray-500">
-                Página {page} de {totalPages} ({total} total)
+            <div className="border-t px-4 py-3 flex items-center justify-between" style={{ borderColor: 'rgba(22,65,58,0.08)' }}>
+              <p className="text-[0.75rem]" style={{ color: 'rgba(22,65,58,0.42)' }}>
+                Página <span className="font-semibold" style={{ color: 'rgba(22,65,58,0.68)' }}>{page}</span> de {totalPages} &middot; {total} registros
               </p>
-              <div className="flex gap-2">
+              <div className="flex gap-1.5">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="gap-1 text-xs"
+                  className="gap-1 text-xs h-8 border-brand-green/20 text-brand-green/70 hover:bg-brand-green/[0.06] hover:text-brand-green hover:border-brand-green/30 transition-all disabled:opacity-30"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   Anterior
@@ -440,7 +479,7 @@ export default function PdfsSalvosPage() {
                   size="sm"
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="gap-1 text-xs"
+                  className="gap-1 text-xs h-8 border-brand-green/20 text-brand-green/70 hover:bg-brand-green/[0.06] hover:text-brand-green hover:border-brand-green/30 transition-all disabled:opacity-30"
                 >
                   Próximo
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -506,19 +545,21 @@ export default function PdfsSalvosPage() {
   )
 }
 
+const SKEL = { background: 'rgba(22,65,58,0.07)', borderRadius: '4px' }
+
 function SkeletonRows() {
   return (
     <div className="divide-y divide-gray-100">
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} className="px-4 py-4 flex gap-4 animate-pulse">
-          <div className="h-4 w-28 bg-gray-200 rounded" />
-          <div className="h-4 w-32 bg-gray-200 rounded" />
-          <div className="h-4 w-20 bg-gray-200 rounded" />
-          <div className="h-4 w-20 bg-gray-200 rounded" />
-          <div className="h-4 flex-1 bg-gray-200 rounded" />
-          <div className="h-4 w-16 bg-gray-200 rounded" />
-          <div className="h-4 w-24 bg-gray-200 rounded" />
-          <div className="h-4 w-20 bg-gray-200 rounded" />
+          <div className="h-4 w-28" style={SKEL} />
+          <div className="h-4 w-32" style={SKEL} />
+          <div className="h-4 w-20" style={SKEL} />
+          <div className="h-4 w-20" style={SKEL} />
+          <div className="h-4 flex-1" style={SKEL} />
+          <div className="h-4 w-16" style={SKEL} />
+          <div className="h-4 w-24" style={SKEL} />
+          <div className="h-4 w-20" style={SKEL} />
         </div>
       ))}
     </div>

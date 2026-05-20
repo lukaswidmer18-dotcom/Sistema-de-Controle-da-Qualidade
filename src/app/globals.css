@@ -313,6 +313,34 @@
     box-shadow: var(--shadow-brand);
   }
 
+  /* Glass button — for outline actions placed on dark (brand-green) surfaces */
+  .btn-glass {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.80);
+    backdrop-filter: blur(8px);
+    transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+  }
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: white;
+  }
+  .btn-glass:disabled {
+    opacity: 0.35;
+  }
+
+  /* Page eyebrow label — small uppercase prefix above page h1 in brand headers */
+  .page-eyebrow {
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    color: rgba(188, 147, 63, 0.60);
+    margin-bottom: 2px;
+    line-height: 1;
+  }
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -320,6 +348,154 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  /* ── Split login: brand panel ── */
+  .login-brand-panel {
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(22, 65, 58, 0.92) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 50% at 85% 80%, rgba(14, 44, 38, 0.85) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 70% at 50% 50%, rgba(18, 54, 48, 0.78) 0%, transparent 70%),
+      linear-gradient(145deg, #0d2b26 0%, #16413a 40%, #1a4e44 70%, #0e302a 100%);
+  }
+
+  .login-brand-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle 520px at 15% 25%, rgba(188, 147, 63, 0.18) 0%, transparent 60%),
+      radial-gradient(circle 360px at 82% 68%, rgba(188, 147, 63, 0.12) 0%, transparent 55%),
+      radial-gradient(circle 280px at 55% 15%, rgba(36, 88, 79, 0.55) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Small brand emblem — top left of brand panel */
+  .login-brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: linear-gradient(145deg, #d1a84f 0%, #bc933f 46%, #24584f 100%);
+    box-shadow: 0 8px 20px -6px rgba(188, 147, 63, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.18);
+  }
+
+  /* Mobile version */
+  .login-brand-mark-mobile {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, rgba(188, 147, 63, 0.28) 0%, rgba(22, 65, 58, 0.55) 100%);
+    box-shadow: 0 0 0 1px rgba(188, 147, 63, 0.38), 0 20px 50px -16px rgba(22, 65, 58, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+  }
+
+  .login-feature-item {
+    animation: motion-enter 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  .login-feature-icon-box {
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(188, 147, 63, 0.80);
+    transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+  }
+
+  .login-feature-item:hover .login-feature-icon-box {
+    background: rgba(188, 147, 63, 0.14);
+    border-color: rgba(188, 147, 63, 0.30);
+    color: rgba(188, 147, 63, 1);
+  }
+
+  /* Responsive hero headline — bigger than type-display-xxl on wide screens */
+  .login-hero-headline {
+    font-size: clamp(3.25rem, 4.2vw, 4.75rem);
+    font-variation-settings: "wght" 540;
+    line-height: 0.90;
+    letter-spacing: -0.035em;
+  }
+
+  /* Gold gradient treatment for second headline line */
+  .login-headline-gold {
+    background: linear-gradient(138deg, #f0d483 0%, #d4a848 38%, #bc933f 72%, #a8802e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+  }
+
+  /* Stat pill chips below subtitle */
+  .login-stat-pill {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    padding: 5px 13px;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    border-radius: 100px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* Decorative gold-fade section divider */
+  .login-section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(188, 147, 63, 0.55) 0%, rgba(255, 255, 255, 0.08) 58%, transparent 100%);
+  }
+
+  /* Right form panel — subtle depth background */
+  .login-form-panel {
+    background:
+      radial-gradient(ellipse 130% 55% at 100% 0%, rgba(22, 65, 58, 0.045) 0%, transparent 55%),
+      radial-gradient(ellipse 90% 70% at 0% 100%, rgba(188, 147, 63, 0.05) 0%, transparent 60%),
+      #f9f8f5;
+  }
+
+  /* Icon decoration inside inputs */
+  .login-input-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    color: rgba(22, 65, 58, 0.30);
+    pointer-events: none;
+    transition: color 200ms ease;
+    z-index: 1;
+  }
+
+  .login-input-wrapper:focus-within .login-input-icon {
+    color: rgba(22, 65, 58, 0.58);
+  }
+
+  /* Trust badge row below button */
+  .login-trust-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: rgba(22, 65, 58, 0.26);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 1.25rem;
+  }
+
+  .login-trust-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
   .login-entry-overlay {
     position: fixed;
     inset: 0;

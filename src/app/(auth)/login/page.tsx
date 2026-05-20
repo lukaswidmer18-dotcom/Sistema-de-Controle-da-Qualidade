@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -10,10 +10,19 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, ShieldCheck, CheckCircle2 } from 'lucide-react'
+import {
+  Loader2,
+  ShieldCheck,
+  CheckCircle2,
+  ClipboardCheck,
+  Package,
+  FileText,
+  Lock,
+  Mail,
+  KeyRound,
+  ArrowRight,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useEffect } from 'react'
-import toast from 'react-hot-toast'
 
 const loginSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -23,11 +32,35 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>
 
 const LOADING_STEPS = [
-  "Verificando credenciais...",
-  "Validando parâmetros de Qualidade...",
-  "Inspecionando certificações...",
-  "Acessando ambiente seguro..."
-];
+  'Verificando credenciais...',
+  'Validando parâmetros de Qualidade...',
+  'Inspecionando certificações...',
+  'Acessando ambiente seguro...',
+]
+
+const FEATURES = [
+  {
+    icon: ClipboardCheck,
+    label: 'Checklists de recebimento',
+    desc: 'Formulários completos com fotos e não conformidades',
+  },
+  {
+    icon: Package,
+    label: 'Rastreabilidade de produtos',
+    desc: 'Controle por lote, nota fiscal e placa do veículo',
+  },
+  {
+    icon: FileText,
+    label: 'Relatórios em PDF',
+    desc: 'Exportação e envio automático por e-mail',
+  },
+  {
+    icon: Lock,
+    label: 'Acesso controlado',
+    desc: 'Autenticação com controle de perfis por unidade',
+  },
+]
+
 
 export default function LoginPage() {
   const router = useRouter()
@@ -39,28 +72,27 @@ export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   })
+
   const loadingProgress = Math.min(100, Math.round(((loadingStep + 1) / LOADING_STEPS.length) * 100))
 
   useEffect(() => {
     if (isEntering) {
       const interval = setInterval(() => {
-        setLoadingStep((prev) => (prev < LOADING_STEPS.length - 1 ? prev + 1 : prev));
-      }, 800);
-      return () => clearInterval(interval);
+        setLoadingStep(prev => prev < LOADING_STEPS.length - 1 ? prev + 1 : prev)
+      }, 800)
+      return () => clearInterval(interval)
     }
-  }, [isEntering]);
+  }, [isEntering])
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true)
     setError('')
-
     try {
       const result = await signIn('credentials', {
         email: data.email,
         password: data.password,
         redirect: false,
       })
-
       if (result?.error) {
         setError('E-mail ou senha incorretos.')
         setIsLoading(false)
@@ -78,26 +110,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login-shell min-h-screen flex items-center justify-center p-4">
-      {/* Blobs animados de fundo */}
-      <div className="brand-blob-1" aria-hidden="true" />
-      <div className="brand-blob-2" aria-hidden="true" />
-      <div className="brand-blob-3" aria-hidden="true" />
-      <div className="brand-mesh" aria-hidden="true" />
-
+    <div className="min-h-screen flex">
+      {/* Loading overlay */}
       {isEntering && (
         <div className="login-entry-overlay overflow-hidden">
           <div className="login-entry-glow" aria-hidden="true" />
-
           <div className="login-verification-panel relative z-10 w-full max-w-[620px] rounded-xl p-6 sm:p-8 lg:p-10">
             <div className="flex items-start gap-5 sm:gap-6">
               <div className="login-verification-emblem flex h-20 w-20 shrink-0 items-center justify-center rounded-full sm:h-24 sm:w-24">
                 <ShieldCheck className="login-verification-icon h-10 w-10 text-white sm:h-12 sm:w-12" />
               </div>
               <div className="min-w-0 pt-1.5 sm:pt-2">
-                <p className="text-xs font-black uppercase tracking-[0.34em] text-brand-gold sm:text-sm">
-                  Grupo Pluma
-                </p>
+                <div className="flex flex-col leading-none">
+                  <span className="text-[0.5rem] font-black uppercase tracking-[0.50em] leading-none" style={{ color: 'rgba(188,147,63,0.70)' }}>Grupo</span>
+                  <span className="text-[1.125rem] font-black uppercase tracking-[0.04em] leading-none mt-0.5 text-brand-gold">Pluma</span>
+                </div>
                 <h2 className="mt-1 text-3xl font-black tracking-tight text-white sm:text-4xl">
                   Validando acesso
                 </h2>
@@ -106,7 +133,6 @@ export default function LoginPage() {
                 </p>
               </div>
             </div>
-
             <div className="mt-8 space-y-2.5 sm:mt-10">
               <div className="flex items-center justify-between text-xs font-bold uppercase tracking-[0.18em] text-white/[0.46]">
                 <span>Progresso</span>
@@ -119,12 +145,10 @@ export default function LoginPage() {
                 />
               </div>
             </div>
-
             <div className="mt-7 space-y-3">
               {LOADING_STEPS.map((step, idx) => {
                 const complete = idx < loadingStep
                 const active = idx === loadingStep
-
                 return (
                   <div
                     key={step}
@@ -134,18 +158,15 @@ export default function LoginPage() {
                     style={{ animationDelay: `${idx * 90}ms` }}
                   >
                     <span className="login-step-marker flex h-9 w-9 shrink-0 items-center justify-center rounded-full">
-                      {complete ? (
-                        <CheckCircle2 className="h-5 w-5" />
-                      ) : (
-                        <span className="h-2 w-2 rounded-full bg-current" />
-                      )}
+                      {complete
+                        ? <CheckCircle2 className="h-5 w-5" />
+                        : <span className="h-2 w-2 rounded-full bg-current" />}
                     </span>
                     <span className="min-w-0 text-base font-semibold">{step}</span>
                   </div>
                 )
               })}
             </div>
-
             <div className="mt-7 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-xs font-bold uppercase tracking-[0.18em] text-white/[0.38]">
               <span>Ambiente seguro</span>
               <span>Bello Alimentos LTDA</span>
@@ -154,135 +175,200 @@ export default function LoginPage() {
         </div>
       )}
 
-      <div className={cn('w-full max-w-md transition-all duration-700 relative z-10', isEntering && 'scale-[0.96] opacity-0 blur-sm')}>
-        <div className="motion-enter text-center mb-8">
-          <div
-            className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-5"
-            style={{
-              background: 'linear-gradient(145deg, rgba(188,147,63,0.28) 0%, rgba(22,65,58,0.55) 100%)',
-              boxShadow: '0 0 0 1px rgba(188,147,63,0.38), 0 20px 50px -16px rgba(22,65,58,0.9), inset 0 1px 0 rgba(255,255,255,0.15)',
-              backdropFilter: 'blur(12px)',
-            }}
-          >
-            <ShieldCheck className="w-9 h-9 text-white" />
+      {/* ── Left brand panel (desktop only) ── */}
+      <div className="hidden lg:flex lg:w-[56%] xl:w-[58%] login-brand-panel relative overflow-hidden flex-col">
+        <div className="brand-blob-1" aria-hidden="true" />
+        <div className="brand-blob-2" aria-hidden="true" />
+        <div className="brand-mesh" aria-hidden="true" />
+
+        <div className="relative z-10 flex flex-col h-full px-10 py-10 xl:px-14 xl:py-12">
+          {/* Top: brand mark */}
+          <div className="flex flex-col leading-none">
+            <span className="text-[0.875rem] font-black uppercase tracking-[0.45em] leading-none" style={{ color: 'rgba(188,147,63,0.65)' }}>Grupo</span>
+            <span className="text-[3.25rem] font-black uppercase tracking-[0.04em] leading-none mt-1 text-brand-gold">Pluma</span>
           </div>
-          <p
-            className="text-xs font-black uppercase tracking-[0.42em] mb-1"
-            style={{ color: '#d4a84b', textShadow: '0 0 24px rgba(188,147,63,0.5)' }}
-          >
-            Grupo Pluma
-          </p>
-          <h1
-            className="text-4xl font-black tracking-tight"
-            style={{ color: '#ffffff', textShadow: '0 2px 20px rgba(22,65,58,0.6)' }}
-          >
-            Controle da Qualidade
-          </h1>
-          <p className="mt-2 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.52)' }}>
-            Recebimento de Veículos
+
+          {/* Middle: headline + stats + features */}
+          <div className="my-auto pt-8">
+            <h1 className="login-hero-headline text-white">
+              Controle<br />
+              <span className="login-headline-gold">da Qualidade</span>
+            </h1>
+            <p className="mt-5 text-[0.9375rem] text-white/50 max-w-[380px] leading-relaxed">
+              Plataforma integrada de monitoramento e rastreabilidade no recebimento de insumos e produtos.
+            </p>
+
+            {/* Section divider */}
+            <div className="login-section-divider mt-8 mb-6" />
+
+            {/* Features */}
+            <div className="space-y-2.5">
+              {FEATURES.map((f, i) => (
+                <div
+                  key={i}
+                  className="login-feature-item flex items-center gap-3.5"
+                  style={{ animationDelay: `${150 + i * 75}ms` }}
+                >
+                  <div className="login-feature-icon-box w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0">
+                    <f.icon className="w-[17px] h-[17px]" />
+                  </div>
+                  <div>
+                    <p className="text-[0.8125rem] font-semibold text-white/85 leading-tight">{f.label}</p>
+                    <p className="text-[0.75rem] text-white/60 leading-snug mt-0.5">{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom: footer */}
+          <p className="text-[0.6875rem] text-white/45 tracking-wide">
+            © 2026 Bello Alimentos LTDA · Desenvolvido por Lukas Widmer
           </p>
         </div>
+      </div>
 
-        <div
-          className="motion-enter-delay rounded-2xl p-6"
-          style={{
-            background: 'rgba(255, 255, 255, 0.07)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            border: '1px solid rgba(255, 255, 255, 0.14)',
-            boxShadow: '0 32px 80px -24px rgba(0,0,0,0.55), 0 0 0 1px rgba(188,147,63,0.15), inset 0 1px 0 rgba(255,255,255,0.12)',
-          }}
-        >
-          <div className="mb-5">
-            <h2 className="text-lg font-bold" style={{ color: '#ffffff' }}>Acesso ao Sistema</h2>
-            <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.48)' }}>
+      {/* ── Right form panel ── */}
+      <div
+        className="flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-12 login-form-panel"
+        style={{ borderLeft: '1px solid rgba(22,65,58,0.07)' }}
+      >
+        <div className={cn(
+          'w-full max-w-[360px] transition-all duration-700',
+          isEntering && 'scale-[0.96] opacity-0 blur-sm'
+        )}>
+
+          {/* Mobile brand (hidden on desktop) */}
+          <div className="lg:hidden text-center mb-10 motion-enter">
+            <div className="flex flex-col items-center leading-none mb-4">
+              <span className="text-[0.5625rem] font-black uppercase tracking-[0.52em] leading-none" style={{ color: 'rgba(188,147,63,0.70)' }}>Grupo</span>
+              <span className="text-[2rem] font-black uppercase tracking-[0.04em] leading-none mt-1 text-brand-gold">Pluma</span>
+            </div>
+            <h1 className="text-[1.75rem] font-black tracking-tight text-brand-green leading-tight">
+              Controle da Qualidade
+            </h1>
+            <p className="text-sm text-gray-400 mt-2">Recebimento de Veículos</p>
+          </div>
+
+          {/* Form header */}
+          <div className="mb-7 motion-enter">
+            <h2 className="text-[1.75rem] font-black tracking-tight text-brand-green leading-tight">
+              Bem-vindo de volta
+            </h2>
+            <p className="text-sm text-gray-400 mt-1.5">
               Informe suas credenciais para continuar
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 motion-enter-delay">
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" className="text-sm py-2.5">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
             <div className="space-y-1.5">
-              <Label htmlFor="email" style={{ color: 'rgba(255,255,255,0.70)' }}>E-mail</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="seu@email.com"
-                {...register('email')}
-                disabled={isLoading}
-                className="bg-white/10 border-white/16 text-white placeholder:text-white/30 focus:border-amber-400/50 focus:ring-amber-400/20"
-              />
+              <Label htmlFor="email" className="text-[0.8125rem] font-semibold text-gray-600">
+                E-mail
+              </Label>
+              <div className="relative login-input-wrapper">
+                <Mail className="login-input-icon" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  {...register('email')}
+                  disabled={isLoading}
+                  className="h-11 pl-[2.375rem] bg-white border-gray-200 text-gray-900 placeholder:text-gray-300 focus-visible:ring-brand-green/20 focus-visible:border-brand-green/60 transition-colors"
+                />
+              </div>
               {errors.email && (
-                <p className="text-xs text-red-400">{errors.email.message}</p>
+                <p className="text-xs text-red-500">{errors.email.message}</p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password" style={{ color: 'rgba(255,255,255,0.70)' }}>Senha</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                {...register('password')}
-                disabled={isLoading}
-                className="bg-white/10 border-white/16 text-white placeholder:text-white/30 focus:border-amber-400/50 focus:ring-amber-400/20"
-              />
+              <Label htmlFor="password" className="text-[0.8125rem] font-semibold text-gray-600">
+                Senha
+              </Label>
+              <div className="relative login-input-wrapper">
+                <KeyRound className="login-input-icon" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  {...register('password')}
+                  disabled={isLoading}
+                  className="h-11 pl-[2.375rem] bg-white border-gray-200 text-gray-900 placeholder:text-gray-300 focus-visible:ring-brand-green/20 focus-visible:border-brand-green/60 transition-colors"
+                />
+              </div>
               {errors.password && (
-                <p className="text-xs text-red-400">{errors.password.message}</p>
+                <p className="text-xs text-red-500">{errors.password.message}</p>
               )}
             </div>
 
             <Button
               type="submit"
-              className="w-full font-semibold mt-2 transition-all active:scale-95"
+              className="w-full h-11 font-semibold transition-all active:scale-[0.985] mt-2 group"
               disabled={isLoading}
               style={{
                 background: isLoading
-                  ? 'rgba(188,147,63,0.4)'
-                  : 'linear-gradient(135deg, #c9a04a 0%, #bc933f 50%, #a07c30 100%)',
+                  ? 'rgba(22,65,58,0.40)'
+                  : 'linear-gradient(135deg, #16413a 0%, #1d5c51 60%, #16413a 100%)',
                 color: '#fff',
                 border: 'none',
-                boxShadow: '0 8px 24px -8px rgba(188,147,63,0.6)',
+                boxShadow: isLoading ? 'none' : '0 8px 24px -10px rgba(22,65,58,0.58)',
               }}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
                   Entrando...
                 </>
               ) : (
-                'Entrar'
+                <span className="flex items-center justify-center gap-2">
+                  Entrar
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                </span>
               )}
             </Button>
           </form>
 
+          {/* Trust row */}
+          <div className="login-trust-row">
+            <Lock className="w-3 h-3" />
+            <span>Conexão segura</span>
+            <span className="login-trust-dot" />
+            <span>SSL</span>
+            <span className="login-trust-dot" />
+            <span>Bello Alimentos</span>
+          </div>
+
+          {/* Demo credentials — brand-cohesive treatment */}
           <div
-            className="mt-5 p-3 rounded-xl text-xs"
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: 'rgba(255,255,255,0.45)',
-            }}
+            className="mt-5 rounded-xl overflow-hidden"
+            style={{ border: '1px solid rgba(22,65,58,0.09)', background: 'rgba(22,65,58,0.025)' }}
           >
-            <p className="font-bold mb-1" style={{ color: 'rgba(188,147,63,0.85)' }}>Usuários de demonstração:</p>
-            <p>admin@empresa.com / admin123</p>
-            <p>qualidade@empresa.com / qualidade123</p>
+            <div
+              className="px-4 py-2.5"
+              style={{ borderBottom: '1px solid rgba(22,65,58,0.07)', background: 'rgba(22,65,58,0.04)' }}
+            >
+              <p className="text-[0.6875rem] font-bold uppercase tracking-[0.12em]" style={{ color: 'rgba(22,65,58,0.42)' }}>
+                Acesso de demonstração
+              </p>
+            </div>
+            <div className="px-4 py-3 space-y-2">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[0.75rem] font-mono truncate" style={{ color: 'rgba(22,65,58,0.58)' }}>admin@empresa.com</span>
+                <span className="text-[0.75rem] font-mono shrink-0" style={{ color: 'rgba(22,65,58,0.35)' }}>admin123</span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-[0.75rem] font-mono truncate" style={{ color: 'rgba(22,65,58,0.58)' }}>qualidade@empresa.com</span>
+                <span className="text-[0.75rem] font-mono shrink-0" style={{ color: 'rgba(22,65,58,0.35)' }}>qualidade123</span>
+              </div>
+            </div>
           </div>
         </div>
-
-        <p
-          className="text-center text-xs mt-6"
-          style={{ color: 'rgba(255,255,255,0.28)' }}
-        >
-          © 2026 Grupo Pluma{' '}
-          <span style={{ color: 'rgba(188,147,63,0.45)' }}>•</span>
-          {' '}Desenvolvido por Lukas Widmer
-        </p>
       </div>
     </div>
   )

@@ -439,8 +439,11 @@ export default function NovoFormularioPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="text-xl font-bold text-white">Novo Formulário de Recebimento</h1>
-              <p className="text-sm text-white/65">Etapa {currentStep} de {STEPS.length}</p>
+              <p className="text-[0.625rem] font-bold uppercase tracking-[0.24em] mb-0.5" style={{ color: 'rgba(188,147,63,0.60)' }}>
+                Recebimento
+              </p>
+              <h1 className="text-xl font-black tracking-tight text-white leading-none">Novo Formulário</h1>
+              <p className="text-[0.75rem] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>Etapa {currentStep} de {STEPS.length}</p>
             </div>
             <Badge variant="outline" className="border-brand-gold/45 bg-white/8 text-xs font-mono text-white">
               {formData.formNumber}
@@ -474,12 +477,12 @@ export default function NovoFormularioPage() {
                       ? 'bg-brand-green text-white font-semibold shadow-[0_16px_38px_-24px_rgba(22,65,58,0.8)]'
                       : isDone
                         ? 'bg-brand-green/10 text-brand-green hover:bg-brand-green/15 cursor-pointer'
-                        : 'text-gray-400 cursor-default'
+                        : 'text-brand-green/35 cursor-default'
                   )}
                 >
                   <div className={cn(
                     'w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs font-bold',
-                    isActive ? 'bg-brand-gold text-white' : isDone ? 'bg-brand-green text-white' : 'bg-gray-200 text-gray-400'
+                    isActive ? 'bg-brand-gold text-white' : isDone ? 'bg-brand-green text-white' : 'text-brand-green/30'
                   )}>
                     {isDone ? <CheckCircle2 className="w-3.5 h-3.5" /> : step.id}
                   </div>

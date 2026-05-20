@@ -173,18 +173,21 @@ export default function ReceiptDetailPage() {
       <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <Button variant="ghost" size="sm" onClick={() => router.back()} className="h-8 w-8 p-0 shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => router.back()} className="h-8 w-8 p-0 shrink-0 text-white/60 hover:text-white hover:bg-white/10">
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <div className="min-w-0">
-              <h1 className="text-lg font-bold text-white truncate">
-                Recebimento {receipt.formNumber}
+              <p className="text-[0.625rem] font-bold uppercase tracking-[0.24em] mb-0.5" style={{ color: 'rgba(188,147,63,0.60)' }}>
+                Formulário
+              </p>
+              <h1 className="text-lg font-black tracking-tight text-white leading-none truncate">
+                {receipt.formNumber}
               </h1>
-              <p className="text-xs text-white/65">{formatDateTime(receipt.receivedAt)}</p>
+              <p className="text-[0.75rem] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{formatDateTime(receipt.receivedAt)}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             <Badge className={cn('border text-xs', getStatusColor(receipt.generalStatus))}>
               {getStatusLabel(receipt.generalStatus)}
             </Badge>
@@ -194,14 +197,14 @@ export default function ReceiptDetailPage() {
                 size="sm"
                 onClick={generatePdf}
                 disabled={generatingPdf}
-                className="gap-1.5 text-xs"
+                className="gap-1.5 text-xs border-white/[0.14] bg-white/[0.07] text-white/80 hover:bg-white/[0.14] hover:text-white hover:border-white/25 transition-all"
               >
                 {generatingPdf ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
                 Gerar PDF
               </Button>
             )}
             {receipt.htmlUrl && (
-              <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs">
+              <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs border-white/[0.14] bg-white/[0.07] text-white/80 hover:bg-white/[0.14] hover:text-white hover:border-white/25 transition-all">
                 <a href={receipt.htmlUrl} target="_blank" rel="noopener noreferrer">
                   <Eye className="w-3.5 h-3.5" />
                   Ver HTML
@@ -209,7 +212,7 @@ export default function ReceiptDetailPage() {
               </Button>
             )}
             {receipt.pdfUrl && (
-              <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs">
+              <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs border-white/[0.14] bg-white/[0.07] text-white/80 hover:bg-white/[0.14] hover:text-white hover:border-white/25 transition-all">
                 <a href={receipt.pdfUrl} target="_blank" rel="noopener noreferrer">
                   <FileText className="w-3.5 h-3.5" />
                   Ver PDF
@@ -217,7 +220,7 @@ export default function ReceiptDetailPage() {
               </Button>
             )}
             {receipt.pdfUrl && (
-              <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs">
+              <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs border-white/[0.14] bg-white/[0.07] text-white/80 hover:bg-white/[0.14] hover:text-white hover:border-white/25 transition-all">
                 <a href={receipt.pdfUrl} download>
                   <Download className="w-3.5 h-3.5" />
                   Baixar
@@ -228,7 +231,7 @@ export default function ReceiptDetailPage() {
               variant="outline"
               size="sm"
               onClick={() => setShowEmailModal(true)}
-              className="gap-1.5 text-xs"
+              className="gap-1.5 text-xs border-white/[0.14] bg-white/[0.07] text-white/80 hover:bg-white/[0.14] hover:text-white hover:border-white/25 transition-all"
             >
               <Mail className="w-3.5 h-3.5" />
               E-mail
