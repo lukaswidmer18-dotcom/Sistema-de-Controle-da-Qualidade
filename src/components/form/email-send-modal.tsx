@@ -149,7 +149,6 @@ export function EmailSendModal({ open, onOpenChange, receipt, onSent }: EmailSen
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Erro ao enviar')
 
-      toast.success('E-mail enviado com sucesso!')
       onSent?.()
       onOpenChange(false)
     } catch (err) {

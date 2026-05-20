@@ -391,9 +391,10 @@ export default function NovoFormularioPage() {
       if (pdfRes.ok) {
         const pdfData = await pdfRes.json() as { pdfUrl?: string }
         setSavedPdfUrl(pdfData.pdfUrl ?? null)
+        toast.success('Formulário salvo e PDF gerado com sucesso!')
+      } else {
+        toast.success('Formulário salvo! PDF não pôde ser gerado — tente gerar novamente.')
       }
-
-      toast.success('Formulário salvo com sucesso!')
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Erro inesperado'
       toast.error(message)

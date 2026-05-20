@@ -15,6 +15,8 @@ import {
   Truck,
   Package,
   ClipboardList,
+  RefreshCw,
+  Eye,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -93,6 +95,7 @@ export default function ReceiptDetailPage() {
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [showEmailModal, setShowEmailModal] = useState(false)
+  const [generatingPdf, setGeneratingPdf] = useState(false)
 
   useEffect(() => {
     const fetchReceipt = async () => {
@@ -105,10 +108,6 @@ export default function ReceiptDetailPage() {
         if (!res.ok) throw new Error('Erro ao carregar')
         const data = await res.json() as ReceiptDetail
         setReceipt(data)
-
-        if (data.htmlUrl) {
-          window.open(data.htmlUrl, '_blank')
-        }
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : 'Erro inesperado'
         toast.error(message)
@@ -118,6 +117,27 @@ export default function ReceiptDetailPage() {
     }
     void fetchReceipt()
   }, [id])
+
+  const generatePdf = async () => {
+    if (!receipt) return
+    setGeneratingPdf(true)
+    try {
+      const res = await fetch('/api/pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ receiptId: receipt.id }),
+      })
+      if (!res.ok) throw new Error('Erro ao gerar PDF')
+      const data = await res.json() as { pdfUrl?: string }
+      setReceipt(prev => prev ? { ...prev, pdfUrl: data.pdfUrl ?? prev.pdfUrl } : prev)
+      toast.success('PDF gerado com sucesso!')
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro inesperado'
+      toast.error(message)
+    } finally {
+      setGeneratingPdf(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -168,6 +188,26 @@ export default function ReceiptDetailPage() {
             <Badge className={cn('border text-xs', getStatusColor(receipt.generalStatus))}>
               {getStatusLabel(receipt.generalStatus)}
             </Badge>
+            {!receipt.pdfUrl && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={generatePdf}
+                disabled={generatingPdf}
+                className="gap-1.5 text-xs"
+              >
+                {generatingPdf ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                Gerar PDF
+              </Button>
+            )}
+            {receipt.htmlUrl && (
+              <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs">
+                <a href={receipt.htmlUrl} target="_blank" rel="noopener noreferrer">
+                  <Eye className="w-3.5 h-3.5" />
+                  Ver HTML
+                </a>
+              </Button>
+            )}
             {receipt.pdfUrl && (
               <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs">
                 <a href={receipt.pdfUrl} target="_blank" rel="noopener noreferrer">

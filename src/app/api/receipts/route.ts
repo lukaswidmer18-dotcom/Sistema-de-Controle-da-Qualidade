@@ -129,34 +129,39 @@ export async function GET(request: NextRequest) {
     where.products = { some: productWhere }
   }
 
-  const [receipts, total] = await Promise.all([
-    prisma.receipt.findMany({
-      where,
-      include: {
-        products: { select: { productCode: true, lot: true } },
-        nonConformities: { select: { description: true } },
-        creator: { select: { name: true, email: true } },
-        _count: { select: { nonConformities: true, emailLogs: true } },
-      },
-      orderBy: { createdAt: 'desc' },
-      skip,
-      take: limit,
-    }),
-    prisma.receipt.count({ where }),
-  ])
+  try {
+    const [receipts, total] = await Promise.all([
+      prisma.receipt.findMany({
+        where,
+        include: {
+          products: { select: { productCode: true, lot: true } },
+          nonConformities: { select: { description: true } },
+          creator: { select: { name: true, email: true } },
+          _count: { select: { nonConformities: true, emailLogs: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.receipt.count({ where }),
+    ])
 
-  const rows = receipts.map(receipt => ({
-    ...receipt,
-    htmlUrl: receipt.pdfUrl,
-    emailSentAt: receipt.lastEmailSentAt,
-  }))
+    const rows = receipts.map(receipt => ({
+      ...receipt,
+      htmlUrl: receipt.pdfUrl,
+      emailSentAt: receipt.lastEmailSentAt,
+    }))
 
-  return NextResponse.json({
-    receipts: rows,
-    total,
-    page,
-    totalPages: Math.ceil(total / limit),
-  })
+    return NextResponse.json({
+      receipts: rows,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    })
+  } catch (error) {
+    console.error('Error fetching receipts:', error)
+    return NextResponse.json({ error: 'Erro ao buscar recebimentos' }, { status: 500 })
+  }
 }
 
 export async function POST(request: NextRequest) {

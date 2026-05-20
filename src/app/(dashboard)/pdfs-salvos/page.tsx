@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import toast from 'react-hot-toast'
 import {
   Search,
@@ -328,7 +329,9 @@ export default function PdfsSalvosPage() {
                         {formatDateTime(row.receivedAt)}
                       </td>
                       <td className="px-4 py-3">
-                        <span className="font-mono text-xs font-medium text-gray-800">{row.formNumber}</span>
+                        <Link href={`/pdfs-salvos/${row.id}`} className="font-mono text-xs font-medium text-brand-green hover:underline">
+                          {row.formNumber}
+                        </Link>
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-600">{row.invoiceNumber}</td>
                       <td className="px-4 py-3">

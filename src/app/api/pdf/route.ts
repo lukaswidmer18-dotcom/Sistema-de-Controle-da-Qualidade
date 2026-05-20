@@ -65,12 +65,12 @@ export async function POST(request: NextRequest) {
     await mkdir(uploadsDir, { recursive: true })
 
     // Save HTML for in-browser preview
-    const htmlFileName = `receipt-${receipt.formNumber}-${Date.now()}.html`
+    const htmlFileName = `Monitoramento-de-Recebimento-de-Produtos-${receipt.formNumber}.html`
     const htmlFilePath = join(uploadsDir, htmlFileName)
     await writeFile(htmlFilePath, html, 'utf-8')
 
     // Generate real PDF with puppeteer
-    const pdfFileName = `receipt-${receipt.formNumber}-${Date.now()}.pdf`
+    const pdfFileName = `Monitoramento-de-Recebimento-de-Produtos-${receipt.formNumber}.pdf`
     const pdfFilePath = join(uploadsDir, pdfFileName)
 
     const browser = await puppeteer.launch({
