@@ -60,6 +60,7 @@ export default function ListasPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState<ListFormData>(EMPTY_FORM)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
 
   const fetchLists = useCallback(async () => {
     setLoading(true)
@@ -138,8 +139,14 @@ export default function ListasPage() {
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir esta lista?')) return
+  const handleDelete = (id: string) => {
+    setConfirmDeleteId(id)
+  }
+
+  const doDelete = async () => {
+    if (!confirmDeleteId) return
+    const id = confirmDeleteId
+    setConfirmDeleteId(null)
     setDeleting(id)
     try {
       const res = await fetch(`/api/email-lists/${id}`, { method: 'DELETE' })
@@ -314,6 +321,23 @@ export default function ListasPage() {
             <Button onClick={() => void handleSave()} disabled={saving} className="gap-2">
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
               {editingId ? 'Salvar Alterações' : 'Criar Lista'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!confirmDeleteId} onOpenChange={(open) => { if (!open) setConfirmDeleteId(null) }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Excluir lista</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600">Tem certeza que deseja excluir esta lista? Esta ação não pode ser desfeita.</p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDeleteId(null)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={() => void doDelete()}>
+              Excluir
             </Button>
           </DialogFooter>
         </DialogContent>
