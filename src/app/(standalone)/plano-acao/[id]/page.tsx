@@ -12,6 +12,7 @@ import {
   Download,
   AlertTriangle,
   ClipboardList,
+  LinkIcon,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -69,6 +70,7 @@ export default function PlanoAcaoPage() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [alreadySubmitted, setAlreadySubmitted] = useState(false)
   const [actionPlanPdfUrl, setActionPlanPdfUrl] = useState<string | null>(null)
   const [showPhotos, setShowPhotos] = useState(false)
 
@@ -95,6 +97,7 @@ export default function PlanoAcaoPage() {
           if (ap.status === 'CONCLUIDO') {
             setSubmitted(true)
             setActionPlanPdfUrl(ap.pdfUrl ?? null)
+            if (canFill) setAlreadySubmitted(true)
           }
         }
       })
@@ -162,6 +165,35 @@ export default function PlanoAcaoPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-brand-green/60">Recebimento não encontrado.</p>
+      </div>
+    )
+  }
+
+  if (canFill && alreadySubmitted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="brand-card rounded-2xl p-10 max-w-md w-full text-center space-y-5">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto" style={{ background: 'rgba(239,68,68,0.08)' }}>
+            <LinkIcon className="w-8 h-8 text-red-400" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-xl font-bold text-gray-800">Link Expirado</h1>
+            <p className="text-sm text-gray-500">
+              O plano de ação para o formulário <span className="font-mono font-semibold text-brand-green">{receipt.formNumber}</span> já foi registrado.
+            </p>
+            <p className="text-xs text-gray-400">
+              Este link é de uso único e não está mais disponível.
+            </p>
+          </div>
+          <div
+            className="rounded-lg px-4 py-3 text-xs text-left space-y-1"
+            style={{ background: 'rgba(22,65,58,0.04)', border: '1px solid rgba(22,65,58,0.08)' }}
+          >
+            <p className="text-gray-400 uppercase tracking-wider font-semibold text-[0.65rem]">Recebimento</p>
+            <p className="text-gray-600 font-mono">{receipt.invoiceNumber} · {receipt.trailerPlate}</p>
+            <p className="text-gray-400">{receipt.qualityResponsible}</p>
+          </div>
+        </div>
       </div>
     )
   }
@@ -384,13 +416,6 @@ export default function PlanoAcaoPage() {
                     Baixar PDF do Plano de Ação
                   </a>
                 )}
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => setSubmitted(false)}
-                >
-                  Editar plano de ação
-                </Button>
               </div>
             </div>
           ) : (
