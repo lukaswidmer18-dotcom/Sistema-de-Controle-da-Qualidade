@@ -130,6 +130,10 @@ export default function LoginScreen() {
                 <Text style={styles.buttonText}>Entrar</Text>
               )}
             </TouchableOpacity>
+
+            <View style={styles.trustRow}>
+              <Text style={styles.trustText}>🔒  Conexão segura · SSL</Text>
+            </View>
           </View>
 
           <Text style={styles.version}>v1.0.0</Text>
@@ -274,6 +278,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '800',
     letterSpacing: 0.3,
+  },
+  trustRow: {
+    alignItems: 'center',
+    marginTop: 14,
+  },
+  trustText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: 'rgba(22,65,58,0.35)',
+    letterSpacing: 0.5,
   },
   version: {
     color: 'rgba(255,255,255,0.25)',

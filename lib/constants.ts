@@ -32,4 +32,6 @@ export const ALWAYS_REQUIRE_PHOTO_KEYS = ['temperatura_veiculo', 'lacre', 'termo
 
 export const BRAND_GREEN = '#16413a'
 export const BRAND_GOLD = '#bc933f'
-export const BRAND_CREAM = '#f5f0e8'
+export const BRAND_CREAM = '#f8f5eb'
+export const HAIRLINE_GREEN = 'rgba(22,65,58,0.10)'
+export const HAIRLINE_GOLD = 'rgba(188,147,63,0.18)'

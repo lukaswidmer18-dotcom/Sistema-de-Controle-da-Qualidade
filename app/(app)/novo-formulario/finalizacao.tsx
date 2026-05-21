@@ -7,7 +7,7 @@ import { router, Stack } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
 import { useFormStore } from '@/store/formStore'
 import api, { API_BASE_URL } from '@/lib/api'
-import { BRAND_GREEN, BRAND_GOLD } from '@/lib/constants'
+import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 
 export default function Step6Finalizacao() {
   const { form, reset } = useFormStore()
@@ -150,7 +150,7 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   content: { padding: 16 },
   stepBar: { flexDirection: 'row', gap: 6, justifyContent: 'center', marginBottom: 16 },
   stepDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#e5e7eb', alignItems: 'center', justifyContent: 'center' },
@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
   stepDotText: { fontSize: 12, fontWeight: '700', color: '#6b7280' },
   stepDotTextActive: { color: '#fff' },
   sectionTitle: { fontSize: 15, fontWeight: '800', color: BRAND_GREEN, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 14 },
-  infoBox: { backgroundColor: '#fff', borderRadius: 12, padding: 14, borderWidth: 1, borderColor: '#f0f0f0', marginBottom: 14 },
+  infoBox: { backgroundColor: '#fff', borderRadius: 16, padding: 14, borderWidth: 1, borderColor: HAIRLINE_GREEN, marginBottom: 14, shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2 },
   infoRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#f9fafb' },
   infoLabel: { fontSize: 13, color: '#9ca3af', fontWeight: '600' },
   infoValue: { fontSize: 13, color: '#111827', fontWeight: '500' },
   noteBox: { backgroundColor: 'rgba(22,65,58,0.04)', borderRadius: 10, padding: 14, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(22,65,58,0.08)' },
   noteText: { fontSize: 13, color: 'rgba(22,65,58,0.7)', lineHeight: 20 },
-  submitBtn: { backgroundColor: BRAND_GREEN, borderRadius: 12, height: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+  submitBtn: { backgroundColor: BRAND_GREEN, borderRadius: 14, height: 56, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.30, shadowRadius: 8, elevation: 6 },
   submitBtnDisabled: { opacity: 0.6 },
   submitBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },
   // Success screen

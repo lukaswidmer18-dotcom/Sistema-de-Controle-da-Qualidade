@@ -2,7 +2,7 @@ import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Alert } from 'rea
 import { router, Stack } from 'expo-router'
 import { useFormStore } from '@/store/formStore'
 import { ChecklistItemRow } from '@/components/form/ChecklistItemRow'
-import { BRAND_GREEN, ALWAYS_REQUIRE_PHOTO_KEYS } from '@/lib/constants'
+import { BRAND_GREEN, BRAND_CREAM, HAIRLINE_GREEN, ALWAYS_REQUIRE_PHOTO_KEYS } from '@/lib/constants'
 import { PhotoData, ChecklistStatus } from '@/lib/types'
 
 export default function Step2Veiculo() {
@@ -71,7 +71,7 @@ export default function Step2Veiculo() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   content: { padding: 16 },
   stepBar: { flexDirection: 'row', gap: 6, justifyContent: 'center', marginBottom: 16 },
   stepDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#e5e7eb', alignItems: 'center', justifyContent: 'center' },
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   stepDotTextActive: { color: '#fff' },
   sectionTitle: { fontSize: 15, fontWeight: '800', color: BRAND_GREEN, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
   hint: { fontSize: 12, color: '#9ca3af', marginBottom: 14 },
-  nextBtn: { backgroundColor: BRAND_GREEN, borderRadius: 12, height: 52, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
+  nextBtn: { backgroundColor: BRAND_GREEN, borderRadius: 14, height: 52, alignItems: 'center', justifyContent: 'center', marginTop: 8, shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.30, shadowRadius: 8, elevation: 6 },
   nextBtnDisabled: { opacity: 0.4 },
   nextBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },
 })

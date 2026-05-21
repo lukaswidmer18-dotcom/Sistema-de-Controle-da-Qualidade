@@ -1,7 +1,7 @@
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { router, Stack } from 'expo-router'
 import { useFormStore } from '@/store/formStore'
-import { BRAND_GREEN, BRAND_GOLD } from '@/lib/constants'
+import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 import { GeneralStatus } from '@/lib/types'
 import { getStatusLabel, getStatusColor } from '@/lib/utils'
 
@@ -115,7 +115,7 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   content: { padding: 16 },
   stepBar: { flexDirection: 'row', gap: 6, justifyContent: 'center', marginBottom: 16 },
   stepDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#e5e7eb', alignItems: 'center', justifyContent: 'center' },
@@ -132,11 +132,11 @@ const styles = StyleSheet.create({
   statusGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
   statusBtn: { paddingVertical: 10, paddingHorizontal: 14, borderRadius: 10, borderWidth: 1.5 },
   statusBtnText: { fontSize: 13, fontWeight: '700' },
-  summaryBox: { backgroundColor: '#fff', borderRadius: 12, padding: 14, borderWidth: 1, borderColor: '#f0f0f0', marginBottom: 16 },
+  summaryBox: { backgroundColor: '#fff', borderRadius: 16, padding: 14, borderWidth: 1, borderColor: HAIRLINE_GREEN, marginBottom: 16, shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2 },
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: '#f9fafb' },
   summaryLabel: { fontSize: 13, color: '#9ca3af', fontWeight: '600' },
   summaryValue: { fontSize: 13, color: '#111827', fontWeight: '500' },
-  nextBtn: { backgroundColor: BRAND_GREEN, borderRadius: 12, height: 52, alignItems: 'center', justifyContent: 'center' },
+  nextBtn: { backgroundColor: BRAND_GREEN, borderRadius: 14, height: 52, alignItems: 'center', justifyContent: 'center', shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.30, shadowRadius: 8, elevation: 6 },
   nextBtnDisabled: { opacity: 0.4 },
   nextBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },
 })

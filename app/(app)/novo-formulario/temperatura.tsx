@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import { router, Stack } from 'expo-router'
 import { useFormStore } from '@/store/formStore'
-import { BRAND_GREEN, BRAND_GOLD } from '@/lib/constants'
+import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 import { TemperatureMeasurementData, TemperatureType } from '@/lib/types'
 
 const TEMP_TYPES: { value: TemperatureType; label: string; color: string }[] = [
@@ -156,7 +156,7 @@ function TemperatureCard({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   content: { padding: 16 },
   stepBar: { flexDirection: 'row', gap: 6, justifyContent: 'center', marginBottom: 16 },
   stepDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: '#e5e7eb', alignItems: 'center', justifyContent: 'center' },
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   stepDotTextActive: { color: '#fff' },
   sectionTitle: { fontSize: 15, fontWeight: '800', color: BRAND_GREEN, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
   hint: { fontSize: 12, color: '#9ca3af', marginBottom: 14 },
-  card: { backgroundColor: '#fff', borderRadius: 12, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: '#f0f0f0' },
+  card: { backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 12, borderWidth: 1, borderColor: HAIRLINE_GREEN, shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2 },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
   cardTitle: { fontWeight: '700', color: BRAND_GREEN, fontSize: 14 },
   removeText: { color: '#ef4444', fontSize: 12, fontWeight: '600' },
@@ -177,6 +177,6 @@ const styles = StyleSheet.create({
   statusBtn: { width: 44, height: 46, borderRadius: 10, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   addBtn: { borderWidth: 1.5, borderColor: BRAND_GOLD, borderStyle: 'dashed', borderRadius: 10, padding: 12, alignItems: 'center', marginBottom: 14 },
   addBtnText: { color: BRAND_GREEN, fontWeight: '700', fontSize: 14 },
-  nextBtn: { backgroundColor: BRAND_GREEN, borderRadius: 12, height: 52, alignItems: 'center', justifyContent: 'center' },
+  nextBtn: { backgroundColor: BRAND_GREEN, borderRadius: 14, height: 52, alignItems: 'center', justifyContent: 'center', shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.30, shadowRadius: 8, elevation: 6 },
   nextBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },
 })

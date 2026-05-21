@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router'
 import { useAuthStore } from '@/store/authStore'
 import { View, ActivityIndicator } from 'react-native'
-import { BRAND_GREEN } from '@/lib/constants'
+import { BRAND_GREEN, HAIRLINE_GREEN } from '@/lib/constants'
 
 export default function AppLayout() {
   const { isAuthenticated, isLoading, user } = useAuthStore()
@@ -24,9 +24,9 @@ export default function AppLayout() {
         tabBarStyle: {
           backgroundColor: '#fff',
           borderTopWidth: 1,
-          borderTopColor: '#f0f0f0',
-          paddingBottom: 4,
-          height: 60,
+          borderTopColor: HAIRLINE_GREEN,
+          paddingBottom: 8,
+          height: 64,
         },
         tabBarLabelStyle: {
           fontSize: 11,

@@ -7,7 +7,7 @@ export default function FormLayout() {
       screenOptions={{
         headerStyle: { backgroundColor: BRAND_GREEN },
         headerTintColor: '#fff',
-        headerTitleStyle: { fontWeight: '700', fontSize: 16 },
+        headerTitleStyle: { fontWeight: '800', fontSize: 17 },
         headerBackTitle: 'Voltar',
       }}
     />

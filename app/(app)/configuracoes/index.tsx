@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import { router, Stack } from 'expo-router'
 import { useAuthStore } from '@/store/authStore'
-import { BRAND_GREEN, BRAND_GOLD } from '@/lib/constants'
+import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 
 interface MenuItem {
   label: string
@@ -72,13 +72,13 @@ export default function ConfiguracoesIndex() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   content: { padding: 16, paddingBottom: 32 },
   userCard: {
     flexDirection: 'row', alignItems: 'center', gap: 14,
-    backgroundColor: '#fff', borderRadius: 14, padding: 16, marginBottom: 24,
-    borderWidth: 1, borderColor: '#f0f0f0',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1,
+    backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 24,
+    borderWidth: 1, borderColor: HAIRLINE_GREEN,
+    shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2,
   },
   avatar: {
     width: 48, height: 48, borderRadius: 24,
@@ -90,19 +90,19 @@ const styles = StyleSheet.create({
   userRole: { fontSize: 12, color: BRAND_GREEN, fontWeight: '600', marginTop: 1 },
   userEmail: { fontSize: 12, color: '#9ca3af', marginTop: 2 },
   sectionLabel: {
-    fontSize: 11, fontWeight: '700', color: '#9ca3af',
-    letterSpacing: 1, marginBottom: 8, marginLeft: 4,
+    fontSize: 10, fontWeight: '700', color: 'rgba(22,65,58,0.38)',
+    letterSpacing: 3.5, marginBottom: 8, marginLeft: 4, textTransform: 'uppercase',
   },
   menuCard: {
-    backgroundColor: '#fff', borderRadius: 14,
-    borderWidth: 1, borderColor: '#f0f0f0', overflow: 'hidden', marginBottom: 24,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1,
+    backgroundColor: '#fff', borderRadius: 16,
+    borderWidth: 1, borderColor: HAIRLINE_GREEN, overflow: 'hidden', marginBottom: 24,
+    shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2,
   },
   menuItem: {
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 16, paddingVertical: 14,
   },
-  menuItemBorder: { borderBottomWidth: 1, borderBottomColor: '#f3f4f6' },
+  menuItemBorder: { borderBottomWidth: 1, borderBottomColor: HAIRLINE_GREEN },
   menuItemContent: { flex: 1 },
   menuLabel: { fontSize: 14, fontWeight: '600', color: '#111827' },
   menuDesc: { fontSize: 12, color: '#9ca3af', marginTop: 2 },

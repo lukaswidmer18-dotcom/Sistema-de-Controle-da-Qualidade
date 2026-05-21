@@ -7,7 +7,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import api from '@/lib/api'
-import { BRAND_GREEN } from '@/lib/constants'
+import { BRAND_GREEN, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 
 interface ConfigOption {
   id: string
@@ -210,13 +210,13 @@ export default function OpcoesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   loading: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   list: { padding: 12 },
   listCard: {
-    backgroundColor: '#fff', borderRadius: 12, marginBottom: 10,
-    borderWidth: 1, borderColor: '#f0f0f0', overflow: 'hidden',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1,
+    backgroundColor: '#fff', borderRadius: 16, marginBottom: 10,
+    borderWidth: 1, borderColor: HAIRLINE_GREEN, overflow: 'hidden',
+    shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2,
   },
   listHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 14 },
   listHeaderLeft: { flex: 1 },
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
 })
 
 const modal = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   header: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     paddingHorizontal: 16, paddingVertical: 14, backgroundColor: '#fff',

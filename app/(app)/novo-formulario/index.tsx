@@ -8,7 +8,7 @@ import { useFormStore } from '@/store/formStore'
 import { useAuthStore } from '@/store/authStore'
 import { useQuery } from '@tanstack/react-query'
 import api from '@/lib/api'
-import { BRAND_GREEN, BRAND_GOLD, VEHICLE_TYPES } from '@/lib/constants'
+import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN, VEHICLE_TYPES } from '@/lib/constants'
 import { PhotoCapture } from '@/components/form/PhotoCapture'
 import { PhotoData } from '@/lib/types'
 import { uuid } from '@/lib/utils'
@@ -331,7 +331,7 @@ export default function Step1Identificacao() {
 import { Stack } from 'expo-router'
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   content: { padding: 16 },
   stepBar: {
     flexDirection: 'row', gap: 6, justifyContent: 'center',
@@ -366,8 +366,9 @@ const styles = StyleSheet.create({
   chevron: { fontSize: 10, color: '#9ca3af' },
   row: { flexDirection: 'row', marginTop: 8 },
   productCard: {
-    backgroundColor: '#fff', borderRadius: 12, padding: 12,
-    marginBottom: 10, borderWidth: 1, borderColor: '#f0f0f0',
+    backgroundColor: '#fff', borderRadius: 16, padding: 12,
+    marginBottom: 10, borderWidth: 1, borderColor: HAIRLINE_GREEN,
+    shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2,
   },
   productHeader: {
     flexDirection: 'row', justifyContent: 'space-between',
@@ -381,8 +382,9 @@ const styles = StyleSheet.create({
   },
   addProductText: { color: BRAND_GREEN, fontWeight: '700', fontSize: 14 },
   nextBtn: {
-    backgroundColor: BRAND_GREEN, borderRadius: 12, height: 52,
+    backgroundColor: BRAND_GREEN, borderRadius: 14, height: 52,
     alignItems: 'center', justifyContent: 'center', marginTop: 8,
+    shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.30, shadowRadius: 8, elevation: 6,
   },
   nextBtnDisabled: { opacity: 0.4 },
   nextBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },

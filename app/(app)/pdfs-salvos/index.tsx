@@ -9,7 +9,7 @@ import api, { API_BASE_URL } from '@/lib/api'
 import { useAuthStore } from '@/store/authStore'
 import { router, Stack } from 'expo-router'
 import { Receipt, ReceiptListResponse } from '@/lib/types'
-import { BRAND_GREEN, BRAND_GOLD } from '@/lib/constants'
+import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 import { getStatusLabel, getStatusColor, formatDateTime } from '@/lib/utils'
 
 export default function PdfsSalvos() {
@@ -152,17 +152,17 @@ export default function PdfsSalvos() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9fafb' },
+  container: { flex: 1, backgroundColor: BRAND_CREAM },
   header: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     backgroundColor: BRAND_GREEN, paddingHorizontal: 16, paddingVertical: 14,
-    paddingTop: 20,
+    paddingTop: 20, borderBottomWidth: 1, borderBottomColor: 'rgba(188,147,63,0.26)',
   },
   headerName: { color: '#fff', fontWeight: '700', fontSize: 15 },
   headerRole: { color: 'rgba(255,255,255,0.6)', fontSize: 12 },
   logoutBtn: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 8, backgroundColor: 'rgba(255,255,255,0.15)' },
   logoutText: { color: '#fff', fontWeight: '600', fontSize: 13 },
-  searchBox: { padding: 12, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f0f0f0' },
+  searchBox: { padding: 12, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: HAIRLINE_GREEN },
   searchInput: {
     height: 40, borderWidth: 1.5, borderColor: '#e5e7eb', borderRadius: 10,
     paddingHorizontal: 12, fontSize: 14, color: '#111827', backgroundColor: '#fafafa',
@@ -170,9 +170,9 @@ const styles = StyleSheet.create({
   loading: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   list: { padding: 12 },
   card: {
-    backgroundColor: '#fff', borderRadius: 12, padding: 14, marginBottom: 10,
-    borderWidth: 1, borderColor: '#f0f0f0',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1,
+    backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 10,
+    borderWidth: 1, borderColor: HAIRLINE_GREEN,
+    shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2,
   },
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   formNumber: { fontFamily: 'monospace', fontSize: 13, fontWeight: '700', color: BRAND_GREEN },
