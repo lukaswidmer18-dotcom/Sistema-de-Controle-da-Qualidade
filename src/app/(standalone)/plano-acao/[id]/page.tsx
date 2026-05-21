@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
 import {
@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   ClipboardList,
   LinkIcon,
+  ArrowLeft,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -63,6 +64,7 @@ export default function PlanoAcaoPage() {
   const params = useParams()
   const searchParams = useSearchParams()
   const { data: session } = useSession()
+  const router = useRouter()
   const receiptId = params.id as string
   const canFill = searchParams.get('fill') === '1'
 
@@ -200,6 +202,16 @@ export default function PlanoAcaoPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 space-y-5">
+
+      {!canFill && (
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-1.5 text-sm text-brand-green/50 hover:text-brand-green transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Voltar
+        </button>
+      )}
 
       {/* Receipt summary */}
       <div className="brand-card rounded-xl p-5 motion-enter">

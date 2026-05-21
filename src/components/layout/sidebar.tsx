@@ -24,16 +24,16 @@ import { getRoleLabel } from '@/lib/utils'
 
 const navItems = [
   {
-    href: '/pdfs-salvos',
-    label: 'PDFs Salvos',
-    icon: FileStack,
-    description: 'Biblioteca de relatórios',
-  },
-  {
     href: '/novo-formulario',
     label: 'Novo Formulário',
     icon: Plus,
     description: 'Registrar recebimento',
+  },
+  {
+    href: '/pdfs-salvos',
+    label: 'PDFs Salvos',
+    icon: FileStack,
+    description: 'Biblioteca de relatórios',
   },
   {
     href: '/planos-de-acao',
