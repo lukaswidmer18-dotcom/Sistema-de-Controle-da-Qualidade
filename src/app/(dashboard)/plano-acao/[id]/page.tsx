@@ -6,13 +6,9 @@ import { useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
 import {
   ArrowLeft,
-  FileText,
-  Camera,
   Loader2,
   CheckCircle2,
   Download,
-  X,
-  AlertTriangle,
   ClipboardList,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -20,7 +16,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { formatDateTime, getStatusLabel, getStatusColor } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
@@ -74,7 +69,6 @@ export default function PlanoAcaoPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [actionPlanPdfUrl, setActionPlanPdfUrl] = useState<string | null>(null)
-  const [showPhotos, setShowPhotos] = useState(false)
 
   const [form, setForm] = useState({
     rootCause: '',
@@ -142,18 +136,6 @@ export default function PlanoAcaoPage() {
       setSubmitting(false)
     }
   }
-
-  // Collect all NC photos
-  const allPhotos = receipt?.nonConformities.flatMap(nc => {
-    const photos: Array<{ url: string; label: string }> = []
-    if (nc.photoUrl) {
-      photos.push({ url: nc.photoUrl, label: nc.description || nc.section })
-    }
-    nc.checklistItem?.photos.forEach(p => {
-      photos.push({ url: p.fileUrl, label: p.fileName })
-    })
-    return photos
-  }) ?? []
 
   if (loading) {
     return (
@@ -229,86 +211,9 @@ export default function PlanoAcaoPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="max-w-2xl mx-auto">
 
-          {/* Left: PDF + Non-conformities */}
-          <div className="space-y-5">
-
-            {/* Non-conformities */}
-            <div className="brand-card rounded-xl overflow-hidden motion-enter">
-              <div className="px-5 py-3.5 border-b flex items-center justify-between" style={{ borderColor: 'rgba(22,65,58,0.08)', background: '#fee2e2' }}>
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <p className="text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-red-700">
-                    Não Conformidades ({receipt.nonConformities.length})
-                  </p>
-                </div>
-                {allPhotos.length > 0 && (
-                  <button
-                    onClick={() => setShowPhotos(true)}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-red-700 hover:text-red-900 transition-colors"
-                  >
-                    <Camera className="w-3.5 h-3.5" />
-                    Ver {allPhotos.length} foto(s)
-                  </button>
-                )}
-              </div>
-              <div className="divide-y" style={{ divideColor: 'rgba(22,65,58,0.06)' }}>
-                {receipt.nonConformities.map((nc, i) => (
-                  <div key={nc.id} className="px-5 py-3.5" style={{ background: 'rgba(254,226,226,0.3)' }}>
-                    <div className="flex items-start gap-3">
-                      <span className="text-xs font-bold text-red-600 shrink-0 mt-0.5">NC {i + 1}</span>
-                      <div className="min-w-0">
-                        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-red-500 mb-0.5">
-                          {nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}
-                        </p>
-                        <p className="text-sm text-gray-700">{nc.description || 'Sem descrição'}</p>
-                        {nc.photoUrl && (
-                          <img
-                            src={nc.photoUrl}
-                            alt="Evidência"
-                            className="mt-2 rounded-lg border border-red-200 max-h-32 object-cover cursor-pointer"
-                            onClick={() => setShowPhotos(true)}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* PDF Viewer */}
-            {receipt.pdfUrl && (
-              <div className="brand-card rounded-xl overflow-hidden motion-enter-delay">
-                <div className="px-5 py-3.5 border-b flex items-center justify-between" style={{ borderColor: 'rgba(22,65,58,0.08)' }}>
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-brand-gold" />
-                    <p className="text-[0.6875rem] font-bold uppercase tracking-[0.14em]" style={{ color: 'rgba(22,65,58,0.42)' }}>
-                      Relatório de Recebimento
-                    </p>
-                  </div>
-                  <a
-                    href={receipt.pdfUrl}
-                    download
-                    className="flex items-center gap-1 text-xs font-semibold text-brand-green/70 hover:text-brand-green transition-colors"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Baixar
-                  </a>
-                </div>
-                <div className="p-0" style={{ height: '480px' }}>
-                  <iframe
-                    src={receipt.pdfUrl}
-                    className="w-full h-full border-none"
-                    title="Relatório de Recebimento"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Right: Action plan */}
+          {/* Action plan */}
           <div className="motion-enter-delay">
             {!canFill ? (
               /* Read-only for everyone without ?fill=1 (dashboard view) */
@@ -527,33 +432,6 @@ export default function PlanoAcaoPage() {
           </div>
         </div>
       </div>
-
-      {/* Photos modal */}
-      <Dialog open={showPhotos} onOpenChange={setShowPhotos}>
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Camera className="w-5 h-5 text-red-500" />
-              Fotos das Não Conformidades ({allPhotos.length})
-            </DialogTitle>
-          </DialogHeader>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-2">
-            {allPhotos.map((photo, i) => (
-              <div key={i} className="space-y-1.5">
-                <img
-                  src={photo.url}
-                  alt={photo.label}
-                  className="w-full aspect-square object-cover rounded-lg border border-gray-200"
-                />
-                <p className="text-xs text-gray-500 truncate px-1">{photo.label}</p>
-              </div>
-            ))}
-          </div>
-          {allPhotos.length === 0 && (
-            <p className="text-sm text-gray-400 text-center py-8">Nenhuma foto registrada</p>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
