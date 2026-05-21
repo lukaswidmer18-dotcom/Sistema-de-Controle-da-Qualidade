@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   ChevronRight,
   Menu,
+  ClipboardCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -33,6 +34,13 @@ const navItems = [
     label: 'Novo Formulário',
     icon: Plus,
     description: 'Registrar recebimento',
+  },
+  {
+    href: '/planos-de-acao',
+    label: 'Planos de Ação',
+    icon: ClipboardCheck,
+    description: 'Controle de planos',
+    adminOnly: true,
   },
 ]
 
@@ -121,6 +129,7 @@ export function Sidebar() {
       {/* Main navigation */}
       <nav className="flex-1 p-3 space-y-1 overflow-hidden">
         {navItems.map((item) => {
+          if (item.adminOnly && session?.user?.role !== 'ADMIN') return null
           const Icon = item.icon
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
           return (
