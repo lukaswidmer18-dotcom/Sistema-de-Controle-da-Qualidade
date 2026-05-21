@@ -1,20 +1,20 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
-import { router, Stack } from 'expo-router'
+import { router, Stack, type Href } from 'expo-router'
 import { useAuthStore } from '@/store/authStore'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 
 interface MenuItem {
   label: string
   description: string
-  route: string
+  route: Href
   adminOnly?: boolean
 }
 
 const MENU_ITEMS: MenuItem[] = [
-  { label: 'Listas de E-mail', description: 'Gerenciar grupos de destinatários', route: '/configuracoes/listas' },
-  { label: 'Opções das Listas', description: 'Valores de listas de seleção', route: '/configuracoes/opcoes' },
-  { label: 'Modelos de E-mail', description: 'Templates para envio automático', route: '/configuracoes/modelos' },
-  { label: 'Usuários', description: 'Gerenciar contas de acesso', route: '/configuracoes/usuarios', adminOnly: true },
+  { label: 'Listas de E-mail', description: 'Gerenciar grupos de destinatários', route: '/(app)/configuracoes/listas' },
+  { label: 'Opções das Listas', description: 'Valores de listas de seleção', route: '/(app)/configuracoes/opcoes' },
+  { label: 'Modelos de E-mail', description: 'Templates para envio automático', route: '/(app)/configuracoes/modelos' },
+  { label: 'Usuários', description: 'Gerenciar contas de acesso', route: '/(app)/configuracoes/usuarios', adminOnly: true },
 ]
 
 export default function ConfiguracoesIndex() {
@@ -49,9 +49,9 @@ export default function ConfiguracoesIndex() {
         <View style={styles.menuCard}>
           {visibleItems.map((item, index) => (
             <TouchableOpacity
-              key={item.route}
+              key={item.label}
               style={[styles.menuItem, index < visibleItems.length - 1 && styles.menuItemBorder]}
-              onPress={() => router.push(item.route as `/${string}`)}
+              onPress={() => router.push(item.route)}
               activeOpacity={0.65}
             >
               <View style={styles.menuItemContent}>
