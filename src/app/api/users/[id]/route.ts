@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+﻿import { NextRequest, NextResponse } from 'next/server'
+import { getApiSession } from '@/lib/api-auth'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  const session = await auth()
+  const session = await getApiSession()
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Sem permissão' }, { status: 403 })
   }
@@ -27,7 +27,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
-  const session = await auth()
+  const session = await getApiSession()
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Sem permissão' }, { status: 403 })
   }

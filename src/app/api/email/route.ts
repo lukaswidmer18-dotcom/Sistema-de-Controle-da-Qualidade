@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+﻿import { NextRequest, NextResponse } from 'next/server'
+import { getApiSession } from '@/lib/api-auth'
 import { prisma } from '@/lib/prisma'
 import nodemailer from 'nodemailer'
 import { join } from 'path'
@@ -18,7 +18,7 @@ function getTransporter() {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await auth()
+  const session = await getApiSession()
   if (!session) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
   }

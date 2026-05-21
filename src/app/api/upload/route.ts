@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+﻿import { NextRequest, NextResponse } from 'next/server'
+import { getApiSession } from '@/lib/api-auth'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(request: NextRequest) {
-  const session = await auth()
+  const session = await getApiSession()
   if (!session) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
   }

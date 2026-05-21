@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+﻿import { NextRequest, NextResponse } from 'next/server'
+import { getApiSession } from '@/lib/api-auth'
 import { prisma } from '@/lib/prisma'
 import { generateActionPlanHTML } from '@/lib/pdf-generator'
 import { writeFile, mkdir, readFile } from 'fs/promises'
@@ -23,7 +23,7 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await auth()
+  const session = await getApiSession()
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
 
   const receipt = await prisma.receipt.findUnique({
@@ -50,7 +50,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await auth()
+  const session = await getApiSession()
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
 
   const body = await request.json() as {

@@ -476,50 +476,11 @@ export function generateReceiptHTML(data: ReceiptData): string {
   </table>
   ` : ''}
 
-  <!-- 6. Não Conformidades -->
-  ${data.nonConformities.length > 0 ? `
-  <div class="section-title" style="background-color:#fee2e2">
-    <div class="section-number" style="background-color:#dc2626">6</div>
-    <div class="section-text" style="color:#b91c1c">Registro de Não Conformidades</div>
-  </div>
-  <table class="data-table" style="border:1px solid #fca5a5">
-    <thead>
-      <tr>
-        <th style="width:15%">ID</th>
-        <th style="width:25%">Seção</th>
-        <th style="width:40%">Descrição</th>
-        <th style="width:20%;text-align:center">Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${data.nonConformities.map((nc, index) => `
-        <tr style="page-break-inside:avoid;background-color:#fff5f5">
-          <td style="vertical-align:top;font-weight:800;color:#dc2626;border-bottom:1px solid #fca5a5;">NC 6.${index + 1}</td>
-          <td style="vertical-align:top;font-size:11px;color:#7f1d1d;font-weight:600;text-transform:uppercase;border-bottom:1px solid #fca5a5;">${nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}</td>
-          <td style="vertical-align:top;color:#450a0a;border-bottom:1px solid #fca5a5;">
-            ${nc.description || 'Sem descrição detalhada'}
-            ${nc.photoUrl ? `
-              <div style="margin-top:8px;">
-                <div style="font-weight:600;font-size:11px;color:#991b1b;margin-bottom:6px">Evidência Fotográfica:</div>
-                <img src="${getAbsoluteUrl(nc.photoUrl)}" style="width:100%;max-width:240px;height:auto;border-radius:6px;border:1px solid #fca5a5;" alt="evidência" />
-              </div>
-            ` : ''}
-          </td>
-          <td style="vertical-align:top;text-align:center;border-bottom:1px solid #fca5a5;">
-            <span style="padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;${getStatusBadgeStyle(nc.status)}">
-              ${getStatusLabel(nc.status)}
-            </span>
-          </td>
-        </tr>
-      `).join('')}
-    </tbody>
-  </table>
-  ` : ''}
 
-  <!-- 7. Observações Finais -->
+  <!-- 6. Observações Finais -->
   ${data.observations ? `
   <div class="section-title">
-    <div class="section-number">7</div>
+    <div class="section-number">6</div>
     <div class="section-text">Observações Finais</div>
   </div>
   <div style="background-color:#f8fafc;border:1px solid #e2e8f0;padding:16px 20px;border-radius:6px;color:#334155;line-height:1.6;margin-bottom:32px">

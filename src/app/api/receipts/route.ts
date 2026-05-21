@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+﻿import { NextRequest, NextResponse } from 'next/server'
+import { getApiSession } from '@/lib/api-auth'
 import { prisma } from '@/lib/prisma'
 import { generateFormNumber } from '@/lib/utils'
 import { z } from 'zod'
@@ -81,7 +81,7 @@ const receiptSchema = z.object({
 })
 
 export async function GET(request: NextRequest) {
-  const session = await auth()
+  const session = await getApiSession()
   if (!session) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
   }
@@ -167,7 +167,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await auth()
+  const session = await getApiSession()
   if (!session) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
   }

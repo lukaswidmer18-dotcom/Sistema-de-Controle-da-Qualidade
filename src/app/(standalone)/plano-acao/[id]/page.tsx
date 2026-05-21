@@ -5,7 +5,6 @@ import { useParams, useSearchParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
 import {
-  FileText,
   Camera,
   Loader2,
   CheckCircle2,
@@ -30,6 +29,7 @@ interface NonConformityItem {
   description?: string | null
   photoUrl?: string | null
   checklistItem?: {
+    itemLabel: string
     photos: Array<{ id: string; fileUrl: string; fileName: string }>
   } | null
 }
@@ -244,87 +244,31 @@ export default function PlanoAcaoPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      {/* Quick-access buttons */}
+      <div className="flex gap-2 flex-wrap motion-enter">
+        <button
+          onClick={() => setShowPhotos(true)}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold border transition-colors"
+          style={{ borderColor: 'rgba(239,68,68,0.3)', color: '#b91c1c', background: '#fee2e2' }}
+        >
+          <AlertTriangle className="w-3.5 h-3.5" />
+          Não Conformidades ({receipt.nonConformities.length})
+        </button>
+        {receipt.pdfUrl && (
+          <a
+            href={receipt.pdfUrl}
+            download
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold border transition-colors"
+            style={{ borderColor: 'rgba(22,65,58,0.2)', color: '#16413a', background: 'rgba(22,65,58,0.05)' }}
+          >
+            <Download className="w-3.5 h-3.5" />
+            Baixar Relatório
+          </a>
+        )}
+      </div>
 
-        {/* Left: Non-conformities + PDF */}
-        <div className="space-y-5">
-
-          {/* Non-conformities */}
-          <div className="brand-card rounded-xl overflow-hidden motion-enter">
-            <div className="px-5 py-3.5 border-b flex items-center justify-between" style={{ borderColor: 'rgba(22,65,58,0.08)', background: '#fee2e2' }}>
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-red-600" />
-                <p className="text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-red-700">
-                  Não Conformidades ({receipt.nonConformities.length})
-                </p>
-              </div>
-              {allPhotos.length > 0 && (
-                <button
-                  onClick={() => setShowPhotos(true)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-red-700 hover:text-red-900 transition-colors"
-                >
-                  <Camera className="w-3.5 h-3.5" />
-                  Ver {allPhotos.length} foto(s)
-                </button>
-              )}
-            </div>
-            <div className="divide-y divide-brand-green/[0.06]">
-              {receipt.nonConformities.map((nc, i) => (
-                <div key={nc.id} className="px-5 py-3.5" style={{ background: 'rgba(254,226,226,0.3)' }}>
-                  <div className="flex items-start gap-3">
-                    <span className="text-xs font-bold text-red-600 shrink-0 mt-0.5">NC {i + 1}</span>
-                    <div className="min-w-0">
-                      <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-red-500 mb-0.5">
-                        {nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section}
-                      </p>
-                      <p className="text-sm text-gray-700">{nc.description || 'Sem descrição'}</p>
-                      {nc.photoUrl && (
-                        <img
-                          src={nc.photoUrl}
-                          alt="Evidência"
-                          className="mt-2 rounded-lg border border-red-200 max-h-32 object-cover cursor-pointer"
-                          onClick={() => setShowPhotos(true)}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* PDF Viewer */}
-          {receipt.pdfUrl && (
-            <div className="brand-card rounded-xl overflow-hidden motion-enter-delay">
-              <div className="px-5 py-3.5 border-b flex items-center justify-between" style={{ borderColor: 'rgba(22,65,58,0.08)' }}>
-                <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-brand-gold" />
-                  <p className="text-[0.6875rem] font-bold uppercase tracking-[0.14em]" style={{ color: 'rgba(22,65,58,0.42)' }}>
-                    Relatório de Recebimento
-                  </p>
-                </div>
-                <a
-                  href={receipt.pdfUrl}
-                  download
-                  className="flex items-center gap-1 text-xs font-semibold text-brand-green/70 hover:text-brand-green transition-colors"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  Baixar
-                </a>
-              </div>
-              <div className="p-0" style={{ height: '480px' }}>
-                <iframe
-                  src={receipt.pdfUrl}
-                  className="w-full h-full border-none"
-                  title="Relatório de Recebimento"
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right: Action plan */}
-        <div className="motion-enter-delay">
+      {/* Action plan - full width */}
+      <div className="motion-enter-delay">
           {!canFill ? (
             /* Read-only dashboard view */
             <div className="brand-card rounded-xl overflow-hidden">
@@ -532,7 +476,6 @@ export default function PlanoAcaoPage() {
               </form>
             </div>
           )}
-        </div>
       </div>
 
       {/* Photos modal */}
@@ -544,21 +487,41 @@ export default function PlanoAcaoPage() {
               Fotos das Não Conformidades ({allPhotos.length})
             </DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-2">
-            {allPhotos.map((photo, i) => (
-              <div key={i} className="space-y-1.5">
-                <img
-                  src={photo.url}
-                  alt={photo.label}
-                  className="w-full aspect-square object-cover rounded-lg border border-gray-200"
-                />
-                <p className="text-xs text-gray-500 truncate px-1">{photo.label}</p>
-              </div>
-            ))}
+          <div className="space-y-5 mt-2">
+            {receipt.nonConformities.map((nc, i) => {
+              const photos: Array<{ url: string; label: string }> = []
+              if (nc.photoUrl) photos.push({ url: nc.photoUrl, label: nc.description || nc.section })
+              nc.checklistItem?.photos.forEach(p => photos.push({ url: p.fileUrl, label: p.fileName }))
+              if (photos.length === 0) return null
+              const sectionLabel = nc.section === 'VEICULO' ? 'Condições do Veículo' : nc.section === 'CARGA' ? 'Condições da Carga' : nc.section
+              return (
+                <div key={nc.id}>
+                  <p className="text-xs font-bold uppercase tracking-wider text-red-600 mb-0.5">
+                    NC {i + 1} — {sectionLabel}
+                  </p>
+                  {nc.checklistItem?.itemLabel && (
+                    <p className="text-xs font-medium text-gray-600 mb-1">{nc.checklistItem.itemLabel}</p>
+                  )}
+                  {nc.description && (
+                    <p className="text-xs text-gray-400 mb-2">{nc.description}</p>
+                  )}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {photos.map((photo, j) => (
+                      <img
+                        key={j}
+                        src={photo.url}
+                        alt={photo.label}
+                        className="w-full aspect-square object-cover rounded-lg border border-gray-200"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+            {allPhotos.length === 0 && (
+              <p className="text-sm text-gray-400 text-center py-8">Nenhuma foto registrada</p>
+            )}
           </div>
-          {allPhotos.length === 0 && (
-            <p className="text-sm text-gray-400 text-center py-8">Nenhuma foto registrada</p>
-          )}
         </DialogContent>
       </Dialog>
     </div>
