@@ -136,6 +136,7 @@ export async function GET(request: NextRequest) {
         include: {
           products: { select: { productCode: true, lot: true } },
           nonConformities: { select: { description: true } },
+          actionPlan: { select: { id: true } },
           creator: { select: { name: true, email: true } },
           _count: { select: { nonConformities: true, emailLogs: true } },
         },
@@ -150,6 +151,7 @@ export async function GET(request: NextRequest) {
       ...receipt,
       htmlUrl: receipt.pdfUrl,
       emailSentAt: receipt.lastEmailSentAt,
+      hasActionPlan: receipt.actionPlan !== null,
     }))
 
     return NextResponse.json({

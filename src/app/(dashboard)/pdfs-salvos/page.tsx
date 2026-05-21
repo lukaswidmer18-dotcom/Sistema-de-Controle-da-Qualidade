@@ -11,7 +11,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Filter,
-  CheckCircle2,
   ChevronDown,
   ChevronUp,
   FileText,
@@ -63,6 +62,7 @@ interface ReceiptRow {
   pdfUrl?: string | null
   htmlUrl?: string | null
   emailSentAt?: string | null
+  hasActionPlan?: boolean
   products: ProductSummary[]
   nonConformities: NonConformitySummary[]
 }
@@ -347,10 +347,19 @@ export default function PdfsSalvosPage() {
                     <tr
                       key={row.id}
                       className="transition-colors"
-                      style={row.emailSentAt
-                        ? { boxShadow: 'inset 4px 0 0 rgba(52,211,153,0.75)', background: 'rgba(52,211,153,0.04)' }
-                        : { boxShadow: 'inset 4px 0 0 rgba(251,146,60,0.55)', background: 'rgba(251,146,60,0.03)' }
-                      }
+                      style={(() => {
+                        const hasNCs = row.nonConformities.length > 0
+                        if (!row.emailSentAt) {
+                          // Email not sent
+                          return { boxShadow: 'inset 4px 0 0 rgba(239,68,68,0.75)', background: 'rgba(239,68,68,0.03)' }
+                        }
+                        if (hasNCs && !row.hasActionPlan) {
+                          // Email sent but action plan pending
+                          return { boxShadow: 'inset 4px 0 0 rgba(251,191,36,0.85)', background: 'rgba(251,191,36,0.04)' }
+                        }
+                        // All resolved
+                        return { boxShadow: 'inset 4px 0 0 rgba(52,211,153,0.75)', background: 'rgba(52,211,153,0.04)' }
+                      })()}
                     >
                       <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
                         {formatDateTime(row.receivedAt)}
@@ -382,11 +391,6 @@ export default function PdfsSalvosPage() {
                           <Badge className={cn('text-xs border', getStatusColor(row.generalStatus))}>
                             {getStatusLabel(row.generalStatus)}
                           </Badge>
-                          {row.emailSentAt && (
-                            <span title="E-mail enviado" aria-label="E-mail enviado">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-brand-green shrink-0" />
-                            </span>
-                          )}
                         </div>
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-600 max-w-[120px] truncate">
