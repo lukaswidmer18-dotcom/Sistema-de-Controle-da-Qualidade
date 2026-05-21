@@ -222,7 +222,7 @@ export default function LoginPage() {
           </div>
 
           {/* Bottom: footer */}
-          <p className="text-[0.6875rem] text-white/45 tracking-wide">
+          <p className="text-[0.6875rem] text-white/70 tracking-wide">
             © 2026 Bello Alimentos LTDA · Desenvolvido por Lukas Widmer
           </p>
         </div>

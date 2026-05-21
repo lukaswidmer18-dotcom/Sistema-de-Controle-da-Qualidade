@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     })
 
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
-    const actionPlanUrl = `${baseUrl}/plano-acao/${receiptId}`
+    const actionPlanUrl = `${baseUrl}/plano-acao/${receiptId}?fill=1`
 
     const htmlEmail = receipt?.generalStatus === 'NAO_CONFORME'
       ? `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1f2937">

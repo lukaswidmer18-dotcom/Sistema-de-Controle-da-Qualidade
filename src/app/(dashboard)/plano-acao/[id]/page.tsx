@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import toast from 'react-hot-toast'
 import {
   ArrowLeft,
@@ -62,7 +63,11 @@ interface ReceiptData {
 export default function PlanoAcaoPage() {
   const params = useParams()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { data: session } = useSession()
   const receiptId = params.id as string
+  const isAdmin = session?.user?.role === 'ADMIN'
+  const canFill = searchParams.get('fill') === '1'
 
   const [receipt, setReceipt] = useState<ReceiptData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -303,9 +308,72 @@ export default function PlanoAcaoPage() {
             )}
           </div>
 
-          {/* Right: Action plan form */}
+          {/* Right: Action plan */}
           <div className="motion-enter-delay">
-            {submitted ? (
+            {!canFill ? (
+              /* Read-only for everyone without ?fill=1 (dashboard view) */
+              <div className="brand-card rounded-xl overflow-hidden">
+                <div
+                  className="px-5 py-4 border-b flex items-center gap-2"
+                  style={{
+                    borderColor: 'rgba(22,65,58,0.08)',
+                    background: submitted ? 'rgba(52,211,153,0.06)' : 'rgba(251,191,36,0.06)',
+                  }}
+                >
+                  {submitted ? (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                  ) : (
+                    <ClipboardList className="w-5 h-5 text-amber-500" />
+                  )}
+                  <p className="font-bold text-brand-green">
+                    {submitted ? 'Plano de Ação Finalizado' : 'Plano de Ação Pendente'}
+                  </p>
+                </div>
+
+                {submitted ? (
+                  <div className="p-5 space-y-4">
+                    <div>
+                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Causa Raiz</p>
+                      <p className="text-sm text-gray-700 whitespace-pre-wrap">{form.rootCause}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Ação Corretiva</p>
+                      <p className="text-sm text-gray-700 whitespace-pre-wrap">{form.description}</p>
+                    </div>
+                    <div className="flex gap-3">
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Responsável</p>
+                        <p className="text-sm font-semibold text-gray-700">{form.responsible}</p>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Prazo</p>
+                        <p className="text-sm font-semibold text-gray-700">
+                          {new Date(form.deadline + 'T12:00:00').toLocaleDateString('pt-BR')}
+                        </p>
+                      </div>
+                    </div>
+                    {actionPlanPdfUrl && (
+                      <a
+                        href={actionPlanPdfUrl}
+                        download
+                        className="flex items-center gap-2 w-full justify-center rounded-lg px-4 py-2.5 text-sm font-semibold border transition-colors hover:bg-brand-cream"
+                        style={{ borderColor: 'rgba(22,65,58,0.2)', color: '#16413a' }}
+                      >
+                        <Download className="w-4 h-4" />
+                        Baixar PDF do Plano de Ação
+                      </a>
+                    )}
+                  </div>
+                ) : (
+                  <div className="p-5">
+                    <p className="text-sm text-gray-500">
+                      Nenhum plano de ação foi registrado para este recebimento ainda.
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : submitted ? (
+              /* Non-admin: plan already submitted */
               <div className="brand-card rounded-xl overflow-hidden">
                 <div className="px-5 py-4 border-b" style={{ borderColor: 'rgba(22,65,58,0.08)', background: 'rgba(52,211,153,0.06)' }}>
                   <div className="flex items-center gap-2">
@@ -334,7 +402,6 @@ export default function PlanoAcaoPage() {
                       </p>
                     </div>
                   </div>
-
                   {actionPlanPdfUrl && (
                     <a
                       href={actionPlanPdfUrl}
@@ -346,7 +413,6 @@ export default function PlanoAcaoPage() {
                       Baixar PDF do Plano de Ação
                     </a>
                   )}
-
                   <Button
                     variant="outline"
                     className="w-full"
@@ -357,6 +423,7 @@ export default function PlanoAcaoPage() {
                 </div>
               </div>
             ) : (
+              /* Non-admin: form to fill */
               <div className="brand-card rounded-xl overflow-hidden">
                 <div className="px-5 py-3.5 border-b" style={{ borderColor: 'rgba(22,65,58,0.08)' }}>
                   <div className="flex items-center gap-2">
