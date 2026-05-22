@@ -18,11 +18,9 @@ interface Props {
 export function MobileLoadingScreen({
   title = 'Validando acesso',
   subtitle = 'Preparando ambiente seguro',
-  progress = 72,
   steps,
 }: Props) {
   const pulse = useRef(new Animated.Value(0)).current
-  const sweep = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
     const pulseLoop = Animated.loop(
@@ -41,23 +39,13 @@ export function MobileLoadingScreen({
         }),
       ])
     )
-    const sweepLoop = Animated.loop(
-      Animated.timing(sweep, {
-        toValue: 1,
-        duration: 1400,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      })
-    )
 
     pulseLoop.start()
-    sweepLoop.start()
 
     return () => {
       pulseLoop.stop()
-      sweepLoop.stop()
     }
-  }, [pulse, sweep])
+  }, [pulse])
 
   const scale = pulse.interpolate({
     inputRange: [0, 1],
@@ -66,10 +54,6 @@ export function MobileLoadingScreen({
   const opacity = pulse.interpolate({
     inputRange: [0, 1],
     outputRange: [0.55, 1],
-  })
-  const sweepX = sweep.interpolate({
-    inputRange: [0, 1],
-    outputRange: [-96, 300],
   })
   const status = steps?.find(step => step.state === 'active')?.label ?? subtitle
 
@@ -91,13 +75,9 @@ export function MobileLoadingScreen({
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
 
-        <View style={styles.progressWrap} accessibilityLabel={`Carregando ${Math.round(progress)} por cento`}>
-          <View style={styles.progressTrack}>
-            <Animated.View style={[styles.progressSegment, { transform: [{ translateX: sweepX }] }]} />
-          </View>
-          <View style={styles.progressMeta}>
-            <Text style={styles.statusText} numberOfLines={1}>{status}</Text>
-          </View>
+        <View style={styles.statusWrap}>
+          <View style={styles.statusDot} />
+          <Text style={styles.statusText} numberOfLines={1}>{status}</Text>
         </View>
       </View>
 
@@ -186,28 +166,17 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 34,
   },
-  progressWrap: {
-    width: '100%',
-    maxWidth: 300,
+  statusWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    minHeight: 24,
   },
-  progressTrack: {
-    height: 6,
-    borderRadius: 4,
-    backgroundColor: 'rgba(248,245,235,0.14)',
-    overflow: 'hidden',
-  },
-  progressSegment: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: 96,
-    height: '100%',
+  statusDot: {
+    width: 7,
+    height: 7,
     borderRadius: 4,
     backgroundColor: BRAND_GOLD,
-  },
-  progressMeta: {
-    marginTop: 12,
-    alignItems: 'center',
   },
   statusText: {
     color: 'rgba(248,245,235,0.58)',

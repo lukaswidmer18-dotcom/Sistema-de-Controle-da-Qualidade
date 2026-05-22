@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 import { router, Stack } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
+import axios from 'axios'
 import { useFormStore } from '@/store/formStore'
 import api, { API_BASE_URL } from '@/lib/api'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
@@ -50,7 +51,11 @@ export default function Step6Finalizacao() {
 
       setDone(true)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Erro ao enviar formulário'
+      const message = axios.isAxiosError(err)
+        ? (err.response?.data as { error?: string; errors?: string[] })?.error
+          ?? (err.response?.data as { errors?: string[] })?.errors?.[0]
+          ?? err.message
+        : err instanceof Error ? err.message : 'Erro ao enviar formulário'
       Alert.alert('Erro', message)
     } finally {
       setSubmitting(false)

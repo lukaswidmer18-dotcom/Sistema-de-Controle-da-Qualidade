@@ -112,6 +112,17 @@ function TemperatureCard({
     }
   }
 
+  const setTemperatureValue = (value: string) => {
+    const normalized = value.replace(',', '.').trim()
+    if (!normalized || normalized === '-' || normalized === '+') {
+      onUpdate('temperature', undefined)
+      return
+    }
+
+    const parsed = Number(normalized)
+    onUpdate('temperature', Number.isFinite(parsed) ? parsed : undefined)
+  }
+
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
@@ -160,7 +171,7 @@ function TemperatureCard({
         <TextInput
           style={[styles.input, { flex: 1 }]}
           value={temp.temperature !== undefined ? String(temp.temperature) : ''}
-          onChangeText={v => onUpdate('temperature', v ? parseFloat(v) : undefined)}
+          onChangeText={setTemperatureValue}
           placeholder="Temp. (°C)"
           placeholderTextColor="#9ca3af"
           keyboardType="decimal-pad"

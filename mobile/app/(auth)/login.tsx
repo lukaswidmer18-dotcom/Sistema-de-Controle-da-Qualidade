@@ -148,10 +148,9 @@ export default function LoginScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                 >
-                  <View style={[styles.eyeShape, showPassword && styles.eyeShapeActive]}>
-                    <View style={[styles.eyePupil, showPassword && styles.eyePupilActive]} />
-                  </View>
-                  {showPassword && <View style={styles.eyeSlash} />}
+                  <Text style={[styles.eyeText, showPassword && styles.eyeTextActive]}>
+                    {showPassword ? 'Ocultar' : 'Ver'}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -343,39 +342,19 @@ const styles = StyleSheet.create({
     color: '#111827',
   },
   eyeButton: {
-    width: 48,
+    minWidth: 64,
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 8,
   },
-  eyeShape: {
-    width: 22,
-    height: 14,
-    borderWidth: 1.7,
-    borderColor: '#6b7280',
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+  eyeText: {
+    color: '#647067',
+    fontSize: 12,
+    fontWeight: '800',
   },
-  eyeShapeActive: {
-    borderColor: BRAND_GREEN,
-  },
-  eyePupil: {
-    width: 5,
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: '#6b7280',
-  },
-  eyePupilActive: {
-    backgroundColor: BRAND_GREEN,
-  },
-  eyeSlash: {
-    position: 'absolute',
-    width: 26,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: BRAND_GREEN,
-    transform: [{ rotate: '-35deg' }],
+  eyeTextActive: {
+    color: BRAND_GREEN,
   },
   button: {
     height: 54,
