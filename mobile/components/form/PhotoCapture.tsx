@@ -180,10 +180,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addButton: {
+    minHeight: 44,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingVertical: 8,
+    paddingVertical: 9,
     paddingHorizontal: 12,
     borderRadius: 8,
     borderWidth: 1.5,

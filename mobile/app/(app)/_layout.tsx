@@ -1,11 +1,13 @@
 import { Tabs } from 'expo-router'
 import { useAuthStore } from '@/store/authStore'
 import { View, ActivityIndicator } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BRAND_GREEN, HAIRLINE_GREEN } from '@/lib/constants'
 
 export default function AppLayout() {
   const { isAuthenticated, isLoading, user } = useAuthStore()
   const isAdmin = user?.role === 'ADMIN'
+  const insets = useSafeAreaInsets()
 
   if (isLoading || !isAuthenticated) {
     return (
@@ -20,17 +22,23 @@ export default function AppLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: BRAND_GREEN,
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarInactiveTintColor: '#647067',
         tabBarStyle: {
           backgroundColor: '#fff',
           borderTopWidth: 1,
           borderTopColor: HAIRLINE_GREEN,
-          paddingBottom: 8,
-          height: 64,
+          paddingTop: 8,
+          paddingBottom: Math.max(insets.bottom, 10),
+          height: 66 + Math.max(insets.bottom, 10),
+          shadowColor: '#0f2f2a',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.08,
+          shadowRadius: 10,
+          elevation: 14,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '600',
+          fontSize: 10,
+          fontWeight: '700',
         },
       }}
     >

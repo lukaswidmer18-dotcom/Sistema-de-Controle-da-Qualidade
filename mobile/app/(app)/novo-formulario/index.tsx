@@ -3,7 +3,7 @@ import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
   StyleSheet, Alert, Modal, FlatList,
 } from 'react-native'
-import { router, useNavigation } from 'expo-router'
+import { router, Stack } from 'expo-router'
 import { useFormStore } from '@/store/formStore'
 import { useAuthStore } from '@/store/authStore'
 import { useQuery } from '@tanstack/react-query'
@@ -11,17 +11,14 @@ import api from '@/lib/api'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN, VEHICLE_TYPES } from '@/lib/constants'
 import { PhotoCapture } from '@/components/form/PhotoCapture'
 import { PhotoData } from '@/lib/types'
-import { uuid } from '@/lib/utils'
 
 interface EmailList { id: string; name: string; emails: string[] }
 
 export default function Step1Identificacao() {
   const { form, updateField, updateProduct, addProduct, removeProduct, setPlatePicture, restore, reset } = useFormStore()
   const user = useAuthStore(s => s.user)
-  const navigation = useNavigation()
   const [showVehicleTypes, setShowVehicleTypes] = useState(false)
   const [showEvaluators, setShowEvaluators] = useState(false)
-  const [hasDraft, setHasDraft] = useState(false)
 
   const { data: emailLists } = useQuery<EmailList[]>({
     queryKey: ['email-lists'],
@@ -53,6 +50,7 @@ export default function Step1Identificacao() {
   const canProceed = () => {
     if (!form.evaluatorName) return false
     if (!form.qualityResponsible) return false
+    if (!form.operationResponsible) return false
     if (!form.receivingOrder) return false
     if (!form.invoiceNumber) return false
     if (!form.vehicleType) return false
@@ -262,12 +260,12 @@ export default function Step1Identificacao() {
         <TouchableOpacity
           style={[styles.nextBtn, !canProceed() && styles.nextBtnDisabled]}
           onPress={proceed}
+          disabled={!canProceed()}
           activeOpacity={0.85}
         >
           <Text style={styles.nextBtnText}>Próximo →</Text>
         </TouchableOpacity>
 
-        <View style={{ height: 40 }} />
       </ScrollView>
 
       {/* Vehicle type picker */}
@@ -327,15 +325,12 @@ export default function Step1Identificacao() {
   )
 }
 
-// Need to import Stack for screen options
-import { Stack } from 'expo-router'
-
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: BRAND_CREAM },
-  content: { padding: 16 },
+  content: { padding: 14, paddingBottom: 132 },
   stepBar: {
     flexDirection: 'row', gap: 6, justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   stepDot: {
     width: 28, height: 28, borderRadius: 14,
@@ -347,28 +342,28 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 15, fontWeight: '800', color: BRAND_GREEN,
     textTransform: 'uppercase', letterSpacing: 0.5,
-    marginBottom: 12,
+    marginBottom: 10,
   },
-  field: { marginBottom: 14 },
+  field: { marginBottom: 12 },
   label: { fontSize: 13, fontWeight: '600', color: '#374151', marginBottom: 6 },
   req: { color: '#ef4444' },
   input: {
-    height: 46, borderWidth: 1.5, borderColor: '#e5e7eb',
-    borderRadius: 10, paddingHorizontal: 12, fontSize: 14,
+    height: 48, borderWidth: 1, borderColor: '#d8ddd6',
+    borderRadius: 8, paddingHorizontal: 12, fontSize: 14,
     color: '#111827', backgroundColor: '#fff',
   },
   selectBtn: {
-    height: 46, borderWidth: 1.5, borderColor: '#e5e7eb',
-    borderRadius: 10, paddingHorizontal: 12, backgroundColor: '#fff',
+    height: 48, borderWidth: 1, borderColor: '#d8ddd6',
+    borderRadius: 8, paddingHorizontal: 12, backgroundColor: '#fff',
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
   selectText: { fontSize: 14, color: '#374151' },
   chevron: { fontSize: 10, color: '#9ca3af' },
   row: { flexDirection: 'row', marginTop: 8 },
   productCard: {
-    backgroundColor: '#fff', borderRadius: 16, padding: 12,
+    backgroundColor: '#fff', borderRadius: 8, padding: 12,
     marginBottom: 10, borderWidth: 1, borderColor: HAIRLINE_GREEN,
-    shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 3, elevation: 2,
+    shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1,
   },
   productHeader: {
     flexDirection: 'row', justifyContent: 'space-between',
@@ -377,16 +372,20 @@ const styles = StyleSheet.create({
   productIndex: { fontSize: 13, fontWeight: '700', color: BRAND_GREEN },
   removeText: { fontSize: 12, color: '#ef4444', fontWeight: '600' },
   addProductBtn: {
-    borderWidth: 1.5, borderColor: BRAND_GOLD, borderStyle: 'dashed',
-    borderRadius: 10, padding: 12, alignItems: 'center', marginBottom: 14,
+    minHeight: 48, borderWidth: 1.5, borderColor: BRAND_GOLD, borderStyle: 'dashed',
+    borderRadius: 8, padding: 12, alignItems: 'center', justifyContent: 'center', marginBottom: 14,
   },
   addProductText: { color: BRAND_GREEN, fontWeight: '700', fontSize: 14 },
   nextBtn: {
-    backgroundColor: BRAND_GREEN, borderRadius: 14, height: 52,
+    backgroundColor: BRAND_GREEN, borderRadius: 8, height: 54,
     alignItems: 'center', justifyContent: 'center', marginTop: 8,
     shadowColor: BRAND_GREEN, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.30, shadowRadius: 8, elevation: 6,
   },
-  nextBtnDisabled: { opacity: 0.4 },
+  nextBtnDisabled: {
+    backgroundColor: '#93a39f',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
   nextBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' },
   modalSheet: {
