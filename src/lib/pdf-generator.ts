@@ -222,6 +222,7 @@ function getStatusBadgeStyle(status: string): string {
 
 function getAbsoluteUrl(fileUrl: string): string {
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+  if (fileUrl.startsWith('data:')) return fileUrl
   if (fileUrl.startsWith('http')) return fileUrl
   return `${baseUrl}${fileUrl}`
 }

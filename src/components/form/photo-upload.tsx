@@ -35,6 +35,38 @@ export function PhotoUpload({
   const [uploading, setUploading] = useState(false)
   const [previewPhoto, setPreviewPhoto] = useState<string | null>(null)
 
+  const compressImage = async (file: File): Promise<File> => {
+    if (!file.type.startsWith('image/')) return file
+
+    const imageUrl = URL.createObjectURL(file)
+    try {
+      const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => resolve(img)
+        img.onerror = reject
+        img.src = imageUrl
+      })
+
+      const maxDimension = 1600
+      const scale = Math.min(1, maxDimension / Math.max(image.width, image.height))
+      const width = Math.round(image.width * scale)
+      const height = Math.round(image.height * scale)
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+      canvas.getContext('2d')?.drawImage(image, 0, 0, width, height)
+
+      const blob = await new Promise<Blob | null>(resolve => {
+        canvas.toBlob(resolve, 'image/jpeg', 0.82)
+      })
+
+      if (!blob) return file
+      return new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' })
+    } finally {
+      URL.revokeObjectURL(imageUrl)
+    }
+  }
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
     if (!files.length) return
@@ -45,8 +77,9 @@ export function PhotoUpload({
     setUploading(true)
     try {
       const uploadPromises = filesToUpload.map(async (file) => {
+        const uploadFile = await compressImage(file)
         const formData = new FormData()
-        formData.append('file', file)
+        formData.append('file', uploadFile)
 
         const response = await fetch('/api/upload', {
           method: 'POST',
@@ -57,7 +90,7 @@ export function PhotoUpload({
 
         const data = await response.json()
 
-        const previewUrl = URL.createObjectURL(file)
+        const previewUrl = URL.createObjectURL(uploadFile)
 
         return {
           fileUrl: data.fileUrl,
