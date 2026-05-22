@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useAuthStore } from '@/store/authStore'
 
-// Set via environment or update to your server's LAN IP for development
-export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000'
+const DEFAULT_API_URL = 'https://sistema-controle-qualidade.vercel.app'
+
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? DEFAULT_API_URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,

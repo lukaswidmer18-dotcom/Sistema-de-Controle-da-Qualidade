@@ -48,6 +48,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b5e09d61-c385-4910-970a-014f78b3e11c"
+      }
+    },
+    "owner": "lukaswidmer"
   }
 }
