@@ -23,6 +23,7 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [focusedField, setFocusedField] = useState<'email' | 'password' | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
   const setSession = useAuthStore(s => s.setSession)
 
   const handleLogin = async () => {
@@ -124,20 +125,35 @@ export default function LoginScreen() {
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Senha</Text>
-              <TextInput
-                style={[styles.input, focusedField === 'password' && styles.inputFocused]}
-                value={password}
-                onChangeText={v => { setPassword(v); setError(null) }}
-                placeholder="********"
-                placeholderTextColor="#9ca3af"
-                secureTextEntry
-                autoComplete="password"
-                editable={!loading}
-                onSubmitEditing={handleLogin}
-                returnKeyType="go"
-                onFocus={() => setFocusedField('password')}
-                onBlur={() => setFocusedField(null)}
-              />
+              <View style={[styles.passwordWrap, focusedField === 'password' && styles.inputFocused]}>
+                <TextInput
+                  style={styles.passwordInput}
+                  value={password}
+                  onChangeText={v => { setPassword(v); setError(null) }}
+                  placeholder="********"
+                  placeholderTextColor="#9ca3af"
+                  secureTextEntry={!showPassword}
+                  autoComplete="password"
+                  editable={!loading}
+                  onSubmitEditing={handleLogin}
+                  returnKeyType="go"
+                  onFocus={() => setFocusedField('password')}
+                  onBlur={() => setFocusedField(null)}
+                />
+                <TouchableOpacity
+                  style={styles.eyeButton}
+                  onPress={() => setShowPassword(value => !value)}
+                  disabled={loading}
+                  activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                >
+                  <View style={[styles.eyeShape, showPassword && styles.eyeShapeActive]}>
+                    <View style={[styles.eyePupil, showPassword && styles.eyePupilActive]} />
+                  </View>
+                  {showPassword && <View style={styles.eyeSlash} />}
+                </TouchableOpacity>
+              </View>
             </View>
 
             <TouchableOpacity
@@ -308,6 +324,58 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 6,
     elevation: 2,
+  },
+  passwordWrap: {
+    height: 50,
+    borderWidth: 1.5,
+    borderColor: HAIRLINE_GREEN,
+    borderRadius: 12,
+    backgroundColor: '#fafafa',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  passwordInput: {
+    flex: 1,
+    height: '100%',
+    paddingLeft: 16,
+    paddingRight: 8,
+    fontSize: 15,
+    color: '#111827',
+  },
+  eyeButton: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  eyeShape: {
+    width: 22,
+    height: 14,
+    borderWidth: 1.7,
+    borderColor: '#6b7280',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  eyeShapeActive: {
+    borderColor: BRAND_GREEN,
+  },
+  eyePupil: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: '#6b7280',
+  },
+  eyePupilActive: {
+    backgroundColor: BRAND_GREEN,
+  },
+  eyeSlash: {
+    position: 'absolute',
+    width: 26,
+    height: 2,
+    borderRadius: 1,
+    backgroundColor: BRAND_GREEN,
+    transform: [{ rotate: '-35deg' }],
   },
   button: {
     height: 54,

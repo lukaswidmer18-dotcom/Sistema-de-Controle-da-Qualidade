@@ -69,7 +69,7 @@ export function MobileLoadingScreen({
   })
   const sweepX = sweep.interpolate({
     inputRange: [0, 1],
-    outputRange: [-80, 260],
+    outputRange: [-96, 300],
   })
   const status = steps?.find(step => step.state === 'active')?.label ?? subtitle
 
@@ -91,15 +91,12 @@ export function MobileLoadingScreen({
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
 
-        <View style={styles.progressWrap}>
+        <View style={styles.progressWrap} accessibilityLabel={`Carregando ${Math.round(progress)} por cento`}>
           <View style={styles.progressTrack}>
-            <View style={[styles.progressFill, { width: `${Math.max(12, Math.min(progress, 100))}%` }]}>
-              <Animated.View style={[styles.sweep, { transform: [{ translateX: sweepX }] }]} />
-            </View>
+            <Animated.View style={[styles.progressSegment, { transform: [{ translateX: sweepX }] }]} />
           </View>
           <View style={styles.progressMeta}>
             <Text style={styles.statusText} numberOfLines={1}>{status}</Text>
-            <Text style={styles.percent}>{Math.round(progress)}%</Text>
           </View>
         </View>
       </View>
@@ -194,39 +191,28 @@ const styles = StyleSheet.create({
     maxWidth: 300,
   },
   progressTrack: {
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: 'rgba(248,245,235,0.16)',
+    height: 6,
+    borderRadius: 4,
+    backgroundColor: 'rgba(248,245,235,0.14)',
     overflow: 'hidden',
   },
-  progressFill: {
+  progressSegment: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: 96,
     height: '100%',
-    borderRadius: 3,
+    borderRadius: 4,
     backgroundColor: BRAND_GOLD,
-    overflow: 'hidden',
-  },
-  sweep: {
-    width: 74,
-    height: '100%',
-    backgroundColor: 'rgba(255,255,255,0.34)',
   },
   progressMeta: {
     marginTop: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 12,
   },
   statusText: {
-    flex: 1,
     color: 'rgba(248,245,235,0.58)',
     fontSize: 12,
     fontWeight: '800',
-  },
-  percent: {
-    color: 'rgba(248,245,235,0.78)',
-    fontSize: 12,
-    fontWeight: '900',
   },
   footer: {
     minHeight: 72,
