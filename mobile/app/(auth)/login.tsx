@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   View,
   Text,
@@ -24,6 +24,8 @@ export default function LoginScreen() {
   const [error, setError] = useState<string | null>(null)
   const [focusedField, setFocusedField] = useState<'email' | 'password' | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const emailInputRef = useRef<TextInput>(null)
+  const passwordInputRef = useRef<TextInput>(null)
   const setSession = useAuthStore(s => s.setSession)
 
   const handleLogin = async () => {
@@ -75,7 +77,7 @@ export default function LoginScreen() {
       <View style={styles.screen}>
         <ScrollView
           contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
         >
           <View>
@@ -109,6 +111,7 @@ export default function LoginScreen() {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>E-mail</Text>
               <TextInput
+                ref={emailInputRef}
                 style={[styles.input, focusedField === 'email' && styles.inputFocused]}
                 value={email}
                 onChangeText={v => { setEmail(v); setError(null) }}
@@ -116,8 +119,13 @@ export default function LoginScreen() {
                 placeholderTextColor="#9ca3af"
                 keyboardType="email-address"
                 autoCapitalize="none"
-                autoComplete="email"
+                autoCorrect={false}
+                autoComplete="username"
+                textContentType="username"
                 editable={!loading}
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onSubmitEditing={() => passwordInputRef.current?.focus()}
                 onFocus={() => setFocusedField('email')}
                 onBlur={() => setFocusedField(null)}
               />
@@ -125,15 +133,23 @@ export default function LoginScreen() {
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Senha</Text>
-              <View style={[styles.passwordWrap, focusedField === 'password' && styles.inputFocused]}>
+              <View
+                style={[styles.passwordWrap, focusedField === 'password' && styles.inputFocused]}
+                onTouchEnd={() => passwordInputRef.current?.focus()}
+              >
                 <TextInput
+                  ref={passwordInputRef}
                   style={styles.passwordInput}
                   value={password}
                   onChangeText={v => { setPassword(v); setError(null) }}
                   placeholder="********"
                   placeholderTextColor="#9ca3af"
                   secureTextEntry={!showPassword}
+                  autoCapitalize="none"
+                  autoCorrect={false}
                   autoComplete="password"
+                  textContentType="password"
+                  importantForAutofill="yes"
                   editable={!loading}
                   onSubmitEditing={handleLogin}
                   returnKeyType="go"
@@ -142,7 +158,10 @@ export default function LoginScreen() {
                 />
                 <TouchableOpacity
                   style={styles.eyeButton}
-                  onPress={() => setShowPassword(value => !value)}
+                  onPress={() => {
+                    setShowPassword(value => !value)
+                    requestAnimationFrame(() => passwordInputRef.current?.focus())
+                  }}
                   disabled={loading}
                   activeOpacity={0.7}
                   accessibilityRole="button"
