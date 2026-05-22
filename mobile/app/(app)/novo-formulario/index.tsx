@@ -55,6 +55,7 @@ export default function Step1Identificacao() {
     if (!form.invoiceNumber) return false
     if (!form.vehicleType) return false
     if (!form.trailerPlate) return false
+    if (!form.platePicture || form.platePicture.uploading || form.platePicture.error) return false
     if (form.products.length === 0) return false
     if (form.products.some(p => !p.productCode || !p.lot)) return false
     return true
@@ -185,7 +186,7 @@ export default function Step1Identificacao() {
 
         {/* Plate picture */}
         <View style={styles.field}>
-          <Text style={styles.label}>Foto da Placa</Text>
+          <Text style={styles.label}>Foto da Placa - Carreta <Text style={styles.req}>*</Text></Text>
           <PhotoCapture
             photos={form.platePicture ? [form.platePicture] : []}
             onAdd={photo => setPlatePicture(photo)}

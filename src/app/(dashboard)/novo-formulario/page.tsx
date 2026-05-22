@@ -228,7 +228,7 @@ export default function NovoFormularioPage() {
       if (!formData.invoiceNumber) errors.push('Número da nota fiscal é obrigatório')
       if (!formData.vehicleType) errors.push('Tipo de veículo é obrigatório')
       if (!formData.trailerPlate) errors.push('Placa do reboque é obrigatória')
-      if (!formData.platePicture) errors.push('Foto da placa é obrigatória')
+      if (!formData.platePicture) errors.push('Foto da placa - carreta é obrigatória')
       const validProducts = formData.products.filter(p => p.productCode && p.lot)
       if (validProducts.length === 0) errors.push('Pelo menos um produto com código e lote é obrigatório')
     }
@@ -264,6 +264,12 @@ export default function NovoFormularioPage() {
 
     if (step === 4) {
       formData.temperatures.forEach((temp, index) => {
+        if (!temp.status) {
+          errors.push(`Status obrigatório para medição ${index + 1}`)
+        }
+        if (temp.status === 'NAO_APLICAVEL') {
+          return
+        }
         if (temp.status === 'NAO_CONFORME' && !temp.photoUrl && !temp.photoPreview) {
           errors.push(`Foto obrigatória para medição ${index + 1}`)
         }
@@ -631,7 +637,7 @@ export default function NovoFormularioPage() {
                   </FormField>
                 </div>
 
-                <FormField label="Foto da Placa" required>
+                <FormField label="Foto da Placa - Carreta" required>
                   <PhotoUpload
                     photos={formData.platePicture ? [formData.platePicture] : []}
                     onPhotosChange={photos => updateFormData('platePicture', photos[0] as PhotoData | undefined)}
@@ -861,7 +867,15 @@ export default function NovoFormularioPage() {
                         <Label className="text-xs text-gray-500 mb-1 block">Status</Label>
                         <Select
                           value={temp.status || ''}
-                          onValueChange={val => updateTemperature(index, 'status', val)}
+                          onValueChange={val => {
+                            updateTemperature(index, 'status', val)
+                            if (val === 'NAO_APLICAVEL') {
+                              updateTemperature(index, 'observation', '')
+                              updateTemperature(index, 'photoUrl', '')
+                              updateTemperature(index, 'photoPreview', '')
+                              updateTemperature(index, 'photoFile', undefined)
+                            }
+                          }}
                         >
                           <SelectTrigger className="h-8 text-xs">
                             <SelectValue placeholder="Selecione" />
@@ -869,7 +883,7 @@ export default function NovoFormularioPage() {
                           <SelectContent>
                             <SelectItem value="CONFORME">Conforme</SelectItem>
                             <SelectItem value="NAO_CONFORME">Não Conforme</SelectItem>
-                            <SelectItem value="NAO_APLICAVEL">Não Aplicável</SelectItem>
+                            <SelectItem value="NAO_APLICAVEL">N/A - Não Aplicável</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -877,7 +891,7 @@ export default function NovoFormularioPage() {
 
                     <div>
                       <Label className="text-xs text-gray-500 mb-1 block">
-                        Observação {temp.status === 'NAO_CONFORME' ? '*' : '(opcional)'}
+                        Observação {temp.status === 'NAO_CONFORME' ? '*' : temp.status === 'NAO_APLICAVEL' ? '(N/A)' : '(opcional)'}
                       </Label>
                       <Textarea
                         value={temp.observation || ''}
@@ -920,6 +934,12 @@ export default function NovoFormularioPage() {
                           <p className="text-xs text-red-500 mt-1">⚠ Foto obrigatória</p>
                         )}
                       </div>
+                    )}
+
+                    {temp.status === 'NAO_APLICAVEL' && (
+                      <p className="text-xs text-gray-500 font-medium">
+                        N/A selecionado: foto não obrigatória para esta medição.
+                      </p>
                     )}
                   </div>
                 ))}

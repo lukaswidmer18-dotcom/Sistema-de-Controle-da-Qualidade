@@ -11,6 +11,8 @@ const photoSchema = z.object({
   fileType: z.string(),
 })
 
+const REQUIRED_VEHICLE_PHOTO_KEYS = new Set(['temperatura_veiculo', 'lacre', 'termografo'])
+
 const checklistItemSchema = z.object({
   key: z.string().optional(),
   label: z.string().optional(),
@@ -79,6 +81,43 @@ const receiptSchema = z.object({
     photoUrl: z.string().optional(),
   })).optional(),
 })
+
+function validateBusinessRules(data: z.infer<typeof receiptSchema>) {
+  const errors: string[] = []
+
+  if (!data.platePicture?.trim()) {
+    errors.push('Foto da placa - carreta é obrigatória')
+  }
+
+  data.vehicleChecklist.forEach(item => {
+    const hasPhoto = item.photos?.some(photo => photo.fileUrl?.trim()) ?? false
+    if (REQUIRED_VEHICLE_PHOTO_KEYS.has(item.itemKey) && !hasPhoto) {
+      errors.push(`Foto obrigatória para: ${item.itemLabel}`)
+    }
+    if (item.status === 'NAO_CONFORME' && !hasPhoto) {
+      errors.push(`Foto obrigatória para: ${item.itemLabel}`)
+    }
+    if (item.status === 'NAO_CONFORME' && !item.observation?.trim()) {
+      errors.push(`Observação obrigatória para: ${item.itemLabel}`)
+    }
+  })
+
+  data.temperatures?.forEach((temperature, index) => {
+    if (!temperature.status) {
+      errors.push(`Status obrigatório para medição ${index + 1}`)
+      return
+    }
+    if (temperature.status === 'NAO_APLICAVEL') return
+    if (temperature.status === 'NAO_CONFORME' && !temperature.photoUrl?.trim()) {
+      errors.push(`Foto obrigatória para medição ${index + 1}`)
+    }
+    if (temperature.status === 'NAO_CONFORME' && !temperature.observation?.trim()) {
+      errors.push(`Observação obrigatória para medição ${index + 1}`)
+    }
+  })
+
+  return errors
+}
 
 export async function GET(request: NextRequest) {
   const session = await getApiSession()
@@ -175,6 +214,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const data = receiptSchema.parse(body)
+    const ruleErrors = validateBusinessRules(data)
+
+    if (ruleErrors.length > 0) {
+      return NextResponse.json({ error: ruleErrors[0], errors: ruleErrors }, { status: 400 })
+    }
 
     const formNumber = data.formNumber || generateFormNumber()
 

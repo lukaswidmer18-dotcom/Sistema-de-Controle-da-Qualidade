@@ -20,6 +20,14 @@ export default function Step6Finalizacao() {
     return [
       ...form.vehicleChecklist.flatMap(i => i.photos ?? []),
       ...form.cargoChecklist.flatMap(i => i.photos ?? []),
+      ...form.temperatures
+        .filter(t => t.photoUploading)
+        .map(t => ({
+          fileUrl: t.photoUrl ?? '',
+          fileName: 'temperatura.jpg',
+          fileType: 'image/jpeg',
+          uploading: t.photoUploading,
+        })),
     ].some(p => p.uploading)
   }
 
