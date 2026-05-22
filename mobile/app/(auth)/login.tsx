@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -16,6 +15,7 @@ import { useAuthStore } from '@/store/authStore'
 import { API_BASE_URL } from '@/lib/api'
 import { BRAND_GREEN, BRAND_GOLD, HAIRLINE_GOLD, HAIRLINE_GREEN } from '@/lib/constants'
 import { AuthUser } from '@/lib/types'
+import { MobileLoadingScreen } from '@/components/MobileLoadingScreen'
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('')
@@ -49,6 +49,21 @@ export default function LoginScreen() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <MobileLoadingScreen
+        title="Validando acesso"
+        subtitle="Conferindo credenciais e parametros..."
+        progress={74}
+        steps={[
+          { label: 'Verificando credenciais', state: 'done' },
+          { label: 'Validando parametros de Qualidade', state: 'active' },
+          { label: 'Acessando ambiente seguro', state: 'pending' },
+        ]}
+      />
+    )
   }
 
   return (
@@ -133,11 +148,7 @@ export default function LoginScreen() {
               accessibilityRole="button"
               accessibilityLabel="Entrar no sistema"
             >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.buttonText}>Entrar</Text>
-              )}
+              <Text style={styles.buttonText}>Entrar</Text>
             </TouchableOpacity>
 
             <View style={styles.trustRow}>

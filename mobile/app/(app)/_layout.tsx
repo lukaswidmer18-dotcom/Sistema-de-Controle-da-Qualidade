@@ -1,8 +1,9 @@
 import { Tabs } from 'expo-router'
 import { useAuthStore } from '@/store/authStore'
-import { View, ActivityIndicator } from 'react-native'
+import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { BRAND_GREEN, HAIRLINE_GREEN } from '@/lib/constants'
+import { MobileLoadingScreen } from '@/components/MobileLoadingScreen'
 
 export default function AppLayout() {
   const { isAuthenticated, isLoading, user } = useAuthStore()
@@ -10,11 +11,7 @@ export default function AppLayout() {
   const insets = useSafeAreaInsets()
 
   if (isLoading || !isAuthenticated) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: BRAND_GREEN }}>
-        <ActivityIndicator color="#fff" size="large" />
-      </View>
-    )
+    return <MobileLoadingScreen title="Abrindo sistema" subtitle="Validando sessao corporativa..." progress={76} />
   }
 
   return (
