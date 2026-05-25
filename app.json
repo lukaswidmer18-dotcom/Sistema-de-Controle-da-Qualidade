@@ -18,6 +18,7 @@
     },
     "android": {
       "package": "com.belloalimentos.controlequalidade",
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "backgroundColor": "#16413a",
         "foregroundImage": "./assets/android-icon-foreground.png",
