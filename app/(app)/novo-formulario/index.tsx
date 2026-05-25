@@ -117,7 +117,7 @@ export default function Step1Identificacao() {
               onPress={() => setShowUnits(true)}
             >
               <Text style={styles.selectText}>
-                {units.find(u => u.value === form.unit)?.label ?? form.unit || 'Selecionar unidade...'}
+                {(units.find(u => u.value === form.unit)?.label ?? form.unit) || 'Selecionar unidade...'}
               </Text>
               <Text style={styles.chevron}>▼</Text>
             </TouchableOpacity>
