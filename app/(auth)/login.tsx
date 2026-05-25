@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Pressable,
   StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -139,13 +140,18 @@ export default function LoginScreen() {
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
                 />
-                <TouchableOpacity onPress={() => setShowPassword(p => !p)} style={styles.eyeButton}>
+                <Pressable
+                  onPress={() => setShowPassword(p => !p)}
+                  style={styles.eyeButton}
+                  hitSlop={0}
+                  android_ripple={null}
+                >
                   <Feather
                     name={showPassword ? 'eye-off' : 'eye'}
                     size={18}
                     color={focusedField === 'password' ? BRAND_GREEN : '#b0b7c3'}
                   />
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
 
