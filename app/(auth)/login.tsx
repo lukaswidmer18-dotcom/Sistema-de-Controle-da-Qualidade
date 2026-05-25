@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import {
   View,
   Text,
@@ -25,6 +25,7 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [focusedField, setFocusedField] = useState<'email' | 'password' | null>(null)
+  const passwordRef = useRef<TextInput>(null)
   const setSession = useAuthStore(s => s.setSession)
 
   const handleLogin = async () => {
@@ -118,6 +119,9 @@ export default function LoginScreen() {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoComplete="email"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                  onSubmitEditing={() => passwordRef.current?.focus()}
                   editable={!loading}
                   onFocus={() => setFocusedField('email')}
                   onBlur={() => setFocusedField(null)}
@@ -139,6 +143,7 @@ export default function LoginScreen() {
                   style={styles.inputIcon}
                 />
                 <TextInput
+                  ref={passwordRef}
                   style={[styles.input, { flex: 1 }]}
                   value={password}
                   onChangeText={v => { setPassword(v); setError(null) }}
@@ -146,9 +151,9 @@ export default function LoginScreen() {
                   placeholderTextColor="#c4c9d4"
                   secureTextEntry={!showPassword}
                   autoComplete="password"
+                  returnKeyType="done"
                   editable={!loading}
                   onSubmitEditing={handleLogin}
-                  returnKeyType="go"
                   onFocus={() => setFocusedField('password')}
                   onBlur={() => setFocusedField(null)}
                 />
