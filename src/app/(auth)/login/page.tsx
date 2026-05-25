@@ -344,30 +344,6 @@ export default function LoginPage() {
             <span>Bello Alimentos</span>
           </div>
 
-          {/* Demo credentials — brand-cohesive treatment */}
-          <div
-            className="mt-5 rounded-xl overflow-hidden"
-            style={{ border: '1px solid rgba(22,65,58,0.09)', background: 'rgba(22,65,58,0.025)' }}
-          >
-            <div
-              className="px-4 py-2.5"
-              style={{ borderBottom: '1px solid rgba(22,65,58,0.07)', background: 'rgba(22,65,58,0.04)' }}
-            >
-              <p className="text-[0.6875rem] font-bold uppercase tracking-[0.12em]" style={{ color: 'rgba(22,65,58,0.42)' }}>
-                Acesso de demonstração
-              </p>
-            </div>
-            <div className="px-4 py-3 space-y-2">
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[0.75rem] font-mono truncate" style={{ color: 'rgba(22,65,58,0.58)' }}>admin@empresa.com</span>
-                <span className="text-[0.75rem] font-mono shrink-0" style={{ color: 'rgba(22,65,58,0.35)' }}>admin123</span>
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <span className="text-[0.75rem] font-mono truncate" style={{ color: 'rgba(22,65,58,0.58)' }}>qualidade@empresa.com</span>
-                <span className="text-[0.75rem] font-mono shrink-0" style={{ color: 'rgba(22,65,58,0.35)' }}>qualidade123</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
