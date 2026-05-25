@@ -13,8 +13,6 @@ api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`
-    // Also send as cookie header since NextAuth expects cookie-based sessions
-    config.headers['Cookie'] = `next-auth.session-token=${token}`
   }
   return config
 })

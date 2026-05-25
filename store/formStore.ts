@@ -193,7 +193,9 @@ export const useFormStore = create<FormState>((set, get) => ({
         set({ form: JSON.parse(saved) as ReceiptFormData })
         return true
       }
-    } catch {}
+    } catch (e) {
+      console.error('formStore: failed to restore draft', e)
+    }
     return false
   },
 }))
