@@ -149,6 +149,16 @@ export interface ReceiptProductSaved {
   quantity: string | null
 }
 
+export interface EmailLog {
+  id: string
+  recipients: string[]
+  subject: string
+  body: string
+  status: string
+  sentAt: string
+  sender: { name: string; email: string } | null
+}
+
 export interface ReceiptDetail extends Receipt {
   unit: string
   operationResponsible: string
@@ -158,6 +168,7 @@ export interface ReceiptDetail extends Receipt {
   checklistItems: ReceiptChecklistItem[]
   temperatures: ReceiptTemperature[]
   nonConformities: ReceiptNonConformity[]
+  emailLogs: EmailLog[]
 }
 
 export interface ActionPlanData {
