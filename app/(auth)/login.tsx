@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
 } from 'react-native'
 import { router } from 'expo-router'
 import axios from 'axios'
@@ -55,8 +54,7 @@ export default function LoginScreen() {
   }
 
   return (
-    // On Android: behavior=undefined lets the system (adjustResize) handle keyboard.
-    // behavior="height" + adjustResize = double-shrink → content shifts → wrong field gets focus.
+    // adjustPan (app.json) handles Android keyboard — no ScrollView to conflict with the pan.
     <KeyboardAvoidingView
       style={styles.root}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -65,11 +63,7 @@ export default function LoginScreen() {
         <View style={styles.blob1} pointerEvents="none" />
         <View style={styles.blob2} pointerEvents="none" />
 
-        <ScrollView
-          contentContainerStyle={styles.scroll}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
+        <View style={styles.scroll}>
           {/* Header — compact to avoid overflow on small screens */}
           <View style={styles.header}>
             <View style={styles.iconBox}>
@@ -178,7 +172,7 @@ export default function LoginScreen() {
           </View>
 
           <Text style={styles.version}>v1.0.0 · © 2026 Bello Alimentos LTDA</Text>
-        </ScrollView>
+        </View>
       </View>
     </KeyboardAvoidingView>
   )
@@ -206,7 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.04)',
   },
   scroll: {
-    flexGrow: 1,
+    flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 24,
     paddingVertical: 36,
