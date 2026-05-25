@@ -3,10 +3,9 @@ import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, TextInput, RefreshControl,
 } from 'react-native'
-import * as WebBrowser from 'expo-web-browser'
 import { useQuery } from '@tanstack/react-query'
-import { Stack } from 'expo-router'
-import api, { API_BASE_URL } from '@/lib/api'
+import { router, Stack } from 'expo-router'
+import api from '@/lib/api'
 import { useAuthStore } from '@/store/authStore'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 
@@ -60,12 +59,6 @@ export default function PlanosDeAcao() {
     },
   })
 
-  const openPdf = async (plan: ActionPlan) => {
-    if (!plan.pdfUrl) return
-    const url = plan.pdfUrl.startsWith('http') ? plan.pdfUrl : `${API_BASE_URL}${plan.pdfUrl}`
-    await WebBrowser.openBrowserAsync(url)
-  }
-
   const totalPages = Math.ceil((data?.total ?? 0) / 20)
 
   const renderItem = ({ item }: { item: ActionPlan }) => {
@@ -73,9 +66,8 @@ export default function PlanosDeAcao() {
     return (
       <TouchableOpacity
         style={[styles.card, { borderLeftColor: isDone ? '#34d399' : '#fbbf24', borderLeftWidth: 4 }]}
-        onPress={() => openPdf(item)}
+        onPress={() => router.push(`/(app)/planos-de-acao/${item.receipt.id}`)}
         activeOpacity={0.75}
-        disabled={!item.pdfUrl}
       >
         <View style={styles.cardTop}>
           <Text style={styles.formNumber}>{item.receipt.formNumber}</Text>
@@ -107,11 +99,7 @@ export default function PlanosDeAcao() {
 
         <View style={styles.cardBottom}>
           <Text style={styles.dateText}>Prazo: {formatDate(item.deadline)}</Text>
-          {item.pdfUrl ? (
-            <Text style={styles.pdfLink}>Ver PDF →</Text>
-          ) : (
-            <Text style={styles.noPdf}>Sem PDF</Text>
-          )}
+          <Text style={styles.pdfLink}>Ver detalhes →</Text>
         </View>
       </TouchableOpacity>
     )

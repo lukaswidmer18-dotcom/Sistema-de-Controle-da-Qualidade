@@ -3,9 +3,8 @@ import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, TextInput, RefreshControl,
 } from 'react-native'
-import * as WebBrowser from 'expo-web-browser'
 import { useQuery } from '@tanstack/react-query'
-import api, { API_BASE_URL } from '@/lib/api'
+import api from '@/lib/api'
 import { useAuthStore } from '@/store/authStore'
 import { router, Stack } from 'expo-router'
 import { Receipt, ReceiptListResponse } from '@/lib/types'
@@ -28,12 +27,6 @@ export default function PdfsSalvos() {
     },
   })
 
-  const openPdf = async (receipt: Receipt) => {
-    if (!receipt.pdfUrl) return
-    const url = receipt.pdfUrl.startsWith('http') ? receipt.pdfUrl : `${API_BASE_URL}${receipt.pdfUrl}`
-    await WebBrowser.openBrowserAsync(url)
-  }
-
   const handleLogout = async () => {
     await logout()
     router.replace('/(auth)/login')
@@ -45,9 +38,8 @@ export default function PdfsSalvos() {
     return (
       <TouchableOpacity
         style={styles.card}
-        onPress={() => openPdf(item)}
+        onPress={() => router.push(`/(app)/pdfs-salvos/${item.id}`)}
         activeOpacity={0.75}
-        disabled={!item.pdfUrl}
       >
         <View style={styles.cardTop}>
           <Text style={styles.formNumber}>{item.formNumber}</Text>
@@ -70,11 +62,7 @@ export default function PdfsSalvos() {
         </View>
         <View style={styles.cardBottom}>
           <Text style={styles.dateText}>{formatDateTime(item.receivedAt)}</Text>
-          {item.pdfUrl ? (
-            <Text style={styles.pdfLink}>Ver PDF →</Text>
-          ) : (
-            <Text style={styles.noPdf}>Sem PDF</Text>
-          )}
+          <Text style={styles.pdfLink}>Ver detalhes →</Text>
         </View>
       </TouchableOpacity>
     )
