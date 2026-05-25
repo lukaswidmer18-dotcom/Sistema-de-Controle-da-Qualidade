@@ -14,6 +14,7 @@ import { PhotoData } from '@/lib/types'
 import { uuid } from '@/lib/utils'
 
 interface EmailList { id: string; name: string; emails: string[] }
+interface ConfigOption { label: string; value: string }
 
 export default function Step1Identificacao() {
   const { form, updateField, updateProduct, addProduct, removeProduct, setPlatePicture, restore, reset } = useFormStore()
@@ -21,6 +22,7 @@ export default function Step1Identificacao() {
   const navigation = useNavigation()
   const [showVehicleTypes, setShowVehicleTypes] = useState(false)
   const [showEvaluators, setShowEvaluators] = useState(false)
+  const [showUnits, setShowUnits] = useState(false)
   const [hasDraft, setHasDraft] = useState(false)
 
   const { data: emailLists } = useQuery<EmailList[]>({
@@ -28,6 +30,14 @@ export default function Step1Identificacao() {
     queryFn: async () => {
       const res = await api.get<EmailList[]>('/api/email-lists')
       return res.data
+    },
+  })
+
+  const { data: units } = useQuery<ConfigOption[]>({
+    queryKey: ['config-units'],
+    queryFn: async () => {
+      const res = await api.get<{ list?: { options: ConfigOption[] } }>('/api/config-lists?name=UNIDADES')
+      return res.data.list?.options ?? []
     },
   })
 
@@ -97,6 +107,22 @@ export default function Step1Identificacao() {
             placeholderTextColor="#9ca3af"
           />
         </View>
+
+        {/* Unit */}
+        {units && units.length > 0 && (
+          <View style={styles.field}>
+            <Text style={styles.label}>Unidade <Text style={styles.req}>*</Text></Text>
+            <TouchableOpacity
+              style={styles.selectBtn}
+              onPress={() => setShowUnits(true)}
+            >
+              <Text style={styles.selectText}>
+                {units.find(u => u.value === form.unit)?.label ?? form.unit || 'Selecionar unidade...'}
+              </Text>
+              <Text style={styles.chevron}>▼</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Email list */}
         {emailLists && emailLists.length > 0 && (
@@ -295,6 +321,34 @@ export default function Step1Identificacao() {
           </View>
         </View>
       </Modal>
+
+      {/* Unit picker */}
+      {units && (
+        <Modal visible={showUnits} transparent animationType="slide">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalSheet}>
+              <Text style={styles.modalTitle}>Unidade</Text>
+              <FlatList
+                data={units}
+                keyExtractor={u => u.value}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.modalItem}
+                    onPress={() => { updateField('unit', item.value); setShowUnits(false) }}
+                  >
+                    <Text style={[styles.modalItemText, form.unit === item.value && { color: BRAND_GREEN, fontWeight: '700' }]}>
+                      {item.label}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+              <TouchableOpacity style={styles.modalCancel} onPress={() => setShowUnits(false)}>
+                <Text style={styles.modalCancelText}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
 
       {/* Email list picker */}
       {emailLists && (
