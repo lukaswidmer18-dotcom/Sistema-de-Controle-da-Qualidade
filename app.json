@@ -34,7 +34,16 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "single"
+      "output": "static",
+      "favicon": "./assets/favicon.png",
+      "name": "Controle de Qualidade",
+      "shortName": "Qualidade",
+      "lang": "pt-BR",
+      "themeColor": "#16413a",
+      "backgroundColor": "#16413a",
+      "display": "standalone",
+      "orientation": "portrait",
+      "startUrl": "/"
     },
     "plugins": [
       "expo-router",
