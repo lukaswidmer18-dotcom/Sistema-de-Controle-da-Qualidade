@@ -1,5 +1,5 @@
 import {
-  ScrollView, View, Text, TextInput, TouchableOpacity,
+  ScrollView, View, Text, TextInput, TouchableOpacity, Pressable,
   StyleSheet, Alert, Modal, FlatList,
 } from 'react-native'
 import { router, Stack } from 'expo-router'
@@ -71,9 +71,9 @@ function TemperatureCard({
     <View style={styles.card}>
       <View style={styles.cardHeader}>
         <Text style={styles.cardTitle}>Medição {index + 1}</Text>
-        <TouchableOpacity onPress={onRemove}>
+        <Pressable onPress={onRemove} hitSlop={0} android_ripple={null}>
           <Text style={styles.removeText}>Remover</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       {/* Type selector */}
@@ -123,7 +123,7 @@ function TemperatureCard({
         />
         <View style={styles.row}>
           {(['CONFORME', 'NAO_CONFORME'] as const).map(s => (
-            <TouchableOpacity
+            <Pressable
               key={s}
               style={[
                 styles.statusBtn,
@@ -131,11 +131,13 @@ function TemperatureCard({
                 temp.status === s && { backgroundColor: s === 'CONFORME' ? '#dcfce7' : '#fee2e2' },
               ]}
               onPress={() => onUpdate('status', s)}
+              hitSlop={0}
+              android_ripple={null}
             >
               <Text style={{ fontSize: 11, fontWeight: '700', color: s === 'CONFORME' ? '#16a34a' : '#dc2626' }}>
                 {s === 'CONFORME' ? 'OK' : 'NC'}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
       </View>

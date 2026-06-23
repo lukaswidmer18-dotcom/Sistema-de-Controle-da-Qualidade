@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
-  View, Text, TextInput, TouchableOpacity, ScrollView,
+  View, Text, TextInput, TouchableOpacity, Pressable, ScrollView,
   StyleSheet, Alert, Modal, FlatList,
 } from 'react-native'
 import { router, useNavigation } from 'expo-router'
@@ -229,9 +229,9 @@ export default function Step1Identificacao() {
             <View style={styles.productHeader}>
               <Text style={styles.productIndex}>Produto {i + 1}</Text>
               {form.products.length > 1 && (
-                <TouchableOpacity onPress={() => removeProduct(product.id)}>
+                <Pressable onPress={() => removeProduct(product.id)} hitSlop={0} android_ripple={null}>
                   <Text style={styles.removeText}>Remover</Text>
-                </TouchableOpacity>
+                </Pressable>
               )}
             </View>
             <TextInput
