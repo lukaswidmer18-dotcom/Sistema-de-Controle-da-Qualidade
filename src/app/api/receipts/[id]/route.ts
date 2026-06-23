@@ -32,7 +32,12 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
   }
 
-  return NextResponse.json({ receipt })
+  const emailLogs = receipt.emailLogs.map(log => ({
+    ...log,
+    recipients: JSON.parse(log.recipients) as string[],
+  }))
+
+  return NextResponse.json({ receipt: { ...receipt, emailLogs } })
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
