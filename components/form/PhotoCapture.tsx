@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  Platform,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { alert } from '@/lib/alert'
@@ -64,9 +65,14 @@ export function PhotoCapture({ photos, onAdd, onUpdate, maxPhotos = 5, label }: 
       onAdd(placeholder)
       const photoIndex = photos.length
 
-      // Upload
+      // Upload — web's FormData needs a real Blob, native's bridge wants the {uri,name,type} shape
       const formData = new FormData()
-      formData.append('file', { uri: previewUri, name: fileName, type: fileType } as unknown as Blob)
+      if (Platform.OS === 'web') {
+        const blob = await fetch(previewUri).then(r => r.blob())
+        formData.append('file', blob, fileName)
+      } else {
+        formData.append('file', { uri: previewUri, name: fileName, type: fileType } as unknown as Blob)
+      }
 
       const uploadRes = await api.post<{ fileUrl: string; fileName: string; fileType: string }>(
         '/api/upload',
