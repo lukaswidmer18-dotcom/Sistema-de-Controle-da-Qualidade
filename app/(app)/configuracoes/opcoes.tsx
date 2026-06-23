@@ -2,11 +2,12 @@ import { useState, useCallback } from 'react'
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, TextInput, Modal, ScrollView,
-  Alert, RefreshControl,
+  RefreshControl,
 } from 'react-native'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import api from '@/lib/api'
+import { alert } from '@/lib/alert'
 import { BRAND_GREEN, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 
 interface ConfigOption {
@@ -62,7 +63,7 @@ export default function OpcoesScreen() {
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : 'Erro ao adicionar opção'
-      Alert.alert('Erro', msg)
+      alert('Erro', msg)
     },
   })
 

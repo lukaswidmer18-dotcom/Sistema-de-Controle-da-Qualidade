@@ -1,6 +1,6 @@
 import {
   ScrollView, View, Text, TextInput, TouchableOpacity, Pressable,
-  StyleSheet, Alert, Modal, FlatList,
+  StyleSheet, Modal, FlatList,
 } from 'react-native'
 import { router, Stack } from 'expo-router'
 import { useFormStore } from '@/store/formStore'

@@ -2,11 +2,12 @@ import { useState, useCallback } from 'react'
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, TextInput, Modal, ScrollView,
-  Switch, Alert, RefreshControl,
+  Switch, RefreshControl,
 } from 'react-native'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import api from '@/lib/api'
+import { alert } from '@/lib/alert'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 
 interface Recipient { email: string }
@@ -67,7 +68,7 @@ export default function ListasScreen() {
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : 'Erro ao salvar lista'
-      Alert.alert('Erro', msg)
+      alert('Erro', msg)
     },
   })
 
@@ -78,7 +79,7 @@ export default function ListasScreen() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['email-lists'] })
     },
-    onError: () => Alert.alert('Erro', 'Não foi possível excluir a lista'),
+    onError: () => alert('Erro', 'Não foi possível excluir a lista'),
   })
 
   const openCreate = useCallback(() => {
@@ -99,7 +100,7 @@ export default function ListasScreen() {
   }, [])
 
   const confirmDelete = useCallback((id: string, name: string) => {
-    Alert.alert('Excluir lista', `Excluir "${name}"? Esta ação não pode ser desfeita.`, [
+    alert('Excluir lista', `Excluir "${name}"? Esta ação não pode ser desfeita.`, [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Excluir', style: 'destructive', onPress: () => deleteMutation.mutate(id) },
     ])

@@ -1,5 +1,6 @@
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { router, Stack } from 'expo-router'
+import { alert } from '@/lib/alert'
 import { useFormStore } from '@/store/formStore'
 import { ChecklistItemRow } from '@/components/form/ChecklistItemRow'
 import { BRAND_GREEN, BRAND_CREAM, HAIRLINE_GREEN, ALWAYS_REQUIRE_PHOTO_KEYS } from '@/lib/constants'
@@ -22,7 +23,7 @@ export default function Step2Veiculo() {
 
   const proceed = () => {
     if (!canProceed()) {
-      Alert.alert('Atenção', 'Preencha todos os itens. Itens NAO_CONFORME exigem observação e foto. Aguarde uploads finalizarem.')
+      alert('Atenção', 'Preencha todos os itens. Itens NAO_CONFORME exigem observação e foto. Aguarde uploads finalizarem.')
       return
     }
     router.push('/(app)/novo-formulario/carga')

@@ -2,11 +2,12 @@ import { useState, useCallback } from 'react'
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, TextInput, Modal, ScrollView,
-  Switch, Alert, RefreshControl,
+  Switch, RefreshControl,
 } from 'react-native'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import api from '@/lib/api'
+import { alert } from '@/lib/alert'
 import { useAuthStore } from '@/store/authStore'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 import type { UserRole } from '@/lib/types'
@@ -70,7 +71,7 @@ export default function UsuariosScreen() {
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : 'Erro ao salvar usuário'
-      Alert.alert('Erro', msg)
+      alert('Erro', msg)
     },
   })
 
@@ -81,7 +82,7 @@ export default function UsuariosScreen() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['users'] })
     },
-    onError: () => Alert.alert('Erro', 'Não foi possível deletar o usuário'),
+    onError: () => alert('Erro', 'Não foi possível deletar o usuário'),
   })
 
   const openCreate = useCallback(() => {
@@ -98,10 +99,10 @@ export default function UsuariosScreen() {
 
   const confirmDelete = useCallback((user: UserRow) => {
     if (user.id === currentUser?.id) {
-      Alert.alert('Aviso', 'Não é possível deletar sua própria conta')
+      alert('Aviso', 'Não é possível deletar sua própria conta')
       return
     }
-    Alert.alert('Deletar Usuário', `Deletar "${user.name}"? Esta ação não pode ser desfeita.`, [
+    alert('Deletar Usuário', `Deletar "${user.name}"? Esta ação não pode ser desfeita.`, [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Deletar', style: 'destructive', onPress: () => deleteMutation.mutate(user.id) },
     ])

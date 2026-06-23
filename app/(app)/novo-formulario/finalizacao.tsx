@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import {
   ScrollView, View, Text, TouchableOpacity, StyleSheet,
-  ActivityIndicator, Alert,
+  ActivityIndicator,
 } from 'react-native'
 import { router, Stack } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
 import axios from 'axios'
+import { alert } from '@/lib/alert'
 import { useFormStore } from '@/store/formStore'
 import api, { API_BASE_URL } from '@/lib/api'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
@@ -26,7 +27,7 @@ export default function Step6Finalizacao() {
 
   const submit = async () => {
     if (hasUploadingPhotos()) {
-      Alert.alert('Aguarde', 'Ainda há fotos sendo enviadas. Aguarde o upload finalizar.')
+      alert('Aguarde', 'Ainda há fotos sendo enviadas. Aguarde o upload finalizar.')
       return
     }
 
@@ -50,7 +51,7 @@ export default function Step6Finalizacao() {
       } else if (err instanceof Error) {
         message = err.message
       }
-      Alert.alert('Erro', message)
+      alert('Erro', message)
     } finally {
       setSubmitting(false)
     }

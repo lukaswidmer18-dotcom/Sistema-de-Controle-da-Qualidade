@@ -6,10 +6,10 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
-  Alert,
   ScrollView,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
+import { alert } from '@/lib/alert'
 import api from '@/lib/api'
 import { PhotoData } from '@/lib/types'
 import { BRAND_GREEN, BRAND_GOLD } from '@/lib/constants'
@@ -29,13 +29,13 @@ export function PhotoCapture({ photos, onAdd, onUpdate, maxPhotos = 5, label }: 
     if (source === 'camera') {
       const { status } = await ImagePicker.requestCameraPermissionsAsync()
       if (status !== 'granted') {
-        Alert.alert('Permissão necessária', 'Permita acesso à câmera nas configurações')
+        alert('Permissão necessária', 'Permita acesso à câmera nas configurações')
         return
       }
     } else {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
       if (status !== 'granted') {
-        Alert.alert('Permissão necessária', 'Permita acesso à galeria nas configurações')
+        alert('Permissão necessária', 'Permita acesso à galeria nas configurações')
         return
       }
     }
@@ -83,14 +83,14 @@ export function PhotoCapture({ photos, onAdd, onUpdate, maxPhotos = 5, label }: 
     } catch {
       const photoIndex = photos.length
       onUpdate(photoIndex, { uploading: false, error: true })
-      Alert.alert('Erro', 'Falha ao fazer upload da foto. Tente novamente.')
+      alert('Erro', 'Falha ao fazer upload da foto. Tente novamente.')
     } finally {
       setPicking(false)
     }
   }
 
   const showPicker = () => {
-    Alert.alert('Adicionar foto', 'Escolha a origem', [
+    alert('Adicionar foto', 'Escolha a origem', [
       { text: 'Câmera', onPress: () => requestAndPick('camera') },
       { text: 'Galeria', onPress: () => requestAndPick('gallery') },
       { text: 'Cancelar', style: 'cancel' },

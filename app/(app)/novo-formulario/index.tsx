@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import {
   View, Text, TextInput, TouchableOpacity, Pressable, ScrollView,
-  StyleSheet, Alert, Modal, FlatList,
+  StyleSheet, Modal, FlatList,
 } from 'react-native'
-import { router, useNavigation } from 'expo-router'
+import { router, useNavigation, Stack } from 'expo-router'
+import { alert } from '@/lib/alert'
 import { useFormStore } from '@/store/formStore'
 import { useAuthStore } from '@/store/authStore'
 import { useQuery } from '@tanstack/react-query'
@@ -44,7 +45,7 @@ export default function Step1Identificacao() {
   useEffect(() => {
     void restore().then(restored => {
     if (restored) {
-      Alert.alert(
+      alert(
         'Rascunho encontrado',
         'Existe um formulário em andamento. Continuar ou iniciar novo?',
         [
@@ -74,7 +75,7 @@ export default function Step1Identificacao() {
 
   const proceed = () => {
     if (!canProceed()) {
-      Alert.alert('Campos obrigatórios', 'Preencha todos os campos marcados com *')
+      alert('Campos obrigatórios', 'Preencha todos os campos marcados com *')
       return
     }
     router.push('/(app)/novo-formulario/veiculo')
@@ -380,9 +381,6 @@ export default function Step1Identificacao() {
     </>
   )
 }
-
-// Need to import Stack for screen options
-import { Stack } from 'expo-router'
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: BRAND_CREAM },

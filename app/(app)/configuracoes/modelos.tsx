@@ -2,11 +2,12 @@ import { useState, useCallback } from 'react'
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
   ActivityIndicator, TextInput, Modal, ScrollView,
-  Switch, Alert, RefreshControl,
+  Switch, RefreshControl,
 } from 'react-native'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import api from '@/lib/api'
+import { alert } from '@/lib/alert'
 import { BRAND_GREEN, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
 
 interface EmailTemplate {
@@ -62,7 +63,7 @@ export default function ModelosScreen() {
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : 'Erro ao salvar modelo'
-      Alert.alert('Erro', msg)
+      alert('Erro', msg)
     },
   })
 
@@ -73,7 +74,7 @@ export default function ModelosScreen() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['email-templates'] })
     },
-    onError: () => Alert.alert('Erro', 'Não foi possível excluir o modelo'),
+    onError: () => alert('Erro', 'Não foi possível excluir o modelo'),
   })
 
   const openCreate = useCallback(() => {
@@ -89,7 +90,7 @@ export default function ModelosScreen() {
   }, [])
 
   const confirmDelete = useCallback((id: string, name: string) => {
-    Alert.alert('Excluir modelo', `Excluir "${name}"? Esta ação não pode ser desfeita.`, [
+    alert('Excluir modelo', `Excluir "${name}"? Esta ação não pode ser desfeita.`, [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Excluir', style: 'destructive', onPress: () => deleteMutation.mutate(id) },
     ])

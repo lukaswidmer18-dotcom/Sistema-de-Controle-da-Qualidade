@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet,
-  ActivityIndicator, Alert, KeyboardAvoidingView, Platform,
+  ActivityIndicator, KeyboardAvoidingView, Platform,
 } from 'react-native'
 import { useLocalSearchParams, Stack } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { alert } from '@/lib/alert'
 import api, { API_BASE_URL } from '@/lib/api'
 import { ReceiptWithActionPlan } from '@/lib/types'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
@@ -63,7 +64,7 @@ export default function ActionPlanEditor() {
       } else if (err instanceof Error) {
         message = err.message
       }
-      Alert.alert('Erro', message)
+      alert('Erro', message)
     },
   })
 
@@ -74,7 +75,7 @@ export default function ActionPlanEditor() {
 
   const handleSubmit = () => {
     if (!rootCause.trim() || !description.trim() || !responsible.trim() || !deadline.trim()) {
-      Alert.alert('Campos obrigatórios', 'Preencha todos os campos antes de salvar.')
+      alert('Campos obrigatórios', 'Preencha todos os campos antes de salvar.')
       return
     }
     mutation.mutate({ rootCause, description, responsible, deadline })

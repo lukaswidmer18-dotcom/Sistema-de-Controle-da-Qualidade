@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import {
   ScrollView, View, Text, TouchableOpacity, StyleSheet,
-  ActivityIndicator, TextInput, KeyboardAvoidingView, Platform, Alert,
+  ActivityIndicator, TextInput, KeyboardAvoidingView, Platform,
 } from 'react-native'
 import { useLocalSearchParams, router, Stack } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { alert } from '@/lib/alert'
 import api, { API_BASE_URL } from '@/lib/api'
 import { ReceiptDetail } from '@/lib/types'
 import { BRAND_GREEN, BRAND_GOLD, BRAND_CREAM, HAIRLINE_GREEN } from '@/lib/constants'
@@ -74,7 +75,7 @@ export default function ReceiptDetailScreen() {
       } else if (err instanceof Error) {
         message = err.message
       }
-      Alert.alert('Erro', message)
+      alert('Erro', message)
     },
   })
 
