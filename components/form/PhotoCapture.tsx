@@ -3,6 +3,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Pressable,
   Image,
   StyleSheet,
   ActivityIndicator,
@@ -19,11 +20,12 @@ interface Props {
   photos: PhotoData[]
   onAdd: (photo: PhotoData) => void
   onUpdate: (index: number, photo: Partial<PhotoData>) => void
+  onRemove: (index: number) => void
   maxPhotos?: number
   label?: string
 }
 
-export function PhotoCapture({ photos, onAdd, onUpdate, maxPhotos = 5, label }: Props) {
+export function PhotoCapture({ photos, onAdd, onUpdate, onRemove, maxPhotos = 5, label }: Props) {
   const [picking, setPicking] = useState(false)
 
   const requestAndPick = async (source: 'camera' | 'gallery') => {
@@ -127,6 +129,16 @@ export function PhotoCapture({ photos, onAdd, onUpdate, maxPhotos = 5, label }: 
                   <Text style={{ color: '#fff', fontSize: 11 }}>Erro</Text>
                 </View>
               )}
+              {!photo.uploading && (
+                <Pressable
+                  onPress={() => onRemove(i)}
+                  style={styles.removeBtn}
+                  hitSlop={0}
+                  android_ripple={null}
+                >
+                  <Text style={styles.removeBtnText}>✕</Text>
+                </Pressable>
+              )}
             </View>
           ))}
         </ScrollView>
@@ -184,6 +196,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.4)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  removeBtn: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  removeBtnText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '700',
   },
   addButton: {
     flexDirection: 'row',

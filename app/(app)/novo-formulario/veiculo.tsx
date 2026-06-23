@@ -7,7 +7,7 @@ import { BRAND_GREEN, BRAND_CREAM, HAIRLINE_GREEN, ALWAYS_REQUIRE_PHOTO_KEYS } f
 import { PhotoData, ChecklistStatus } from '@/lib/types'
 
 export default function Step2Veiculo() {
-  const { form, updateChecklistStatus, updateChecklistObservation, addChecklistPhoto, updateChecklistPhoto } = useFormStore()
+  const { form, updateChecklistStatus, updateChecklistObservation, addChecklistPhoto, updateChecklistPhoto, removeChecklistPhoto } = useFormStore()
 
   const canProceed = () => {
     return form.vehicleChecklist.every(item => {
@@ -54,6 +54,7 @@ export default function Step2Veiculo() {
             onObservationChange={(key, obs) => updateChecklistObservation('vehicle', key, obs)}
             onAddPhoto={(key, photo) => addChecklistPhoto('vehicle', key, photo)}
             onUpdatePhoto={(key, idx, photo) => updateChecklistPhoto('vehicle', key, idx, photo)}
+            onRemovePhoto={(key, idx) => removeChecklistPhoto('vehicle', key, idx)}
           />
         ))}
 

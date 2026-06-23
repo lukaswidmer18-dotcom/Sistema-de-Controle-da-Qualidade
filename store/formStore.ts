@@ -51,6 +51,7 @@ interface FormState {
   updateChecklistObservation: (section: 'vehicle' | 'cargo', key: string, observation: string) => void
   addChecklistPhoto: (section: 'vehicle' | 'cargo', key: string, photo: PhotoData) => void
   updateChecklistPhoto: (section: 'vehicle' | 'cargo', key: string, photoIndex: number, photo: Partial<PhotoData>) => void
+  removeChecklistPhoto: (section: 'vehicle' | 'cargo', key: string, photoIndex: number) => void
 
   addTemperature: () => void
   removeTemperature: (id: string) => void
@@ -142,6 +143,21 @@ export const useFormStore = create<FormState>((set, get) => ({
         [field]: s.form[field].map((item: ChecklistItemData) =>
           item.key === key
             ? { ...item, photos: (item.photos ?? []).map((p, i) => i === photoIndex ? { ...p, ...photoUpdate } : p) }
+            : item
+        ),
+      }
+    }))
+    get().persist()
+  },
+
+  removeChecklistPhoto: (section, key, photoIndex) => {
+    const field = section === 'vehicle' ? 'vehicleChecklist' : 'cargoChecklist'
+    set(s => ({
+      form: {
+        ...s.form,
+        [field]: s.form[field].map((item: ChecklistItemData) =>
+          item.key === key
+            ? { ...item, photos: (item.photos ?? []).filter((_, i) => i !== photoIndex) }
             : item
         ),
       }

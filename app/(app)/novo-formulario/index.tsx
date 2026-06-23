@@ -219,6 +219,7 @@ export default function Step1Identificacao() {
             photos={form.platePicture ? [form.platePicture] : []}
             onAdd={photo => setPlatePicture(photo)}
             onUpdate={(_, photo) => setPlatePicture({ ...form.platePicture, ...photo } as PhotoData)}
+            onRemove={() => setPlatePicture(undefined)}
             maxPhotos={1}
           />
         </View>

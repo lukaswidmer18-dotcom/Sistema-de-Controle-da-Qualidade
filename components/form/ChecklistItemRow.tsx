@@ -11,6 +11,7 @@ interface Props {
   onObservationChange: (key: string, observation: string) => void
   onAddPhoto: (key: string, photo: PhotoData) => void
   onUpdatePhoto: (key: string, index: number, photo: Partial<PhotoData>) => void
+  onRemovePhoto: (key: string, index: number) => void
 }
 
 const STATUS_OPTIONS: { value: ChecklistStatus; label: string; color: string; bg: string }[] = [
@@ -19,7 +20,7 @@ const STATUS_OPTIONS: { value: ChecklistStatus; label: string; color: string; bg
   { value: 'NAO_APLICAVEL', label: 'N/A', color: '#6b7280', bg: '#f3f4f6' },
 ]
 
-export function ChecklistItemRow({ item, section, onStatusChange, onObservationChange, onAddPhoto, onUpdatePhoto }: Props) {
+export function ChecklistItemRow({ item, section, onStatusChange, onObservationChange, onAddPhoto, onUpdatePhoto, onRemovePhoto }: Props) {
   const requiresPhoto = ALWAYS_REQUIRE_PHOTO_KEYS.includes(item.key) || item.status === 'NAO_CONFORME'
   const requiresObservation = item.status === 'NAO_CONFORME'
 
@@ -65,6 +66,7 @@ export function ChecklistItemRow({ item, section, onStatusChange, onObservationC
             photos={item.photos ?? []}
             onAdd={photo => onAddPhoto(item.key, photo)}
             onUpdate={(idx, photo) => onUpdatePhoto(item.key, idx, photo)}
+            onRemove={idx => onRemovePhoto(item.key, idx)}
             label={ALWAYS_REQUIRE_PHOTO_KEYS.includes(item.key) ? 'Foto obrigatória' : 'Fotos da NC'}
           />
         </View>

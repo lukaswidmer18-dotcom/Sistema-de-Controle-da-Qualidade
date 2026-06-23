@@ -7,7 +7,7 @@ import { BRAND_GREEN, BRAND_CREAM } from '@/lib/constants'
 import { ChecklistStatus } from '@/lib/types'
 
 export default function Step3Carga() {
-  const { form, updateChecklistStatus, updateChecklistObservation, addChecklistPhoto, updateChecklistPhoto } = useFormStore()
+  const { form, updateChecklistStatus, updateChecklistObservation, addChecklistPhoto, updateChecklistPhoto, removeChecklistPhoto } = useFormStore()
 
   const canProceed = () => {
     return form.cargoChecklist.every(item => {
@@ -51,6 +51,7 @@ export default function Step3Carga() {
             onObservationChange={(key, obs) => updateChecklistObservation('cargo', key, obs)}
             onAddPhoto={(key, photo) => addChecklistPhoto('cargo', key, photo)}
             onUpdatePhoto={(key, idx, photo) => updateChecklistPhoto('cargo', key, idx, photo)}
+            onRemovePhoto={(key, idx) => removeChecklistPhoto('cargo', key, idx)}
           />
         ))}
 
