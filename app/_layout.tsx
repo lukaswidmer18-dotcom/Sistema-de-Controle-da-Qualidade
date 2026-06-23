@@ -23,8 +23,11 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (isLoading) return
-    const inAuthGroup = segments[0] === '(auth)'
-    if (!isAuthenticated && !inAuthGroup) {
+    // Only guard screens inside (app) — the root index.tsx already handles
+    // the initial redirect declaratively. Guarding here too races it during
+    // boot and can remount the login screen mid-tap, dropping focus.
+    const inAppGroup = segments[0] === '(app)'
+    if (!isAuthenticated && inAppGroup) {
       router.replace('/(auth)/login')
     }
   }, [isAuthenticated, isLoading, segments])
