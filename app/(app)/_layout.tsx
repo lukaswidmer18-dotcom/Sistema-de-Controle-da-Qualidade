@@ -64,6 +64,8 @@ export default function AppLayout() {
           ),
         }}
       />
+      {/* Detail route — navigable via router.push, hidden from the tab bar (web shows file-based routes as extra tabs by default) */}
+      <Tabs.Screen name="pdfs-salvos/[id]" options={{ href: null }} />
       <Tabs.Screen
         name="planos-de-acao"
         options={{
@@ -82,6 +84,7 @@ export default function AppLayout() {
           ),
         }}
       />
+      <Tabs.Screen name="planos-de-acao/[id]" options={{ href: null }} />
       <Tabs.Screen
         name="configuracoes"
         options={{
