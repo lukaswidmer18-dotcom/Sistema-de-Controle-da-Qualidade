@@ -9,6 +9,7 @@ export default function FormLayout() {
         headerTintColor: '#fff',
         headerTitleStyle: { fontWeight: '800', fontSize: 17 },
         headerBackTitle: 'Voltar',
+        animation: 'slide_from_right',
       }}
     />
   )

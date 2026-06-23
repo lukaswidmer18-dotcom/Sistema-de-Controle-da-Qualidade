@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import axios from 'axios'
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated'
 import { Feather } from '@expo/vector-icons'
 import { useAuthStore } from '@/store/authStore'
 import { API_BASE_URL } from '@/lib/api'
@@ -66,17 +67,17 @@ export default function LoginScreen() {
 
         <View style={styles.scroll}>
           {/* Header — compact to avoid overflow on small screens */}
-          <View style={styles.header}>
+          <Animated.View entering={FadeInUp.duration(450)} style={styles.header}>
             <View style={styles.iconBox}>
               <Feather name="check" size={28} color="#fff" />
             </View>
             <Text style={styles.brandLabel}>GRUPO  <Text style={styles.brandName}>PLUMA</Text></Text>
             <Text style={styles.title}>Controle da <Text style={styles.titleGold}>Qualidade</Text></Text>
             <Text style={styles.subtitle}>Bello Alimentos · Recebimento</Text>
-          </View>
+          </Animated.View>
 
           {/* Card */}
-          <View style={styles.card}>
+          <Animated.View entering={FadeInDown.duration(450).delay(100)} style={styles.card}>
             <Text style={styles.cardTitle}>Bem-vindo de volta</Text>
             <Text style={styles.cardSubtitle}>Informe suas credenciais para continuar</Text>
 
@@ -179,9 +180,10 @@ export default function LoginScreen() {
               <Feather name="lock" size={10} color="rgba(22,65,58,0.32)" />
               <Text style={styles.trustText}>  Conexão segura · SSL · Bello Alimentos</Text>
             </View>
-          </View>
+          </Animated.View>
 
           <Text style={styles.version}>v1.0.0 · © 2026 Bello Alimentos LTDA</Text>
+          <Text style={styles.credit}>Desenvolvido por Lukas Widmer</Text>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -375,6 +377,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textAlign: 'center',
     marginTop: 24,
+    letterSpacing: 0.3,
+  },
+  credit: {
+    color: 'rgba(255,255,255,0.13)',
+    fontSize: 10,
+    textAlign: 'center',
+    marginTop: 3,
     letterSpacing: 0.3,
   },
 })
