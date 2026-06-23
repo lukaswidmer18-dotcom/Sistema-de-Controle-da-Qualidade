@@ -106,6 +106,8 @@ export default function LoginScreen() {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
+                  autoComplete="off"
+                  importantForAutofill="no"
                   returnKeyType="next"
                   blurOnSubmit={false}
                   onSubmitEditing={() => passwordRef.current?.focus()}
@@ -134,6 +136,8 @@ export default function LoginScreen() {
                   placeholder="••••••••"
                   placeholderTextColor="#c4c9d4"
                   secureTextEntry={!showPassword}
+                  autoComplete="off"
+                  importantForAutofill="no"
                   returnKeyType="done"
                   editable={!loading}
                   onSubmitEditing={handleLogin}
