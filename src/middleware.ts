@@ -7,8 +7,15 @@ const ALLOWED_ORIGINS = [
   process.env.EXPO_ORIGIN,
 ].filter(Boolean) as string[]
 
+// Expo tunnel URLs are random per session (e.g. https://abc123-user-8081.exp.direct)
+const ALLOWED_ORIGIN_PATTERNS = [/^https:\/\/[a-z0-9-]+\.exp\.direct$/]
+
+function isOriginAllowed(origin: string): boolean {
+  return ALLOWED_ORIGINS.includes(origin) || ALLOWED_ORIGIN_PATTERNS.some(p => p.test(origin))
+}
+
 function corsHeaders(origin: string | null) {
-  const allowed = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]
+  const allowed = origin && isOriginAllowed(origin) ? origin : ALLOWED_ORIGINS[0]
   return {
     'Access-Control-Allow-Origin': allowed,
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
