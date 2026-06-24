@@ -11,9 +11,9 @@ interface MenuItem {
 }
 
 const MENU_ITEMS: MenuItem[] = [
-  { label: 'Listas de E-mail', description: 'Gerenciar grupos de destinatários', route: '/configuracoes/listas' },
-  { label: 'Opções das Listas', description: 'Valores de listas de seleção', route: '/configuracoes/opcoes' },
-  { label: 'Modelos de E-mail', description: 'Templates para envio automático', route: '/configuracoes/modelos' },
+  { label: 'Listas de E-mail', description: 'Gerenciar grupos de destinatários', route: '/configuracoes/listas', adminOnly: true },
+  { label: 'Opções das Listas', description: 'Valores de listas de seleção', route: '/configuracoes/opcoes', adminOnly: true },
+  { label: 'Modelos de E-mail', description: 'Templates para envio automático', route: '/configuracoes/modelos', adminOnly: true },
   { label: 'Usuários', description: 'Gerenciar contas de acesso', route: '/configuracoes/usuarios', adminOnly: true },
 ]
 
@@ -44,24 +44,28 @@ export default function ConfiguracoesIndex() {
           </View>
         </View>
 
-        <Text style={styles.sectionLabel}>CONFIGURAÇÕES DO SISTEMA</Text>
+        {visibleItems.length > 0 && (
+          <>
+            <Text style={styles.sectionLabel}>CONFIGURAÇÕES DO SISTEMA</Text>
 
-        <View style={styles.menuCard}>
-          {visibleItems.map((item, index) => (
-            <TouchableOpacity
-              key={item.route}
-              style={[styles.menuItem, index < visibleItems.length - 1 && styles.menuItemBorder]}
-              onPress={() => router.push(item.route as `/${string}`)}
-              activeOpacity={0.65}
-            >
-              <View style={styles.menuItemContent}>
-                <Text style={styles.menuLabel}>{item.label}</Text>
-                <Text style={styles.menuDesc}>{item.description}</Text>
-              </View>
-              <Text style={styles.chevron}>›</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+            <View style={styles.menuCard}>
+              {visibleItems.map((item, index) => (
+                <TouchableOpacity
+                  key={item.route}
+                  style={[styles.menuItem, index < visibleItems.length - 1 && styles.menuItemBorder]}
+                  onPress={() => router.push(item.route as `/${string}`)}
+                  activeOpacity={0.65}
+                >
+                  <View style={styles.menuItemContent}>
+                    <Text style={styles.menuLabel}>{item.label}</Text>
+                    <Text style={styles.menuDesc}>{item.description}</Text>
+                  </View>
+                  <Text style={styles.chevron}>›</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </>
+        )}
 
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout} activeOpacity={0.75}>
           <Text style={styles.logoutText}>Sair do sistema</Text>
