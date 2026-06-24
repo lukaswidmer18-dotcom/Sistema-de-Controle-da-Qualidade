@@ -59,7 +59,7 @@ export function Combobox({
         <div className="flex items-center border-b px-3 py-2">
           <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
           <input
-            className="flex h-8 w-full rounded-md bg-transparent text-sm outline-none placeholder:text-gray-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-8 w-full rounded-md bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
             placeholder={searchPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -67,7 +67,7 @@ export function Combobox({
         </div>
         <div className="max-h-[300px] overflow-y-auto p-1 custom-scrollbar">
           {filteredOptions.length === 0 ? (
-            <div className="py-6 text-center text-sm text-gray-500">
+            <div className="py-6 text-center text-sm text-muted-foreground">
               {emptyMessage}
             </div>
           ) : (

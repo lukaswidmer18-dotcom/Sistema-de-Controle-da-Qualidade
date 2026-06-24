@@ -442,11 +442,11 @@ export default function NovoFormularioPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-[0.625rem] font-bold uppercase tracking-[0.24em] mb-0.5" style={{ color: 'rgba(188,147,63,0.60)' }}>
+              <p className="page-eyebrow">
                 Recebimento
               </p>
               <h1 className="text-xl font-black tracking-tight text-white leading-none">Novo Formulário</h1>
-              <p className="text-[0.75rem] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>Etapa {currentStep} de {STEPS.length}</p>
+              <p className="text-[0.75rem] mt-0.5 text-white/45">Etapa {currentStep} de {STEPS.length}</p>
             </div>
             <Badge variant="outline" className="border-brand-gold/45 bg-white/8 text-xs font-mono text-white">
               {formData.formNumber}
@@ -520,10 +520,10 @@ export default function NovoFormularioPage() {
                         type="datetime-local"
                         value={formData.receivedAt}
                         readOnly
-                        className="bg-gray-50 border-gray-100 text-gray-500 cursor-not-allowed select-none"
+                        className="bg-muted border-border text-muted-foreground cursor-not-allowed select-none"
                       />
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                        <Badge variant="outline" className="bg-white text-[10px] uppercase font-bold text-gray-400 border-gray-100">
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70">
+                        <Badge variant="outline" className="bg-white text-[10px] uppercase font-bold text-muted-foreground/70 border-border">
                           Auto
                         </Badge>
                       </div>
@@ -659,7 +659,7 @@ export default function NovoFormularioPage() {
                 {/* Products table */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <Label className="text-sm font-semibold text-gray-700">
+                    <Label className="text-sm font-semibold text-foreground/80">
                       Produtos / Lotes <span className="text-red-500">*</span>
                     </Label>
                     <Button type="button" variant="outline" size="sm" onClick={addProduct} className="gap-1.5 text-xs">
@@ -672,10 +672,10 @@ export default function NovoFormularioPage() {
                     <table className="w-full text-sm">
                       <thead className="bg-brand-cream border-b border-brand-gold/20">
                         <tr>
-                          <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Código *</th>
-                          <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Descrição</th>
-                          <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Lote *</th>
-                          <th className="text-left px-3 py-2 font-medium text-gray-600 text-xs">Quantidade</th>
+                          <th className="text-left px-3 py-2 font-medium text-foreground/70 text-xs">Código *</th>
+                          <th className="text-left px-3 py-2 font-medium text-foreground/70 text-xs">Descrição</th>
+                          <th className="text-left px-3 py-2 font-medium text-foreground/70 text-xs">Lote *</th>
+                          <th className="text-left px-3 py-2 font-medium text-foreground/70 text-xs">Quantidade</th>
                           <th className="w-8"></th>
                         </tr>
                       </thead>
@@ -742,7 +742,7 @@ export default function NovoFormularioPage() {
             {currentStep === 2 && (
               <div className="space-y-4">
                 <SectionTitle icon={<Truck className="w-5 h-5" />} title="Condições do Veículo" />
-                <p className="text-sm text-gray-500">Avalie cada item e registre fotos e observações quando necessário.</p>
+                <p className="text-sm text-muted-foreground">Avalie cada item e registre fotos e observações quando necessário.</p>
                 {formData.vehicleChecklist.map((item, index) => (
                   <ChecklistItemComponent
                     key={item.key}
@@ -758,7 +758,7 @@ export default function NovoFormularioPage() {
             {currentStep === 3 && (
               <div className="space-y-4">
                 <SectionTitle icon={<Package className="w-5 h-5" />} title="Condições da Carga" />
-                <p className="text-sm text-gray-500">Avalie cada item e registre fotos e observações quando necessário.</p>
+                <p className="text-sm text-muted-foreground">Avalie cada item e registre fotos e observações quando necessário.</p>
                 {formData.cargoChecklist.map((item, index) => (
                   <ChecklistItemComponent
                     key={item.key}
@@ -782,7 +782,7 @@ export default function NovoFormularioPage() {
                 </div>
 
                 {formData.temperatures.length === 0 && (
-                  <div className="text-center py-12 text-gray-400 border-2 border-dashed rounded-lg">
+                  <div className="text-center py-12 text-muted-foreground/70 border-2 border-dashed rounded-lg">
                     <Thermometer className="w-10 h-10 mx-auto mb-2 opacity-40" />
                     <p className="text-sm">Nenhuma medição registrada</p>
                     <p className="text-xs mt-1">Clique em "Adicionar medição" para registrar</p>
@@ -792,7 +792,7 @@ export default function NovoFormularioPage() {
                 {formData.temperatures.map((temp, index) => (
                   <div key={index} className="border rounded-lg p-4 space-y-3">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-semibold text-gray-700">Medição {index + 1}</span>
+                      <span className="text-sm font-semibold text-foreground/80">Medição {index + 1}</span>
                       <button
                         type="button"
                         onClick={() => removeTemperature(index)}
@@ -804,7 +804,7 @@ export default function NovoFormularioPage() {
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       <div>
-                        <Label className="text-xs text-gray-500 mb-1 block">Tipo</Label>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Tipo</Label>
                         <Select
                           value={temp.temperatureType}
                           onValueChange={val => updateTemperature(index, 'temperatureType', val)}
@@ -820,7 +820,7 @@ export default function NovoFormularioPage() {
                       </div>
 
                       <div>
-                        <Label className="text-xs text-gray-500 mb-1 block">Código do Produto</Label>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Código do Produto</Label>
                         <Input
                           value={temp.productCode || ''}
                           onChange={e => updateTemperature(index, 'productCode', e.target.value)}
@@ -830,7 +830,7 @@ export default function NovoFormularioPage() {
                       </div>
 
                       <div>
-                        <Label className="text-xs text-gray-500 mb-1 block">Lote</Label>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Lote</Label>
                         <Input
                           value={temp.lot || ''}
                           onChange={e => updateTemperature(index, 'lot', e.target.value)}
@@ -840,7 +840,7 @@ export default function NovoFormularioPage() {
                       </div>
 
                       <div>
-                        <Label className="text-xs text-gray-500 mb-1 block">Temperatura</Label>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Temperatura</Label>
                         <Input
                           type="number"
                           step="0.1"
@@ -852,7 +852,7 @@ export default function NovoFormularioPage() {
                       </div>
 
                       <div>
-                        <Label className="text-xs text-gray-500 mb-1 block">Unidade</Label>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Unidade</Label>
                         <Input
                           value={temp.unit}
                           readOnly
@@ -861,7 +861,7 @@ export default function NovoFormularioPage() {
                       </div>
 
                       <div>
-                        <Label className="text-xs text-gray-500 mb-1 block">Status</Label>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Status</Label>
                         <Select
                           value={temp.status || ''}
                           onValueChange={val => {
@@ -887,7 +887,7 @@ export default function NovoFormularioPage() {
                     </div>
 
                     <div>
-                      <Label className="text-xs text-gray-500 mb-1 block">
+                      <Label className="text-xs text-muted-foreground mb-1 block">
                         Observação (opcional)
                       </Label>
                       <Textarea
@@ -901,7 +901,7 @@ export default function NovoFormularioPage() {
 
                     {temp.status === 'NAO_CONFORME' && (
                       <div>
-                        <Label className="text-xs text-gray-500 mb-1 block">Foto da medição *</Label>
+                        <Label className="text-xs text-muted-foreground mb-1 block">Foto da medição *</Label>
                         <PhotoUpload
                           photos={
                             temp.photoUrl || temp.photoPreview
@@ -929,7 +929,7 @@ export default function NovoFormularioPage() {
                     )}
 
                     {temp.status === 'NAO_APLICAVEL' && (
-                      <p className="text-xs text-gray-500 font-medium">
+                      <p className="text-xs text-muted-foreground font-medium">
                         N/A selecionado: foto não obrigatória para esta medição.
                       </p>
                     )}
@@ -951,7 +951,7 @@ export default function NovoFormularioPage() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-foreground/70">
                       {autoNCs.length} não conformidade(s) detectada(s) automaticamente:
                     </p>
                     {autoNCs.map((nc, index) => (
@@ -959,7 +959,7 @@ export default function NovoFormularioPage() {
                         <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-red-700 uppercase tracking-wider mb-0.5">{nc.section}</p>
-                          <p className="text-sm text-gray-700">{nc.description}</p>
+                          <p className="text-sm text-foreground/80">{nc.description}</p>
                           {nc.photoUrl && (
                             <img
                               src={nc.photoUrl}
@@ -977,7 +977,7 @@ export default function NovoFormularioPage() {
 
                 <div>
                   <Label className="text-sm font-semibold mb-2 block">Status Geral do Recebimento</Label>
-                  <p className="text-xs text-gray-500 mb-2">
+                  <p className="text-xs text-muted-foreground mb-2">
                     Sugerido automaticamente: <strong>{getStatusLabel(getSuggestedStatus())}</strong>
                   </p>
                   <Select
@@ -1011,8 +1011,8 @@ export default function NovoFormularioPage() {
                       <CheckCircle2 className="w-9 h-9 text-brand-green" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Formulário salvo com sucesso!</h3>
-                      <p className="text-sm text-gray-500 mt-1">Número: {formData.formNumber}</p>
+                      <h3 className="text-lg font-semibold text-foreground">Formulário salvo com sucesso!</h3>
+                      <p className="text-sm text-muted-foreground mt-1">Número: {formData.formNumber}</p>
                     </div>
                     <div className="flex flex-wrap gap-3 justify-center">
                       {savedPdfUrl && (
@@ -1061,7 +1061,7 @@ export default function NovoFormularioPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-gray-700">Status Geral:</span>
+                      <span className="text-sm font-medium text-foreground/80">Status Geral:</span>
                       <Badge className={cn('border', getStatusColor(formData.generalStatus))}>
                         {getStatusLabel(formData.generalStatus)}
                       </Badge>
@@ -1072,20 +1072,23 @@ export default function NovoFormularioPage() {
                     {(() => {
                       const pending = getPendingIssues()
                       return pending.length > 0 ? (
-                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                        <div
+                          className="rounded-lg p-4"
+                          style={{ border: '1px solid rgba(217,119,6,0.22)', background: 'rgba(217,119,6,0.06)' }}
+                        >
                           <p className="text-sm font-semibold text-orange-700 mb-2 flex items-center gap-1.5">
                             <AlertTriangle className="w-4 h-4" />
                             Pendências a corrigir ({pending.length}):
                           </p>
                           <ul className="space-y-1">
                             {pending.slice(0, 8).map((issue, i) => (
-                              <li key={i} className="text-xs text-orange-600 flex items-start gap-1.5">
+                              <li key={i} className="text-xs text-orange-700/80 flex items-start gap-1.5">
                                 <span className="mt-0.5 shrink-0">•</span>
                                 {issue}
                               </li>
                             ))}
                             {pending.length > 8 && (
-                              <li className="text-xs text-orange-500">...e mais {pending.length - 8} item(s)</li>
+                              <li className="text-xs text-orange-700/60">...e mais {pending.length - 8} item(s)</li>
                             )}
                           </ul>
                         </div>
@@ -1161,7 +1164,7 @@ function SectionTitle({ icon, title }: { icon: React.ReactNode; title: string })
   return (
     <div className="flex items-center gap-2 mb-1">
       <span className="text-brand-gold">{icon}</span>
-      <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
     </div>
   )
 }
@@ -1180,7 +1183,7 @@ function FormField({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-medium text-gray-700">
+        <Label className="text-sm font-medium text-foreground/80">
           {label}
           {required && <span className="text-red-500 ml-0.5">*</span>}
         </Label>

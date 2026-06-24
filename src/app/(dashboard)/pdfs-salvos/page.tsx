@@ -172,11 +172,11 @@ export default function PdfsSalvosPage() {
       <div className="brand-header px-6 py-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[0.625rem] font-bold uppercase tracking-[0.24em] mb-0.5" style={{ color: 'rgba(188,147,63,0.60)' }}>
+            <p className="page-eyebrow">
               Biblioteca
             </p>
             <h1 className="text-xl font-black tracking-tight text-white leading-none">PDFs Salvos</h1>
-            <p className="text-[0.75rem] mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>{total} formulário(s) encontrado(s)</p>
+            <p className="text-[0.75rem] mt-0.5 text-white/45">{total} formulário(s) encontrado(s)</p>
           </div>
           <Button
             variant="outline"
@@ -196,10 +196,10 @@ export default function PdfsSalvosPage() {
         {/* Filter panel */}
         {showFilters && (
           <div className="brand-card motion-enter rounded-xl p-5 space-y-4">
-            <p className="text-[0.6875rem] font-bold uppercase tracking-[0.14em]" style={{ color: 'rgba(22,65,58,0.45)' }}>Filtros de pesquisa</p>
+            <p className="text-[0.6875rem] font-bold uppercase tracking-[0.14em] text-brand-green/45">Filtros de pesquisa</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Data de (recebimento)</Label>
+                <Label className="text-xs text-muted-foreground">Data de (recebimento)</Label>
                 <Input
                   type="date"
                   value={filters.dateFrom}
@@ -208,7 +208,7 @@ export default function PdfsSalvosPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Data até</Label>
+                <Label className="text-xs text-muted-foreground">Data até</Label>
                 <Input
                   type="date"
                   value={filters.dateTo}
@@ -217,7 +217,7 @@ export default function PdfsSalvosPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Ordem de Recebimento</Label>
+                <Label className="text-xs text-muted-foreground">Ordem de Recebimento</Label>
                 <Input
                   value={filters.receivingOrder}
                   onChange={e => updateFilter('receivingOrder', e.target.value)}
@@ -226,7 +226,7 @@ export default function PdfsSalvosPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Nota Fiscal</Label>
+                <Label className="text-xs text-muted-foreground">Nota Fiscal</Label>
                 <Input
                   value={filters.invoiceNumber}
                   onChange={e => updateFilter('invoiceNumber', e.target.value)}
@@ -235,7 +235,7 @@ export default function PdfsSalvosPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Placa</Label>
+                <Label className="text-xs text-muted-foreground">Placa</Label>
                 <Input
                   value={filters.trailerPlate}
                   onChange={e => updateFilter('trailerPlate', e.target.value)}
@@ -244,7 +244,7 @@ export default function PdfsSalvosPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Código do Produto</Label>
+                <Label className="text-xs text-muted-foreground">Código do Produto</Label>
                 <Input
                   value={filters.productCode}
                   onChange={e => updateFilter('productCode', e.target.value)}
@@ -253,7 +253,7 @@ export default function PdfsSalvosPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Lote</Label>
+                <Label className="text-xs text-muted-foreground">Lote</Label>
                 <Input
                   value={filters.lot}
                   onChange={e => updateFilter('lot', e.target.value)}
@@ -262,7 +262,7 @@ export default function PdfsSalvosPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Status Geral</Label>
+                <Label className="text-xs text-muted-foreground">Status Geral</Label>
                 <Select
                   value={filters.generalStatus || 'ALL'}
                   onValueChange={val => updateFilter('generalStatus', val === 'ALL' ? '' : val)}
@@ -281,7 +281,7 @@ export default function PdfsSalvosPage() {
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label className="text-xs text-gray-500">Resp. Qualidade</Label>
+                <Label className="text-xs text-muted-foreground">Resp. Qualidade</Label>
                 <Input
                   value={filters.qualityResponsible}
                   onChange={e => updateFilter('qualityResponsible', e.target.value)}
@@ -308,25 +308,18 @@ export default function PdfsSalvosPage() {
             <SkeletonRows />
           ) : rows.length === 0 ? (
             <div className="flex flex-col items-center py-20">
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
-                style={{
-                  background: 'linear-gradient(145deg, #16413a, #24584f)',
-                  boxShadow: '0 14px 34px -20px rgba(22,65,58,0.85), inset 0 1px 0 rgba(255,255,255,0.18)',
-                }}
-              >
+              <div className="brand-icon w-14 h-14 rounded-2xl flex items-center justify-center mb-5">
                 <FileText className="w-7 h-7 text-white/60" />
               </div>
-              <p className="text-sm font-semibold" style={{ color: 'rgba(22,65,58,0.68)' }}>
+              <p className="text-sm font-semibold text-brand-green/68">
                 Nenhum formulário encontrado
               </p>
-              <p className="text-xs mt-1.5 max-w-[200px] text-center text-gray-400 leading-relaxed">
+              <p className="text-xs mt-1.5 max-w-[200px] text-center text-muted-foreground leading-relaxed">
                 Tente ajustar os filtros ou registre um novo recebimento
               </p>
               <Link
                 href="/novo-formulario"
-                className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.09em] transition-colors hover:opacity-80"
-                style={{ color: 'rgba(188,147,63,0.80)' }}
+                className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.09em] text-brand-gold/80 transition-colors hover:opacity-80"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Novo formulário
@@ -338,30 +331,31 @@ export default function PdfsSalvosPage() {
                 <thead className="bg-brand-cream border-b border-brand-gold/20">
                   <tr>
                     {['Data','Formulário','NF','Placa','Produto / Lote','Status','Resp. Qualidade','Ações'].map(col => (
-                      <th key={col} className="text-left px-4 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.09em]" style={{ color: 'rgba(22,65,58,0.42)' }}>{col}</th>
+                      <th key={col} className="text-left px-4 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.09em] text-brand-green/42">{col}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-brand-green/8">
                   {rows.map(row => (
                     <tr
                       key={row.id}
-                      className="transition-colors"
-                      style={(() => {
-                        const hasNCs = row.nonConformities.length > 0
-                        if (!row.emailSentAt) {
-                          // Email not sent
-                          return { boxShadow: 'inset 4px 0 0 rgba(239,68,68,0.75)', background: 'rgba(239,68,68,0.03)' }
-                        }
-                        if (hasNCs && !row.hasActionPlan) {
-                          // Email sent but action plan pending
-                          return { boxShadow: 'inset 4px 0 0 rgba(251,191,36,0.85)', background: 'rgba(251,191,36,0.04)' }
-                        }
-                        // All resolved
-                        return { boxShadow: 'inset 4px 0 0 rgba(52,211,153,0.75)', background: 'rgba(52,211,153,0.04)' }
-                      })()}
+                      className={cn(
+                        'transition-colors hover:bg-brand-green/[0.025]',
+                        !row.emailSentAt
+                          ? 'bg-red-500/[0.03]'
+                          : row.nonConformities.length > 0 && !row.hasActionPlan
+                            ? 'bg-amber-400/[0.04]'
+                            : 'bg-emerald-400/[0.04]'
+                      )}
+                      style={{
+                        boxShadow: !row.emailSentAt
+                          ? 'inset 4px 0 0 rgba(239,68,68,0.75)'
+                          : row.nonConformities.length > 0 && !row.hasActionPlan
+                            ? 'inset 4px 0 0 rgba(251,191,36,0.85)'
+                            : 'inset 4px 0 0 rgba(52,211,153,0.75)',
+                      }}
                     >
-                      <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
                         {formatDateTime(row.receivedAt)}
                       </td>
                       <td className="px-4 py-3">
@@ -369,20 +363,20 @@ export default function PdfsSalvosPage() {
                           {row.formNumber}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-600">{row.invoiceNumber}</td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">{row.invoiceNumber}</td>
                       <td className="px-4 py-3">
-                        <span className="font-mono text-xs font-semibold text-gray-700">{row.trailerPlate}</span>
+                        <span className="font-mono text-xs font-semibold text-foreground/80">{row.trailerPlate}</span>
                       </td>
                       <td className="px-4 py-3">
                         <div className="space-y-0.5 max-w-[160px]">
                           {row.products.slice(0, 2).map((p, i) => (
-                            <div key={i} className="text-xs text-gray-600 truncate">
+                            <div key={i} className="text-xs text-muted-foreground truncate">
                               <span className="font-medium">{p.productCode}</span>
-                              {p.lot && <span className="text-gray-400"> / {p.lot}</span>}
+                              {p.lot && <span className="text-muted-foreground/70"> / {p.lot}</span>}
                             </div>
                           ))}
                           {row.products.length > 2 && (
-                            <span className="text-xs text-gray-400">+{row.products.length - 2} mais</span>
+                            <span className="text-xs text-muted-foreground/70">+{row.products.length - 2} mais</span>
                           )}
                         </div>
                       </td>
@@ -393,7 +387,7 @@ export default function PdfsSalvosPage() {
                           </Badge>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-600 max-w-[120px] truncate">
+                      <td className="px-4 py-3 text-xs text-muted-foreground max-w-[120px] truncate">
                         {row.qualityResponsible}
                       </td>
                       <td className="px-4 py-3">
@@ -436,7 +430,7 @@ export default function PdfsSalvosPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 w-7 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-500/10"
                                 title="Plano de Ação"
                               >
                                 <ClipboardList className="w-3.5 h-3.5" />
@@ -446,7 +440,7 @@ export default function PdfsSalvosPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 w-7 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                            className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-500/10"
                             title="Excluir relatório"
                             onClick={() => setDeleteModal(row)}
                           >
@@ -463,9 +457,9 @@ export default function PdfsSalvosPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="border-t px-4 py-3 flex items-center justify-between" style={{ borderColor: 'rgba(22,65,58,0.08)' }}>
-              <p className="text-[0.75rem]" style={{ color: 'rgba(22,65,58,0.42)' }}>
-                Página <span className="font-semibold" style={{ color: 'rgba(22,65,58,0.68)' }}>{page}</span> de {totalPages} &middot; {total} registros
+            <div className="border-t border-brand-green/8 px-4 py-3 flex items-center justify-between">
+              <p className="text-[0.75rem] text-brand-green/42">
+                Página <span className="font-semibold text-brand-green/68">{page}</span> de {totalPages} &middot; {total} registros
               </p>
               <div className="flex gap-1.5">
                 <Button
@@ -536,7 +530,6 @@ export default function PdfsSalvosPage() {
             </Button>
             <Button
               variant="destructive"
-              className="bg-red-600 hover:bg-red-700 text-white"
               onClick={handleDelete}
               disabled={isDeleting}
             >
@@ -553,7 +546,7 @@ const SKEL = { background: 'rgba(22,65,58,0.07)', borderRadius: '4px' }
 
 function SkeletonRows() {
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="divide-y divide-brand-green/8">
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} className="px-4 py-4 flex gap-4 animate-pulse">
           <div className="h-4 w-28" style={SKEL} />
