@@ -3,11 +3,15 @@ import type { PropsWithChildren } from 'react'
 
 // react-native-web renders TextInput as a raw <input>, which the browser
 // defaults to content-box. That makes paddingHorizontal/borderWidth add to
-// (instead of fit inside) any flex/percentage width, so inputs bleed past
-// their container — e.g. the "Qtd." field overflowing its card on the
-// Identificação step. Force border-box everywhere to match RN's box model.
+// (instead of fit inside) any flex/percentage width — force border-box to
+// match RN's box model.
+// Separately, browsers give <input>/<textarea> an intrinsic min-width:auto,
+// which blocks flex:1 siblings from shrinking below their content size —
+// e.g. two flex:1 inputs ("Lote"/"Qtd.") refusing to fit a narrow card and
+// overflowing the screen. min-width:0 lets them actually share the row.
 const webResetCss = `
   *, *::before, *::after { box-sizing: border-box; }
+  input, textarea, select { min-width: 0; }
   input, textarea, select, button { -webkit-tap-highlight-color: transparent; }
 `
 

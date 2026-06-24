@@ -380,8 +380,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   credit: {
-    color: 'rgba(255,255,255,0.13)',
+    color: 'rgba(255,255,255,0.40)',
     fontSize: 10,
+    fontWeight: '600',
     textAlign: 'center',
     marginTop: 3,
     letterSpacing: 0.3,
