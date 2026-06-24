@@ -147,8 +147,8 @@ function TemperatureCard({
           style={[styles.input, { marginTop: 8, minHeight: 60, textAlignVertical: 'top' }]}
           value={temp.observation ?? ''}
           onChangeText={v => onUpdate('observation', v)}
-          placeholder="Descreva a não conformidade *"
-          placeholderTextColor="#ef4444"
+          placeholder="Observação (opcional)"
+          placeholderTextColor="#9ca3af"
           multiline
           numberOfLines={2}
         />
