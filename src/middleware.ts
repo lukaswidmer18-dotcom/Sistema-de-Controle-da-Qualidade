@@ -5,6 +5,7 @@ const ALLOWED_ORIGINS = [
   'http://localhost:19006',
   'http://localhost:19000',
   'https://mobile-app-six-kohl.vercel.app',
+  'https://controle-qualidade-mobile.vercel.app',
   process.env.EXPO_ORIGIN,
 ].filter(Boolean) as string[]
 
