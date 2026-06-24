@@ -16,6 +16,9 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const session = await getApiSession()
   if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+  if (session.user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Sem permissão' }, { status: 403 })
+  }
 
   const body = await request.json()
   const { name, subject, body: templateBody, isActive } = body

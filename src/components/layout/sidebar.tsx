@@ -49,16 +49,19 @@ const settingsItems = [
     href: '/configuracoes/listas',
     label: 'Listas de E-mail',
     icon: Mail,
+    adminOnly: true,
   },
   {
     href: '/configuracoes/opcoes',
     label: 'Opções das Listas',
     icon: Settings,
+    adminOnly: true,
   },
   {
     href: '/configuracoes/modelos',
     label: 'Modelos de E-mail',
     icon: FileText,
+    adminOnly: true,
   },
   {
     href: '/configuracoes/usuarios',
@@ -158,15 +161,17 @@ export function Sidebar() {
         })}
 
         {/* Divider */}
-        <div className="pt-4 pb-2 px-3">
-          {!isCollapsed ? (
-            <p className="text-xs font-semibold text-brand-gold uppercase tracking-wider animate-in fade-in slide-in-from-left-2 duration-300">
-              Configurações
-            </p>
-          ) : (
-            <div className="h-px bg-white/10 w-full" />
-          )}
-        </div>
+        {session?.user?.role === 'ADMIN' && (
+          <div className="pt-4 pb-2 px-3">
+            {!isCollapsed ? (
+              <p className="text-xs font-semibold text-brand-gold uppercase tracking-wider animate-in fade-in slide-in-from-left-2 duration-300">
+                Configurações
+              </p>
+            ) : (
+              <div className="h-px bg-white/10 w-full" />
+            )}
+          </div>
+        )}
 
         {settingsItems.map((item) => {
           if (item.adminOnly && session?.user?.role !== 'ADMIN') return null
