@@ -273,9 +273,6 @@ export default function NovoFormularioPage() {
         if (temp.status === 'NAO_CONFORME' && !temp.photoUrl && !temp.photoPreview) {
           errors.push(`Foto obrigatória para medição ${index + 1}`)
         }
-        if (temp.status === 'NAO_CONFORME' && !temp.observation) {
-          errors.push(`Observação obrigatória para medição ${index + 1} (não conforme)`)
-        }
       })
     }
 
@@ -891,19 +888,14 @@ export default function NovoFormularioPage() {
 
                     <div>
                       <Label className="text-xs text-gray-500 mb-1 block">
-                        Observação {temp.status === 'NAO_CONFORME' ? '*' : temp.status === 'NAO_APLICAVEL' ? '(N/A)' : '(opcional)'}
+                        Observação (opcional)
                       </Label>
                       <Textarea
                         value={temp.observation || ''}
                         onChange={e => updateTemperature(index, 'observation', e.target.value)}
                         placeholder="Observação sobre esta medição"
                         rows={2}
-                        className={cn(
-                          'text-xs resize-none',
-                          showValidation && temp.status === 'NAO_CONFORME' && !temp.observation
-                            ? 'border-red-300'
-                            : ''
-                        )}
+                        className="text-xs resize-none"
                       />
                     </div>
 
