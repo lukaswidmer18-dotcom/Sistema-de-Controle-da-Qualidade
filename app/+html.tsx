@@ -9,10 +9,15 @@ import type { PropsWithChildren } from 'react'
 // which blocks flex:1 siblings from shrinking below their content size —
 // e.g. two flex:1 inputs ("Lote"/"Qtd.") refusing to fit a narrow card and
 // overflowing the screen. min-width:0 lets them actually share the row.
+// Browsers also draw their own rectangular focus outline on <input>, which
+// doesn't follow our borderRadius and shows as a stray black line on top of
+// the custom green focus ring (inputWrapperFocused) — every input already
+// has that visible custom indicator, so the native one is just noise.
 const webResetCss = `
   *, *::before, *::after { box-sizing: border-box; }
   input, textarea, select { min-width: 0; }
   input, textarea, select, button { -webkit-tap-highlight-color: transparent; }
+  input:focus, textarea:focus, select:focus { outline: none; }
 `
 
 export default function Root({ children }: PropsWithChildren) {
