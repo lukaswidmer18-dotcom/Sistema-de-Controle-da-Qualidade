@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import {
@@ -56,6 +57,7 @@ interface ReceiptRow {
   invoiceNumber: string
   receivingOrder: string
   trailerPlate: string
+  evaluatorName: string
   generalStatus: string
   qualityResponsible: string
   receivedAt: string
@@ -94,6 +96,8 @@ const EMPTY_FILTERS: Filters = {
 const PAGE_SIZE = 10
 
 export default function PdfsSalvosPage() {
+  const { data: session } = useSession()
+  const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
   const [rows, setRows] = useState<ReceiptRow[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -330,7 +334,11 @@ export default function PdfsSalvosPage() {
               <table className="w-full text-sm">
                 <thead className="bg-brand-cream border-b border-brand-gold/20">
                   <tr>
-                    {['Data','Formulário','NF','Placa','Produto / Lote','Status','Resp. Qualidade','Ações'].map(col => (
+                    {[
+                      'Data','Formulário',
+                      ...(isAdmin ? ['Unidade'] : []),
+                      'NF','Placa','Produto / Lote','Status','Resp. Qualidade','Ações',
+                    ].map(col => (
                       <th key={col} className="text-left px-4 py-3 text-[0.6875rem] font-bold uppercase tracking-[0.09em] text-brand-green/42">{col}</th>
                     ))}
                   </tr>
@@ -363,6 +371,9 @@ export default function PdfsSalvosPage() {
                           {row.formNumber}
                         </Link>
                       </td>
+                      {isAdmin && (
+                        <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">{row.evaluatorName}</td>
+                      )}
                       <td className="px-4 py-3 text-xs text-muted-foreground">{row.invoiceNumber}</td>
                       <td className="px-4 py-3">
                         <span className="font-mono text-xs font-semibold text-foreground/80">{row.trailerPlate}</span>
