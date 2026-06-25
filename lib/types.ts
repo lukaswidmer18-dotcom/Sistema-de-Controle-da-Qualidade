@@ -79,6 +79,7 @@ export interface AuthUser {
   email: string
   name: string
   role: UserRole
+  unit: string | null
 }
 
 export interface Receipt {

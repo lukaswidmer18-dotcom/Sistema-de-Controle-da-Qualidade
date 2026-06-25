@@ -20,6 +20,7 @@ interface ConfigOption { label: string; value: string }
 export default function Step1Identificacao() {
   const { form, updateField, updateProduct, addProduct, removeProduct, setPlatePicture, restore, reset } = useFormStore()
   const user = useAuthStore(s => s.user)
+  const isQualidade = user?.role === 'QUALIDADE'
   const navigation = useNavigation()
   const [showVehicleTypes, setShowVehicleTypes] = useState(false)
   const [showEvaluators, setShowEvaluators] = useState(false)
@@ -57,6 +58,10 @@ export default function Step1Identificacao() {
     // Pre-fill quality responsible from logged user
     if (!form.qualityResponsible && user?.name) {
       updateField('qualityResponsible', user.name)
+    }
+    // Lock evaluator to the logged user's unit (server also enforces this)
+    if (isQualidade && user?.unit) {
+      updateField('evaluatorName', user.unit)
     }
     })
   }, [])
@@ -97,16 +102,28 @@ export default function Step1Identificacao() {
 
         <Text style={styles.sectionTitle}>Identificação</Text>
 
+        {isQualidade && user?.unit && (
+          <View style={styles.unitBadge}>
+            <Text style={styles.unitBadgeText}>{user.unit}</Text>
+          </View>
+        )}
+
         {/* Evaluator */}
         <View style={styles.field}>
           <Text style={styles.label}>Avaliador <Text style={styles.req}>*</Text></Text>
-          <TextInput
-            style={styles.input}
-            value={form.evaluatorName}
-            onChangeText={v => updateField('evaluatorName', v)}
-            placeholder="Nome do avaliador"
-            placeholderTextColor="#9ca3af"
-          />
+          {isQualidade ? (
+            <View style={[styles.input, styles.inputDisabled]}>
+              <Text style={styles.inputDisabledText}>{form.evaluatorName || user?.unit}</Text>
+            </View>
+          ) : (
+            <TextInput
+              style={styles.input}
+              value={form.evaluatorName}
+              onChangeText={v => updateField('evaluatorName', v)}
+              placeholder="Nome do avaliador"
+              placeholderTextColor="#9ca3af"
+            />
+          )}
         </View>
 
         {/* Unit */}
@@ -410,6 +427,17 @@ const styles = StyleSheet.create({
     borderRadius: 10, paddingHorizontal: 12, fontSize: 14,
     color: '#111827', backgroundColor: '#fff',
   },
+  inputDisabled: {
+    justifyContent: 'center', backgroundColor: '#f3f4f6',
+  },
+  inputDisabledText: { fontSize: 14, color: '#6b7280' },
+  unitBadge: {
+    alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center',
+    backgroundColor: `${BRAND_GOLD}1f`, borderWidth: 1, borderColor: `${BRAND_GOLD}73`,
+    borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4,
+    marginBottom: 14,
+  },
+  unitBadgeText: { fontSize: 12, fontWeight: '700', color: BRAND_GREEN },
   selectBtn: {
     height: 46, borderWidth: 1.5, borderColor: '#e5e7eb',
     borderRadius: 10, paddingHorizontal: 12, backgroundColor: '#fff',

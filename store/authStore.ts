@@ -41,13 +41,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (token) {
         // Decode JWT payload (no signature verification — server validates on each request)
         const payload = JSON.parse(atob(token.split('.')[1])) as {
-          id: string; email: string; name: string; role: string; exp: number
+          id: string; email: string; name: string; role: string; unit: string | null; exp: number
         }
         // Check expiry
         if (payload.exp * 1000 > Date.now()) {
           set({
             token,
-            user: { id: payload.id, email: payload.email, name: payload.name, role: payload.role as AuthUser['role'] },
+            user: {
+              id: payload.id,
+              email: payload.email,
+              name: payload.name,
+              role: payload.role as AuthUser['role'],
+              unit: payload.unit ?? null,
+            },
             isAuthenticated: true,
           })
         } else {
