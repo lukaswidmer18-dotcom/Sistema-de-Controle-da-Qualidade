@@ -10,7 +10,7 @@ export async function GET() {
   }
 
   const users = await prisma.user.findMany({
-    select: { id: true, name: true, email: true, role: true, active: true, createdAt: true },
+    select: { id: true, name: true, email: true, role: true, unit: true, active: true, createdAt: true },
     orderBy: { name: 'asc' },
   })
 
@@ -29,10 +29,14 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json()
-  const { name, email, password, role, isActive } = body
+  const { name, email, password, role, unit, isActive } = body
 
   if (!name || !email || !password || !role) {
     return NextResponse.json({ error: 'Dados obrigatórios ausentes' }, { status: 400 })
+  }
+
+  if (role === 'QUALIDADE' && !unit) {
+    return NextResponse.json({ error: 'Unidade é obrigatória para o perfil Qualidade' }, { status: 400 })
   }
 
   const existing = await prisma.user.findUnique({ where: { email } })
@@ -43,8 +47,15 @@ export async function POST(request: NextRequest) {
   const hashedPassword = await bcrypt.hash(password, 10)
 
   const user = await prisma.user.create({
-    data: { name, email, password: hashedPassword, role, active: isActive !== false },
-    select: { id: true, name: true, email: true, role: true, active: true, createdAt: true },
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      unit: role === 'QUALIDADE' ? unit : null,
+      active: isActive !== false,
+    },
+    select: { id: true, name: true, email: true, role: true, unit: true, active: true, createdAt: true },
   })
 
   return NextResponse.json({ user: { ...user, isActive: user.active } }, { status: 201 })

@@ -107,7 +107,9 @@ function buildEmptyTemperature(): TemperatureMeasurementData {
 }
 
 export default function NovoFormularioPage() {
-  useSession()
+  const { data: session } = useSession()
+  const userRole = (session?.user as { role?: string } | undefined)?.role
+  const userUnit = (session?.user as { unit?: string | null } | undefined)?.unit
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<ReceiptFormData>(buildInitialFormData)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -150,6 +152,12 @@ export default function NovoFormularioPage() {
   ) => {
     setFormData(prev => ({ ...prev, [key]: value }))
   }, [])
+
+  useEffect(() => {
+    if (userRole === 'QUALIDADE' && userUnit) {
+      updateFormData('unit', userUnit)
+    }
+  }, [userRole, userUnit, updateFormData])
 
   const updateProduct = (index: number, field: keyof ReceiptProductData, value: string) => {
     setFormData(prev => {
@@ -561,28 +569,35 @@ export default function NovoFormularioPage() {
                     />
                   </FormField>
 
-                  <FormField 
-                    label="Avaliado" 
+                  <FormField
+                    label="Avaliado"
                     required
-                    action={
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
+                    action={userRole !== 'QUALIDADE' && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         className="h-6 w-6 p-0 hover:bg-brand-gold/10 hover:text-brand-gold"
                         onClick={() => window.open('/configuracoes/opcoes', '_blank')}
                         title="Gerenciar unidades"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </Button>
-                    }
+                    )}
                   >
-                    <Combobox
-                      options={units}
-                      value={formData.unit}
-                      onValueChange={val => updateFormData('unit', val)}
-                      placeholder="Selecione a unidade"
-                      searchPlaceholder="Buscar unidade ou SIF..."
-                    />
+                    {userRole === 'QUALIDADE' ? (
+                      <Input
+                        value={units.find(u => u.value === formData.unit)?.label || formData.unit}
+                        disabled
+                      />
+                    ) : (
+                      <Combobox
+                        options={units}
+                        value={formData.unit}
+                        onValueChange={val => updateFormData('unit', val)}
+                        placeholder="Selecione a unidade"
+                        searchPlaceholder="Buscar unidade ou SIF..."
+                      />
+                    )}
                   </FormField>
 
                   <FormField label="Responsável da operação" required>

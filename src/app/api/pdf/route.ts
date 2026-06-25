@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    if (!receipt) {
+    if (!receipt || (session.user.role === 'QUALIDADE' && receipt.unit !== session.user.unit)) {
       return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
     }
 

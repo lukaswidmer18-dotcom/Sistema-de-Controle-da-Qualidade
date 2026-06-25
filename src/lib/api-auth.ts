@@ -18,12 +18,12 @@ export async function getApiSession() {
   try {
     const token = authHeader.slice(7)
     const { payload } = await jwtVerify(token, secret)
-    const { id, email, name, role } = payload as {
-      id: string; email: string; name: string; role: string
+    const { id, email, name, role, unit } = payload as {
+      id: string; email: string; name: string; role: string; unit?: string | null
     }
     if (!id || !email) return null
     return {
-      user: { id, email, name: name ?? '', role: role ?? '' },
+      user: { id, email, name: name ?? '', role: role ?? '', unit: unit ?? null },
       expires: new Date((payload.exp ?? 0) * 1000).toISOString(),
     }
   } catch {

@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Credenciais inválidas' }, { status: 401 })
     }
 
-    const token = await new SignJWT({ id: user.id, email: user.email, name: user.name, role: user.role })
+    const token = await new SignJWT({ id: user.id, email: user.email, name: user.name, role: user.role, unit: user.unit })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime('30d')
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       token,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role },
+      user: { id: user.id, email: user.email, name: user.name, role: user.role, unit: user.unit },
     })
   } catch {
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 })

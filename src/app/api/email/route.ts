@@ -33,6 +33,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Dados obrigatórios ausentes' }, { status: 400 })
     }
 
+    // Add action plan button to HTML for non-conformity receipts
+    const receipt = await prisma.receipt.findUnique({
+      where: { id: receiptId },
+      select: { generalStatus: true, unit: true },
+    })
+
+    if (!receipt || (session.user.role === 'QUALIDADE' && receipt.unit !== session.user.unit)) {
+      return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
+    }
+
     const transporter = getTransporter()
 
     let attachments: { filename: string; content: Buffer; contentType: string }[] = []
@@ -50,12 +60,6 @@ export async function POST(request: NextRequest) {
         // PDF file not found, send without attachment
       }
     }
-
-    // Add action plan button to HTML for non-conformity receipts
-    const receipt = await prisma.receipt.findUnique({
-      where: { id: receiptId },
-      select: { generalStatus: true },
-    })
 
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
     const actionPlanUrl = `${baseUrl}/plano-acao/${receiptId}?fill=1`

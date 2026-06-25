@@ -13,6 +13,7 @@ model User {
   email     String   @unique
   password  String
   role      String   @default("QUALIDADE") // ADMIN, QUALIDADE
+  unit      String?  // obrigatório para role QUALIDADE; vincula usuário à unidade (ConfigList "UNIDADES")
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

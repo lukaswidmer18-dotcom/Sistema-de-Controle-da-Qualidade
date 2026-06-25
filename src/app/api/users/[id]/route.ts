@@ -10,9 +10,19 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 
   const body = await request.json()
-  const { name, email, password, role, isActive } = body
+  const { name, email, password, role, unit, isActive } = body
 
-  const updateData: Record<string, unknown> = { name, email, role, active: isActive }
+  if (role === 'QUALIDADE' && !unit) {
+    return NextResponse.json({ error: 'Unidade é obrigatória para o perfil Qualidade' }, { status: 400 })
+  }
+
+  const updateData: Record<string, unknown> = {
+    name,
+    email,
+    role,
+    unit: role === 'QUALIDADE' ? unit : null,
+    active: isActive,
+  }
   if (password) {
     updateData.password = await bcrypt.hash(password, 10)
   }
@@ -20,7 +30,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   const user = await prisma.user.update({
     where: { id: params.id },
     data: updateData,
-    select: { id: true, name: true, email: true, role: true, active: true, createdAt: true },
+    select: { id: true, name: true, email: true, role: true, unit: true, active: true, createdAt: true },
   })
 
   return NextResponse.json({ user: { ...user, isActive: user.active } })

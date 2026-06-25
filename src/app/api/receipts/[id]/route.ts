@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     },
   })
 
-  if (!receipt) {
+  if (!receipt || (session.user.role === 'QUALIDADE' && receipt.unit !== session.user.unit)) {
     return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
   }
 
@@ -46,7 +46,19 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
   }
 
+  const existing = await prisma.receipt.findUnique({
+    where: { id: params.id },
+    select: { unit: true },
+  })
+
+  if (!existing || (session.user.role === 'QUALIDADE' && existing.unit !== session.user.unit)) {
+    return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
+  }
+
   const body = await request.json()
+  if (session.user.role === 'QUALIDADE') {
+    delete body.unit
+  }
 
   const receipt = await prisma.receipt.update({
     where: { id: params.id },
@@ -64,6 +76,15 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
   try {
     const id = params.id
+
+    const existing = await prisma.receipt.findUnique({
+      where: { id },
+      select: { unit: true },
+    })
+
+    if (!existing || (session.user.role === 'QUALIDADE' && existing.unit !== session.user.unit)) {
+      return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
+    }
 
     await prisma.$transaction([
       prisma.nonConformity.deleteMany({ where: { receiptId: id } }),

@@ -41,7 +41,9 @@ export async function GET(
     },
   })
 
-  if (!receipt) return NextResponse.json({ error: 'Não encontrado' }, { status: 404 })
+  if (!receipt || (session.user.role === 'QUALIDADE' && receipt.unit !== session.user.unit)) {
+    return NextResponse.json({ error: 'Não encontrado' }, { status: 404 })
+  }
 
   return NextResponse.json({ receipt })
 }
@@ -74,7 +76,9 @@ export async function POST(
     },
   })
 
-  if (!receipt) return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
+  if (!receipt || (session.user.role === 'QUALIDADE' && receipt.unit !== session.user.unit)) {
+    return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
+  }
 
   const actionPlan = await prisma.actionPlan.upsert({
     where: { receiptId: params.id },

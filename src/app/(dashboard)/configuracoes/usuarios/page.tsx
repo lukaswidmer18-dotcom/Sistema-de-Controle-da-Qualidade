@@ -31,6 +31,7 @@ interface UserRow {
   name: string
   email: string
   role: UserRole
+  unit: string | null
   isActive: boolean
   createdAt: string
 }
@@ -40,7 +41,13 @@ interface UserFormData {
   email: string
   password: string
   role: UserRole
+  unit: string
   isActive: boolean
+}
+
+interface UnitOption {
+  label: string
+  value: string
 }
 
 const EMPTY_FORM: UserFormData = {
@@ -48,6 +55,7 @@ const EMPTY_FORM: UserFormData = {
   email: '',
   password: '',
   role: 'QUALIDADE',
+  unit: '',
   isActive: true,
 }
 
@@ -59,6 +67,7 @@ const ROLE_COLORS: Record<UserRole, string> = {
 export default function UsuariosPage() {
   const { data: session } = useSession()
   const [users, setUsers] = useState<UserRow[]>([])
+  const [units, setUnits] = useState<UnitOption[]>([])
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
@@ -88,6 +97,20 @@ export default function UsuariosPage() {
     void fetchUsers()
   }, [fetchUsers])
 
+  useEffect(() => {
+    const fetchUnits = async () => {
+      try {
+        const res = await fetch('/api/config-lists?name=UNIDADES')
+        if (!res.ok) return
+        const data = await res.json() as { list?: { options: UnitOption[] } }
+        if (data.list?.options) setUnits(data.list.options)
+      } catch {
+        // lista de unidades é auxiliar; falha silenciosa não bloqueia gestão de usuários
+      }
+    }
+    void fetchUnits()
+  }, [])
+
   const openCreate = () => {
     setEditingId(null)
     setFormData(EMPTY_FORM)
@@ -101,6 +124,7 @@ export default function UsuariosPage() {
       email: user.email,
       password: '',
       role: user.role,
+      unit: user.unit || '',
       isActive: user.isActive,
     })
     setModalOpen(true)
@@ -119,6 +143,10 @@ export default function UsuariosPage() {
       toast.error('Senha é obrigatória para novos usuários')
       return
     }
+    if (formData.role === 'QUALIDADE' && !formData.unit) {
+      toast.error('Unidade é obrigatória para o perfil Qualidade')
+      return
+    }
 
     setSaving(true)
     try {
@@ -129,6 +157,7 @@ export default function UsuariosPage() {
         name: formData.name.trim(),
         email: formData.email.trim(),
         role: formData.role,
+        unit: formData.role === 'QUALIDADE' ? formData.unit : '',
         isActive: formData.isActive,
       }
       if (formData.password) {
@@ -229,6 +258,7 @@ export default function UsuariosPage() {
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Usuário</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">E-mail</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Perfil</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Unidade</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Ações</th>
                 </tr>
@@ -251,6 +281,11 @@ export default function UsuariosPage() {
                       <Badge className={`text-xs border ${ROLE_COLORS[user.role] || 'bg-gray-100 text-gray-600'}`}>
                         {getRoleLabel(user.role)}
                       </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-gray-500">
+                      {user.role === 'QUALIDADE'
+                        ? (units.find(u => u.value === user.unit)?.label || user.unit || '-')
+                        : '—'}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5">
@@ -383,6 +418,29 @@ export default function UsuariosPage() {
                 </SelectContent>
               </Select>
             </div>
+
+            {formData.role === 'QUALIDADE' && (
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium">
+                  Unidade <span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={formData.unit}
+                  onValueChange={val => updateForm('unit', val)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a unidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {units.map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="flex items-center gap-3">
               <Switch

@@ -132,6 +132,10 @@ export async function GET(request: NextRequest) {
 
   const where: Prisma.ReceiptWhereInput = {}
 
+  if (session.user.role === 'QUALIDADE') {
+    where.unit = session.user.unit ?? '__sem_unidade__'
+  }
+
   const dateFrom = searchParams.get('dateFrom')
   const dateTo = searchParams.get('dateTo')
   if (dateFrom || dateTo) {
@@ -214,6 +218,14 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const data = receiptSchema.parse(body)
+
+    if (session.user.role === 'QUALIDADE') {
+      if (!session.user.unit) {
+        return NextResponse.json({ error: 'Seu usuário não tem unidade vinculada. Contate um administrador.' }, { status: 403 })
+      }
+      data.unit = session.user.unit
+    }
+
     const ruleErrors = validateBusinessRules(data)
 
     if (ruleErrors.length > 0) {
