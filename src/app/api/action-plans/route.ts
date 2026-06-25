@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   const receiptWhere: Prisma.ReceiptWhereInput = {}
 
   if (session.user.role === 'QUALIDADE') {
-    receiptWhere.unit = session.user.unit ?? '__sem_unidade__'
+    receiptWhere.evaluatorName = session.user.unit ?? '__sem_unidade__'
   }
 
   const formNumber = searchParams.get('formNumber')

@@ -100,7 +100,7 @@ export default function UsuariosPage() {
   useEffect(() => {
     const fetchUnits = async () => {
       try {
-        const res = await fetch('/api/config-lists?name=UNIDADES')
+        const res = await fetch('/api/config-lists?name=AVALIADORES')
         if (!res.ok) return
         const data = await res.json() as { list?: { options: UnitOption[] } }
         if (data.list?.options) setUnits(data.list.options)

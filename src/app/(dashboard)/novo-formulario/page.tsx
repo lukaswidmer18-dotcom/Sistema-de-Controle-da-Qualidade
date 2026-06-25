@@ -155,9 +155,14 @@ export default function NovoFormularioPage() {
 
   useEffect(() => {
     if (userRole === 'QUALIDADE' && userUnit) {
-      updateFormData('unit', userUnit)
+      const selected = evaluators.find(e => e.value === userUnit)
+      setFormData(prev => ({
+        ...prev,
+        evaluatorName: userUnit,
+        evaluatorEmailListId: selected?.emailListId,
+      }))
     }
-  }, [userRole, userUnit, updateFormData])
+  }, [userRole, userUnit, evaluators])
 
   const updateProduct = (index: number, field: keyof ReceiptProductData, value: string) => {
     setFormData(prev => {
@@ -538,41 +543,48 @@ export default function NovoFormularioPage() {
                     </div>
                   </FormField>
 
-                  <FormField 
-                    label="Avaliador" 
-                    required 
-                    action={
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
+                  <FormField
+                    label="Avaliador"
+                    required
+                    action={userRole !== 'QUALIDADE' && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         className="h-6 w-6 p-0 hover:bg-brand-gold/10 hover:text-brand-gold"
                         onClick={() => window.open('/configuracoes/opcoes', '_blank')}
                         title="Gerenciar avaliadores"
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </Button>
-                    }
+                    )}
                   >
-                    <Combobox
-                      options={evaluators}
-                      value={formData.evaluatorName}
-                      onValueChange={val => {
-                        const selected = evaluators.find(e => e.value === val)
-                        setFormData(prev => ({ 
-                          ...prev, 
-                          evaluatorName: val,
-                          evaluatorEmailListId: selected?.emailListId
-                        }))
-                      }}
-                      placeholder="Selecione o avaliador"
-                      searchPlaceholder="Buscar avaliador..."
-                    />
+                    {userRole === 'QUALIDADE' ? (
+                      <Input
+                        value={evaluators.find(e => e.value === formData.evaluatorName)?.label || formData.evaluatorName}
+                        disabled
+                      />
+                    ) : (
+                      <Combobox
+                        options={evaluators}
+                        value={formData.evaluatorName}
+                        onValueChange={val => {
+                          const selected = evaluators.find(e => e.value === val)
+                          setFormData(prev => ({
+                            ...prev,
+                            evaluatorName: val,
+                            evaluatorEmailListId: selected?.emailListId
+                          }))
+                        }}
+                        placeholder="Selecione o avaliador"
+                        searchPlaceholder="Buscar avaliador..."
+                      />
+                    )}
                   </FormField>
 
                   <FormField
                     label="Avaliado"
                     required
-                    action={userRole !== 'QUALIDADE' && (
+                    action={
                       <Button
                         variant="ghost"
                         size="sm"
@@ -582,22 +594,15 @@ export default function NovoFormularioPage() {
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </Button>
-                    )}
+                    }
                   >
-                    {userRole === 'QUALIDADE' ? (
-                      <Input
-                        value={units.find(u => u.value === formData.unit)?.label || formData.unit}
-                        disabled
-                      />
-                    ) : (
-                      <Combobox
-                        options={units}
-                        value={formData.unit}
-                        onValueChange={val => updateFormData('unit', val)}
-                        placeholder="Selecione a unidade"
-                        searchPlaceholder="Buscar unidade ou SIF..."
-                      />
-                    )}
+                    <Combobox
+                      options={units}
+                      value={formData.unit}
+                      onValueChange={val => updateFormData('unit', val)}
+                      placeholder="Selecione a unidade"
+                      searchPlaceholder="Buscar unidade ou SIF..."
+                    />
                   </FormField>
 
                   <FormField label="Responsável da operação" required>

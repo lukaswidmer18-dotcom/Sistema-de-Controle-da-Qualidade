@@ -41,7 +41,7 @@ export async function GET(
     },
   })
 
-  if (!receipt || (session.user.role === 'QUALIDADE' && receipt.unit !== session.user.unit)) {
+  if (!receipt || (session.user.role === 'QUALIDADE' && receipt.evaluatorName !== session.user.unit)) {
     return NextResponse.json({ error: 'Não encontrado' }, { status: 404 })
   }
 

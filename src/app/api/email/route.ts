@@ -36,10 +36,10 @@ export async function POST(request: NextRequest) {
     // Add action plan button to HTML for non-conformity receipts
     const receipt = await prisma.receipt.findUnique({
       where: { id: receiptId },
-      select: { generalStatus: true, unit: true },
+      select: { generalStatus: true, evaluatorName: true },
     })
 
-    if (!receipt || (session.user.role === 'QUALIDADE' && receipt.unit !== session.user.unit)) {
+    if (!receipt || (session.user.role === 'QUALIDADE' && receipt.evaluatorName !== session.user.unit)) {
       return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
     }
 

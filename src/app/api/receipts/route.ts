@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
   const where: Prisma.ReceiptWhereInput = {}
 
   if (session.user.role === 'QUALIDADE') {
-    where.unit = session.user.unit ?? '__sem_unidade__'
+    where.evaluatorName = session.user.unit ?? '__sem_unidade__'
   }
 
   const dateFrom = searchParams.get('dateFrom')
@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
       if (!session.user.unit) {
         return NextResponse.json({ error: 'Seu usuário não tem unidade vinculada. Contate um administrador.' }, { status: 403 })
       }
-      data.unit = session.user.unit
+      data.evaluatorName = session.user.unit
     }
 
     const ruleErrors = validateBusinessRules(data)
