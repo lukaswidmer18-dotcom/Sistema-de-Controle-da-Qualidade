@@ -20,6 +20,7 @@ import {
   Package,
   ShieldAlert,
   Flag,
+  Building2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -460,6 +461,12 @@ export default function NovoFormularioPage() {
               </p>
               <h1 className="text-xl font-black tracking-tight text-white leading-none">Novo Formulário</h1>
               <p className="text-[0.75rem] mt-0.5 text-white/45">Etapa {currentStep} de {STEPS.length}</p>
+              {userRole === 'QUALIDADE' && userUnit && (
+                <Badge variant="outline" className="mt-2 gap-1.5 border-brand-gold/45 bg-white/8 text-[0.7rem] font-semibold text-brand-gold">
+                  <Building2 className="w-3 h-3" />
+                  {evaluators.find(e => e.value === userUnit)?.label || userUnit}
+                </Badge>
+              )}
             </div>
             <Badge variant="outline" className="border-brand-gold/45 bg-white/8 text-xs font-mono text-white">
               {formData.formNumber}
