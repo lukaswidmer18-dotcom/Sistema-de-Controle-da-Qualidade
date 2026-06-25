@@ -32,6 +32,8 @@ export default function PdfsSalvos() {
     router.replace('/(auth)/login')
   }
 
+  const isAdmin = user?.role === 'ADMIN'
+
   const renderItem = ({ item }: { item: Receipt }) => {
     const color = getStatusColor(item.generalStatus)
     const hasNCs = (item._count?.nonConformities ?? 0) > 0
@@ -47,6 +49,9 @@ export default function PdfsSalvos() {
             <Text style={[styles.statusText, { color }]}>{getStatusLabel(item.generalStatus)}</Text>
           </View>
         </View>
+        {isAdmin && (
+          <Text style={styles.unitText}>{item.evaluatorName}</Text>
+        )}
         <View style={styles.cardMeta}>
           <Text style={styles.metaText}>NF {item.invoiceNumber}</Text>
           <Text style={styles.metaDot}>·</Text>
@@ -164,6 +169,7 @@ const styles = StyleSheet.create({
   },
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   formNumber: { fontFamily: 'monospace', fontSize: 13, fontWeight: '700', color: BRAND_GREEN },
+  unitText: { fontSize: 11, fontWeight: '700', color: BRAND_GOLD, marginBottom: 6, textTransform: 'uppercase' },
   statusBadge: { paddingVertical: 3, paddingHorizontal: 8, borderRadius: 6, borderWidth: 1 },
   statusText: { fontSize: 11, fontWeight: '700' },
   cardMeta: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 8 },
