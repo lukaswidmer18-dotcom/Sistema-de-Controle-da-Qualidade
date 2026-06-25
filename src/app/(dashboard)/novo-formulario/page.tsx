@@ -584,7 +584,7 @@ export default function NovoFormularioPage() {
                   <FormField
                     label="Avaliado"
                     required
-                    action={
+                    action={userRole !== 'QUALIDADE' && (
                       <Button
                         variant="ghost"
                         size="sm"
@@ -594,7 +594,7 @@ export default function NovoFormularioPage() {
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </Button>
-                    }
+                    )}
                   >
                     <Combobox
                       options={units}
