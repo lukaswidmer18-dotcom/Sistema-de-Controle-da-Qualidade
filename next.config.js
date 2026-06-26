@@ -4,7 +4,7 @@ const nextConfig = {
     domains: ['localhost'],
   },
   experimental: {
-    serverComponentsExternalPackages: ['@prisma/client', 'prisma'],
+    serverComponentsExternalPackages: ['@prisma/client', 'prisma', '@sparticuz/chromium', 'puppeteer-core'],
   },
   webpack: (config, { dev }) => {
     if (dev) {
