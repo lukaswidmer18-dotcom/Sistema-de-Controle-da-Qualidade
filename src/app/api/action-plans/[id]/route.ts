@@ -2,8 +2,8 @@
 import { getApiSession } from '@/lib/api-auth'
 import { prisma } from '@/lib/prisma'
 import { generateActionPlanHTML } from '@/lib/pdf-generator'
+import { launchBrowser } from '@/lib/browser'
 import { put } from '@vercel/blob'
-import puppeteer from 'puppeteer'
 import nodemailer from 'nodemailer'
 
 function getTransporter() {
@@ -119,10 +119,7 @@ export async function POST(
 
   const pdfFileName = `Plano-de-Acao-${receipt.formNumber}.pdf`
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  })
+  const browser = await launchBrowser()
 
   let pdfBuffer: Buffer
   try {

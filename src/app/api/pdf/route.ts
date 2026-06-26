@@ -2,8 +2,8 @@
 import { getApiSession } from '@/lib/api-auth'
 import { prisma } from '@/lib/prisma'
 import { generateReceiptHTML } from '@/lib/pdf-generator'
+import { launchBrowser } from '@/lib/browser'
 import { put } from '@vercel/blob'
-import puppeteer from 'puppeteer'
 
 export async function POST(request: NextRequest) {
   const session = await getApiSession()
@@ -66,10 +66,7 @@ export async function POST(request: NextRequest) {
     // Generate real PDF with puppeteer
     const pdfFileName = `Monitoramento-de-Recebimento-de-Produtos-${receipt.formNumber}.pdf`
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    })
+    const browser = await launchBrowser()
 
     let pdfBuffer: Buffer
     try {
