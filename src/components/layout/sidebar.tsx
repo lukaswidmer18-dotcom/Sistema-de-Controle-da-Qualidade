@@ -16,7 +16,6 @@ import {
   ChevronRight,
   Menu,
   ClipboardCheck,
-  BookOpen,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -42,12 +41,6 @@ const navItems = [
     icon: ClipboardCheck,
     description: 'Controle de planos',
     adminOnly: true,
-  },
-  {
-    href: '/guia-metricas',
-    label: 'Guia de Métricas',
-    icon: BookOpen,
-    description: 'Como ler o sistema',
   },
 ]
 

@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/layout/sidebar'
 import { AuthProvider } from '@/components/layout/session-provider'
+import { MetricsGuide } from '@/components/layout/metrics-guide'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -16,6 +17,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <main className="flex-1 overflow-auto">
           {children}
         </main>
+        <MetricsGuide />
       </div>
     </AuthProvider>
   )
