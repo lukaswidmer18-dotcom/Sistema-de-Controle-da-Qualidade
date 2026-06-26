@@ -18,6 +18,7 @@ import {
   Trash2,
   Plus,
   ClipboardList,
+  Loader2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -108,6 +109,7 @@ export default function PdfsSalvosPage() {
   const [emailModal, setEmailModal] = useState<ReceiptRow | null>(null)
   const [deleteModal, setDeleteModal] = useState<ReceiptRow | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [generatingId, setGeneratingId] = useState<string | null>(null)
 
   const fetchData = useCallback(async (currentFilters: Filters, currentPage: number) => {
     setLoading(true)
@@ -166,6 +168,50 @@ export default function PdfsSalvosPage() {
     } finally {
       setIsDeleting(false)
     }
+  }
+
+  const ensurePdf = async (row: ReceiptRow): Promise<{ pdfUrl: string; htmlUrl: string } | null> => {
+    if (row.pdfUrl && row.htmlUrl) {
+      return { pdfUrl: row.pdfUrl, htmlUrl: row.htmlUrl }
+    }
+
+    setGeneratingId(row.id)
+    try {
+      const res = await fetch('/api/pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ receiptId: row.id }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({})) as { error?: string }
+        throw new Error(err.error || 'Erro ao gerar PDF')
+      }
+      const data = await res.json() as { pdfUrl: string; htmlUrl: string }
+      setRows(prev => prev.map(r => r.id === row.id ? { ...r, pdfUrl: data.pdfUrl, htmlUrl: data.htmlUrl } : r))
+      return data
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro inesperado'
+      toast.error(message)
+      return null
+    } finally {
+      setGeneratingId(null)
+    }
+  }
+
+  const handleView = async (row: ReceiptRow) => {
+    const result = await ensurePdf(row)
+    if (result) window.open(result.htmlUrl, '_blank')
+  }
+
+  const handleDownload = async (row: ReceiptRow) => {
+    const result = await ensurePdf(row)
+    if (!result) return
+    const link = document.createElement('a')
+    link.href = result.pdfUrl
+    link.download = ''
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
   }
 
   const totalPages = Math.ceil(total / PAGE_SIZE)
@@ -403,30 +449,26 @@ export default function PdfsSalvosPage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
-                          {row.htmlUrl && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0"
-                              title="Ver relatório"
-                              onClick={() => window.open(row.htmlUrl!, '_blank')}
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                            </Button>
-                          )}
-                          {row.pdfUrl && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0"
-                              title="Baixar PDF"
-                              asChild
-                            >
-                              <a href={row.pdfUrl} download>
-                                <Download className="w-3.5 h-3.5" />
-                              </a>
-                            </Button>
-                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0"
+                            title="Ver relatório"
+                            disabled={generatingId === row.id}
+                            onClick={() => void handleView(row)}
+                          >
+                            {generatingId === row.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Eye className="w-3.5 h-3.5" />}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 w-7 p-0"
+                            title="Baixar PDF"
+                            disabled={generatingId === row.id}
+                            onClick={() => void handleDownload(row)}
+                          >
+                            {generatingId === row.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
