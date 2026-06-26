@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router'
 import { useAuthStore } from '@/store/authStore'
 import { View, ActivityIndicator } from 'react-native'
 import { BRAND_GREEN, HAIRLINE_GREEN } from '@/lib/constants'
+import { MetricsGuideButton } from '@/components/MetricsGuideButton'
 
 export default function AppLayout() {
   const { isAuthenticated, isLoading, user } = useAuthStore()
@@ -16,6 +17,7 @@ export default function AppLayout() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -101,5 +103,7 @@ export default function AppLayout() {
         }}
       />
     </Tabs>
+    <MetricsGuideButton />
+    </View>
   )
 }
