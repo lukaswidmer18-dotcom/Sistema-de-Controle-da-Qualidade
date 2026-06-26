@@ -2,8 +2,6 @@
 import { getApiSession } from '@/lib/api-auth'
 import { prisma } from '@/lib/prisma'
 import nodemailer from 'nodemailer'
-import { join } from 'path'
-import { readFile } from 'fs/promises'
 
 function getTransporter() {
   return nodemailer.createTransport({
@@ -48,14 +46,16 @@ export async function POST(request: NextRequest) {
     let attachments: { filename: string; content: Buffer; contentType: string }[] = []
 
     if (pdfUrl) {
-      const pdfPath = join(process.cwd(), 'public', pdfUrl.replace('/uploads/', 'uploads/').replace(/^\//, ''))
       try {
-        const pdfBuffer = await readFile(pdfPath)
-        attachments = [{
-          filename: `relatorio-${receiptId}.pdf`,
-          content: pdfBuffer,
-          contentType: 'application/pdf',
-        }]
+        const pdfRes = await fetch(pdfUrl)
+        if (pdfRes.ok) {
+          const pdfBuffer = Buffer.from(await pdfRes.arrayBuffer())
+          attachments = [{
+            filename: `relatorio-${receiptId}.pdf`,
+            content: pdfBuffer,
+            contentType: 'application/pdf',
+          }]
+        }
       } catch {
         // PDF file not found, send without attachment
       }

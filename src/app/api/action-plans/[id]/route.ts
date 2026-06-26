@@ -2,8 +2,7 @@
 import { getApiSession } from '@/lib/api-auth'
 import { prisma } from '@/lib/prisma'
 import { generateActionPlanHTML } from '@/lib/pdf-generator'
-import { writeFile, mkdir, readFile } from 'fs/promises'
-import { join } from 'path'
+import { put } from '@vercel/blob'
 import puppeteer from 'puppeteer'
 import nodemailer from 'nodemailer'
 
@@ -76,9 +75,11 @@ export async function POST(
     },
   })
 
-  if (!receipt || (session.user.role === 'QUALIDADE' && receipt.unit !== session.user.unit)) {
+  if (!receipt || (session.user.role === 'QUALIDADE' && receipt.evaluatorName !== session.user.unit)) {
     return NextResponse.json({ error: 'Recebimento não encontrado' }, { status: 404 })
   }
+
+  try {
 
   const actionPlan = await prisma.actionPlan.upsert({
     where: { receiptId: params.id },
@@ -116,31 +117,32 @@ export async function POST(
     },
   })
 
-  const uploadsDir = join(process.cwd(), 'public', 'uploads', 'pdfs')
-  await mkdir(uploadsDir, { recursive: true })
-
   const pdfFileName = `Plano-de-Acao-${receipt.formNumber}.pdf`
-  const pdfFilePath = join(uploadsDir, pdfFileName)
 
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
 
+  let pdfBuffer: Buffer
   try {
     const page = await browser.newPage()
     await page.setContent(html, { waitUntil: 'load' })
-    const pdfBuffer = await page.pdf({
+    pdfBuffer = Buffer.from(await page.pdf({
       format: 'A4',
       printBackground: true,
       margin: { top: '0', right: '0', bottom: '0', left: '0' },
-    })
-    await writeFile(pdfFilePath, pdfBuffer)
+    }))
   } finally {
     await browser.close()
   }
 
-  const pdfUrl = `/uploads/pdfs/${pdfFileName}`
+  const pdfBlob = await put(`pdfs/${pdfFileName}`, pdfBuffer, {
+    access: 'public',
+    contentType: 'application/pdf',
+    addRandomSuffix: false,
+  })
+  const pdfUrl = pdfBlob.url
 
   await prisma.actionPlan.update({
     where: { id: actionPlan.id },
@@ -226,18 +228,19 @@ Equipe da Qualidade`
 
     const attachments: { filename: string; content: Buffer; contentType: string }[] = []
 
-    const actionPlanBuffer = await readFile(pdfFilePath)
-    attachments.push({ filename: pdfFileName, content: actionPlanBuffer, contentType: 'application/pdf' })
+    attachments.push({ filename: pdfFileName, content: pdfBuffer, contentType: 'application/pdf' })
 
     if (receipt.pdfUrl) {
       try {
-        const receiptPdfPath = join(process.cwd(), 'public', receipt.pdfUrl.replace(/^\//, ''))
-        const receiptBuffer = await readFile(receiptPdfPath)
-        attachments.push({
-          filename: `Relatorio-${receipt.formNumber}.pdf`,
-          content: receiptBuffer,
-          contentType: 'application/pdf',
-        })
+        const receiptPdfRes = await fetch(receipt.pdfUrl)
+        if (receiptPdfRes.ok) {
+          const receiptBuffer = Buffer.from(await receiptPdfRes.arrayBuffer())
+          attachments.push({
+            filename: `Relatorio-${receipt.formNumber}.pdf`,
+            content: receiptBuffer,
+            contentType: 'application/pdf',
+          })
+        }
       } catch {
         // Receipt PDF not found — skip attachment
       }
@@ -268,4 +271,8 @@ Equipe da Qualidade`
   }
 
   return NextResponse.json({ success: true, pdfUrl, emailSent })
+  } catch (error) {
+    console.error('Action plan generation error:', error)
+    return NextResponse.json({ error: 'Erro ao gerar plano de ação' }, { status: 500 })
+  }
 }
