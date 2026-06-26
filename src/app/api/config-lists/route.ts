@@ -82,3 +82,30 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Erro ao criar opção (provavelmente valor duplicado)' }, { status: 400 })
   }
 }
+
+/**
+ * DELETE /api/config-lists?optionId=xxx
+ * Remove uma opção de uma lista
+ */
+export async function DELETE(request: NextRequest) {
+  const session = await getApiSession()
+  if (!session) return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+  if (session.user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Sem permissão' }, { status: 403 })
+  }
+
+  const { searchParams } = new URL(request.url)
+  const optionId = searchParams.get('optionId')
+
+  if (!optionId) {
+    return NextResponse.json({ error: 'ID da opção é obrigatório' }, { status: 400 })
+  }
+
+  try {
+    await prisma.configListOption.delete({ where: { id: optionId } })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Erro ao deletar opção:', error)
+    return NextResponse.json({ error: 'Erro ao deletar opção' }, { status: 500 })
+  }
+}

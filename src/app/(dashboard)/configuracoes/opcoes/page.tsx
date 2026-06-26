@@ -38,6 +38,8 @@ export default function OpcoesPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [newOption, setNewOption] = useState({ label: '', value: '' })
   const [filter, setFilter] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState<ConfigOption | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   const fetchLists = useCallback(async () => {
     setLoading(true)
@@ -104,7 +106,27 @@ export default function OpcoesPage() {
     }
   }
 
-  const filteredOptions = selectedList?.options.filter(opt => 
+  const handleDeleteOption = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/config-lists?optionId=${deleteTarget.id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json() as { error?: string }
+        throw new Error(err.error || 'Erro ao deletar opção')
+      }
+      toast.success('Opção removida!')
+      setDeleteTarget(null)
+      void fetchLists()
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Erro inesperado'
+      toast.error(message)
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  const filteredOptions = selectedList?.options.filter(opt =>
     opt.label.toLowerCase().includes(filter.toLowerCase()) ||
     opt.value.toLowerCase().includes(filter.toLowerCase())
   ) || []
@@ -218,7 +240,12 @@ export default function OpcoesPage() {
                                 <span className="text-xs text-gray-500 font-mono">{opt.value}</span>
                               </td>
                               <td className="px-6 py-4 text-right">
-                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 text-gray-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all"
+                                  onClick={() => setDeleteTarget(opt)}
+                                >
                                   <Trash2 className="w-4 h-4" />
                                 </Button>
                               </td>
@@ -283,6 +310,33 @@ export default function OpcoesPage() {
             <Button onClick={() => void handleAddOption()} disabled={saving} className="gap-2">
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
               Adicionar Opção
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Confirmação Delete */}
+      <Dialog open={!!deleteTarget} onOpenChange={open => { if (!open) setDeleteTarget(null) }}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Remover Opção</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-600 py-2">
+            Tem certeza que deseja remover <strong>{deleteTarget?.label}</strong>?
+            Essa ação não pode ser desfeita.
+          </p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => void handleDeleteOption()}
+              disabled={deleting}
+              className="gap-2"
+            >
+              {deleting && <Loader2 className="w-4 h-4 animate-spin" />}
+              Remover
             </Button>
           </DialogFooter>
         </DialogContent>
